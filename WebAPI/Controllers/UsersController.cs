@@ -34,6 +34,22 @@ namespace WebApi.Controllers
             _appSettings = appSettings.Value;
         }
 
+        /// <summary>
+        /// Authenticates valid user
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /authenticate
+        ///     {
+        ///        "id": 1,
+        ///        "name": "Item1",
+        ///        "isComplete": true
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="userDto"></param>
+        /// <returns>Success - if valid users else BadRequest message</returns>
         [AllowAnonymous]
         [HttpPost("authenticate")]
         public IActionResult Authenticate([FromBody]UserDto userDto)
