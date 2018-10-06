@@ -35,23 +35,26 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Authenticates valid user
+        /// Authenticates is username and password belongs to a valid user
         /// </summary>
         /// <remarks>
         /// Sample request:
         ///
         ///     POST /authenticate
         ///     {
-        ///        "id": 1,
-        ///        "name": "Item1",
-        ///        "isComplete": true
+        ///        "username": "anyusername",
+        ///        "password": "anypassword"
         ///     }
         ///
         /// </remarks>
         /// <param name="userDto"></param>
-        /// <returns>Success - if valid users else BadRequest message</returns>
+        /// <returns>Authenticated user details</returns>
+        /// <response code="201">Returns authenticated user</response>
+        /// <response code="400">If user is not valid</response> 
         [AllowAnonymous]
         [HttpPost("authenticate")]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public IActionResult Authenticate([FromBody]UserDto userDto)
         {
             var user = _userService.Authenticate(userDto.Username, userDto.Password);
