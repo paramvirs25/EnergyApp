@@ -38,9 +38,9 @@ namespace EFGetStarted.AspNetCore.NewDb
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var connection = @"Server=(localdb)\mssqllocaldb;Database=EFGetStarted.AspNetCore.NewDb;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<BloggingContext>
-                (options => options.UseSqlServer(connection));
+            var connection = @"Server=DESKTOP-7AFL4RJ\Sqlexpress;Database=UserDB;Trusted_Connection=True;";
+            //var connection = @"Server=.\SQLEXPRESS;Database=UserDB;Trusted_Connection=True;ConnectRetryCount=0";
+            services.AddDbContext<UserDBContext>(options => options.UseSqlServer(connection));
 
         }
 
