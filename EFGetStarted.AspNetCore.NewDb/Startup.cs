@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 using EFGetStarted.AspNetCore.NewDb.Models;
+using EFGetStarted.AspNetCore.NewDb.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -38,9 +39,13 @@ namespace EFGetStarted.AspNetCore.NewDb
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
-            var connection = @"Server=DESKTOP-7AFL4RJ\Sqlexpress;Database=UserDB;Trusted_Connection=True;";
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            //var connection = @"Server=DESKTOP-7AFL4RJ\Sqlexpress;Database=UserDB;Trusted_Connection=True;";
             //var connection = @"Server=.\SQLEXPRESS;Database=UserDB;Trusted_Connection=True;ConnectRetryCount=0";
-            services.AddDbContext<UserDBContext>(options => options.UseSqlServer(connection));
+            services.AddDbContext<UserDBContext>(options => options.UseSqlServer(appSettingsSection.Get<AppSettings>().DBConnectionString));
 
         }
 
