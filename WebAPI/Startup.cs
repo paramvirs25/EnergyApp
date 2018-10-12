@@ -19,6 +19,7 @@ using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System;
 using System.IO;
+using DAL.Entities;
 
 namespace WebApi
 {
@@ -35,7 +36,7 @@ namespace WebApi
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors();
-            services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
+            //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
             services.AddMvc();
             services.AddAutoMapper();
 
@@ -81,6 +82,10 @@ namespace WebApi
 
             // Register the Swagger generator, defining 1 or more Swagger documents
             AddSwaggerGen(services);
+
+            //Register DB Context
+            var dbConnectionString = appSettingsSection.Get<AppSettings>().DBConnectionString;
+            services.AddDbContext<DataContext>(options => options.UseSqlServer(dbConnectionString));
 
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();

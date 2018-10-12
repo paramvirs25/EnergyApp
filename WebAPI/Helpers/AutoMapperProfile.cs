@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebApi.Dtos;
-using WebApi.Entities;
+//using WebApi.Entities;
+using DAL.Entities;
 
 namespace WebApi.Helpers
 {
@@ -8,8 +9,8 @@ namespace WebApi.Helpers
     {
         public AutoMapperProfile()
         {
-            CreateMap<User, UserDto>();
-            CreateMap<UserDto, User>();
+            CreateMap<UsersTbl, UserDto>();
+            CreateMap<UserDto, UsersTbl>();
         }
     }
 }

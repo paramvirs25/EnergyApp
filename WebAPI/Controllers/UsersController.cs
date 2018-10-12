@@ -11,7 +11,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using WebApi.Services;
 using WebApi.Dtos;
-using WebApi.Entities;
+//using DAL.Entities;
 
 namespace WebApi.Controllers
 {
@@ -68,7 +68,7 @@ namespace WebApi.Controllers
             {
                 Subject = new ClaimsIdentity(new Claim[] 
                 {
-                    new Claim(ClaimTypes.Name, user.Id.ToString())
+                    new Claim(ClaimTypes.Name, user.UserId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -78,38 +78,38 @@ namespace WebApi.Controllers
 
             // return basic user info (without password) and token to store client side
             return Ok(new {
-                Id = user.Id,
+                Id = user.UserId,
                 Username = user.Username,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
+                //FirstName = user.FirstName,
+                //LastName = user.LastName,
                 Token = tokenString
             });
         }
 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        public IActionResult Register([FromBody]UserDto userDto)
-        {
-            // map dto to entity
-            var user = _mapper.Map<User>(userDto);
+        //[AllowAnonymous]
+        //[HttpPost("register")]
+        //public IActionResult Register([FromBody]UserDto userDto)
+        //{
+        //    // map dto to entity
+        //    var user = _mapper.Map<User>(userDto);
 
-            try 
-            {
-                // save 
-                _userService.Create(user, userDto.Password);
-                return Ok();
-            } 
-            catch(AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+        //    try 
+        //    {
+        //        // save 
+        //        _userService.Create(user, userDto.Password);
+        //        return Ok();
+        //    } 
+        //    catch(AppException ex)
+        //    {
+        //        // return error message if there was an exception
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
 
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users =  _userService.GetAll();
+            var users = _userService.GetAll();
             var userDtos = _mapper.Map<IList<UserDto>>(users);
             return Ok(userDtos);
         }
@@ -117,36 +117,36 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user =  _userService.GetById(id);
+            var user = _userService.GetById(id);
             var userDto = _mapper.Map<UserDto>(user);
             return Ok(userDto);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UserDto userDto)
-        {
-            // map dto to entity and set id
-            var user = _mapper.Map<User>(userDto);
-            user.Id = id;
+        //[HttpPut("{id}")]
+        //public IActionResult Update(int id, [FromBody]UserDto userDto)
+        //{
+        //    // map dto to entity and set id
+        //    var user = _mapper.Map<User>(userDto);
+        //    user.Id = id;
 
-            try 
-            {
-                // save 
-                _userService.Update(user, userDto.Password);
-                return Ok();
-            } 
-            catch(AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+        //    try 
+        //    {
+        //        // save 
+        //        _userService.Update(user, userDto.Password);
+        //        return Ok();
+        //    } 
+        //    catch(AppException ex)
+        //    {
+        //        // return error message if there was an exception
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return Ok();
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    _userService.Delete(id);
+        //    return Ok();
+        //}
     }
 }
