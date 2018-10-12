@@ -26,6 +26,7 @@ import { DashboardComponent } from './dashboard';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 
+
 @NgModule({
     imports: [
         BrowserModule,

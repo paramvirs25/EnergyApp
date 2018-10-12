@@ -1,1 +1,18 @@
 /* You can add global styles to this file, and also import other style files */
+.centerContent {
+  margin: auto;
+  width: 75%;
+}
+.tabContentStyle {
+  font-family: Tahoma;
+  font-size: 12px;
+}
+
+.padContent { padding: 50px 10px 50px 10px; }
+.padAll20 { padding: 20px 20px 20px 20px; }
+
+.floatL {float:left;}
+.floatR {float: right;}
+
+.mBottom30 {margin-bottom:30px;}
+
