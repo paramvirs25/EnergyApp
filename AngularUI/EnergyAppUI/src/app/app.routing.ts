@@ -10,10 +10,6 @@ import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 
 const appRoutes: Routes = [
-  //  { path: '', component: HomeComponent, canActivate: [AuthGuard] },
-  //  { path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard] },
-  //  { path: 'login', component: LoginComponent },
-  //  { path: 'register', component: RegisterComponent },
    {
     path: '',
     component: HomeLayoutComponent,
