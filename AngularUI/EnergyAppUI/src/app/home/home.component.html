@@ -4,7 +4,7 @@
     <div class="mBottom30">
       <h4 id="lblVideoName">lblVideoName</h4>
     </div>
-    <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin" autoplay controls style="width:100%;">
+    <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin" autoplay controls style="width:100%;" height="300">
       <source src="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" type="application/vnd.ms-sstr+xml" />
       <p class="amp-no-js">
         To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
@@ -16,7 +16,7 @@
   <div class="padAll20">
     <div class="mBottom30 clearfix">
       <div class="floatL">
-        + Playlist
+        <button class="btn btn-outline-primary" type="submit">+ Playlist</button>
       </div>
       <div class="floatR">
         Progress bar
@@ -32,8 +32,7 @@
         </li>
       </ul>
       <div class="tab-content tabContentStyle" id="myTabContent">
-          <div class="tab-pane fade show active" id="info" role="tabpanel" aria-labelledby="info-tab">
-            <br />
+          <div class="tab-pane fade show mTop20 divScrollable active" id="info" role="tabpanel" aria-labelledby="info-tab">            
             <strong>Course information</strong>
             <hr />
             Should I become an investor? What type of start-ups should I invest in? How to better understand the investor?
@@ -47,7 +46,49 @@
             <br />
             Let’s discuss: How to better understand the investor?          
           </div>
-        <div class="tab-pane fade" id="contents" role="tabpanel" aria-labelledby="contents-tab">...</div>
+          <div class="tab-pane mTop20 fade divScrollable" id="contents" role="tabpanel" aria-labelledby="contents-tab">
+            <div class="accordion" id="accordionContent">
+              <div class="card">
+                <div id="headingOne">
+                  <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    01 | Becoming an investor
+                  </button>
+                </div>
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordionContent">
+                  <div class="card-body">
+                    <a href="#">01 | Sub Menu 1.23 </a><br />
+                    <a href="#">02 | Sub Menu 3.23 </a>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div id="headingTwo">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    02 | Know your investor
+                  </button>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionContent">
+                  <div class="card-body">
+                    <a href="#">01 | Sub Menu 7.27 </a><br />
+                    <a href="#">02 | Sub Menu 2.23 </a>
+                  </div>
+                </div>
+              </div>
+              <div class="card">
+                <div id="headingThree">
+                  <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                    03 | Module Funding System
+                  </button>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordionContent">
+                  <div class="card-body">
+                    <a href="#">01 | Sub Menu 4.23 </a><br />
+                    <a href="#">02 | Sub Menu 5.23 </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
       </div>
     </div>
   </div>

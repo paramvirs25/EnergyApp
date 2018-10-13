@@ -7,12 +7,19 @@
   font-family: Tahoma;
   font-size: 12px;
 }
+.divScrollable {
+  height: 300px;
+  overflow-y: auto;
+}
 
 .padContent { padding: 50px 10px 50px 10px; }
 .padAll20 { padding: 20px 20px 20px 20px; }
+.padL50 {
+  padding-left: 100px;
+}
 
 .floatL {float:left;}
 .floatR {float: right;}
 
 .mBottom30 {margin-bottom:30px;}
-
+.mTop20 {  margin-top: 20px;}
