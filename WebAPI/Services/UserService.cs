@@ -1,33 +1,38 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
-//using WebApi.Entities;
+
 using WebApi.Helpers;
-using WebApi.Dtos;
+
+using AutoMapper;
+using WebApi.Models;
 using DAL.Entities;
 
 namespace WebApi.Services
 {
     public interface IUserService
     {
-        UsersTbl Authenticate(string username, string password);
-        IEnumerable<UsersTbl> GetAll();
-        UsersTbl GetById(int id);
-        //User Create(User user, string password);
-        //void Update(User user, string password = null);
-        //void Delete(int id);
+        UserModel Authenticate(string username, string password);
+        IEnumerable<UserModel> GetAll();
+        UserModel GetById(int id);
+        UserModel Create(UserModel user);
+        void Update(UsersTbl user, string password = null);
+        void Delete(int id);
     }
 
     public class UserService : IUserService
     {
         private DataContext _context;
+        private IMapper _mapper;
 
-        public UserService(DataContext context)
+        public UserService(
+            DataContext context,
+            IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
-        public UsersTbl Authenticate(string username, string password)
+        public UserModel Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
@@ -42,85 +47,85 @@ namespace WebApi.Services
             //if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             //    return null;
 
-            // authentication successful            
-            return user;
+            // authentication successful
+            return _mapper.Map<UserModel>(user);
         }
 
-        public IEnumerable<UsersTbl> GetAll()
+        public UserModel Create(UserModel userModel)
         {
-            return _context.UsersTbl;
+            // validation
+            if (string.IsNullOrWhiteSpace(userModel.Username) || string.IsNullOrWhiteSpace(userModel.Password))
+                throw new AppException("Username and Password are required");
+
+            if (_context.UsersTbl.Any(x => x.Username == userModel.Username))
+                throw new AppException("Username \"" + userModel.Username + "\" is already taken");
+
+            //byte[] passwordHash, passwordSalt;
+            //CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+            //user.PasswordHash = passwordHash;
+            //user.PasswordSalt = passwordSalt;
+
+            _context.UsersTbl.Add(_mapper.Map<UsersTbl>(userModel));
+            _context.SaveChanges();
+
+            return _mapper.Map<UserModel>(_context.UsersTbl.SingleOrDefault(x => x.Username == userModel.Username));
         }
 
-        public UsersTbl GetById(int id)
+        public IEnumerable<UserModel> GetAll()
         {
-            return _context.UsersTbl.Find(id);
+            return _mapper.Map<IList<UserModel>>(_context.UsersTbl);
         }
 
-        //public User Create(User user, string password)
-        //{
-        //    // validation
-        //    if (string.IsNullOrWhiteSpace(password))
-        //        throw new AppException("Password is required");
+        public UserModel GetById(int id)
+        {
+            return _mapper.Map<UserModel>(_context.UsersTbl.Find(id));
+        }
 
-        //    if (_context.Users.Any(x => x.Username == user.Username))
-        //        throw new AppException("Username \"" + user.Username + "\" is already taken");
+        public void Update(UsersTbl userParam, string password = null)
+        {
+            var user = _context.UsersTbl.Find(userParam.UserId);
 
-        //    byte[] passwordHash, passwordSalt;
-        //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            if (user == null)
+                throw new AppException("User not found");
 
-        //    user.PasswordHash = passwordHash;
-        //    user.PasswordSalt = passwordSalt;
+            if (userParam.Username != user.Username)
+            {
+                // username has changed so check if the new username is already taken
+                if (_context.UsersTbl.Any(x => x.Username == userParam.Username))
+                    throw new AppException("Username " + userParam.Username + " is already taken");
+            }
 
-        //    _context.Users.Add(user);
-        //    _context.SaveChanges();
+            // update user properties
+            //user.FirstName = userParam.FirstName;
+            //user.LastName = userParam.LastName;
+            //user.Username = userParam.Username;
 
-        //    return user;
-        //}
+            // update password if it was entered
+            //if (!string.IsNullOrWhiteSpace(password))
+            //{
+            //    byte[] passwordHash, passwordSalt;
+            //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-        //public void Update(User userParam, string password = null)
-        //{
-        //    var user = _context.Users.Find(userParam.Id);
+            //    user.PasswordHash = passwordHash;
+            //    user.PasswordSalt = passwordSalt;
+            //}
 
-        //    if (user == null)
-        //        throw new AppException("User not found");
+            _context.UsersTbl.Update(user);
+            _context.SaveChanges();
+        }
 
-        //    if (userParam.Username != user.Username)
-        //    {
-        //        // username has changed so check if the new username is already taken
-        //        if (_context.Users.Any(x => x.Username == userParam.Username))
-        //            throw new AppException("Username " + userParam.Username + " is already taken");
-        //    }
+        public void Delete(int id)
+        {
+            var user = _context.UsersTbl.Find(id);
+            if (user != null)
+            {
+                _context.UsersTbl.Remove(user);
+                _context.SaveChanges();
+            }
+        }
 
-        //    // update user properties
-        //    user.FirstName = userParam.FirstName;
-        //    user.LastName = userParam.LastName;
-        //    user.Username = userParam.Username;
-
-        //    // update password if it was entered
-        //    if (!string.IsNullOrWhiteSpace(password))
-        //    {
-        //        byte[] passwordHash, passwordSalt;
-        //        CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-        //        user.PasswordHash = passwordHash;
-        //        user.PasswordSalt = passwordSalt;
-        //    }
-
-        //    _context.Users.Update(user);
-        //    _context.SaveChanges();
-        //}
-
-        //public void Delete(int id)
-        //{
-        //    var user = _context.Users.Find(id);
-        //    if (user != null)
-        //    {
-        //        _context.Users.Remove(user);
-        //        _context.SaveChanges();
-        //    }
-        //}
-
-        //// private helper methods
+        // private helper methods
 
         //private static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         //{
