@@ -13,9 +13,9 @@ namespace WebApi.Services
     {
         UserModel Authenticate(string username, string password);
         IEnumerable<UserModel> GetAll();
-        UserModel GetById(int id);
+        UserDetailsModel GetById(int id);
         UserModel Create(UserModel user);
-        void Update(UsersTbl user, string password = null);
+        void Update(UserModel user, string password = null);
         void Delete(int id);
     }
 
@@ -77,12 +77,12 @@ namespace WebApi.Services
             return _mapper.Map<IList<UserModel>>(_context.UsersTbl);
         }
 
-        public UserModel GetById(int id)
+        public UserDetailsModel GetById(int id)
         {
-            return _mapper.Map<UserModel>(_context.UsersTbl.Find(id));
+            return _mapper.Map<UserDetailsModel>(_context.UserDetailsTbl.Find(id));
         }
 
-        public void Update(UsersTbl userParam, string password = null)
+        public void Update(UserModel userParam, string password = null)
         {
             var user = _context.UsersTbl.Find(userParam.UserId);
 

@@ -79,11 +79,8 @@ namespace WebApi.Controllers
 
             // return basic user info (without password) and token to store client side
             return Ok(new {
-                Id = user.UserId,
-                Username = user.Username,
-                //FirstName = user.FirstName,
-                //LastName = user.LastName,
-                Token = tokenString
+                userid = user.UserId,
+                token = tokenString
             });
         }
 
@@ -133,20 +130,21 @@ namespace WebApi.Controllers
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return Ok(_userService.GetById(id));
+            var user = _userService.GetById(id);
+            return Ok(user);
         }
 
         [HttpPut("{id}")]
         public IActionResult Update(int id, [FromBody]UserModel userDto)
         {
             // map dto to entity and set id
-            var user = _mapper.Map<UsersTbl>(userDto);
-            user.UserId = id;
+            //var user = _mapper.Map<UsersTbl>(userDto);
+            //user.UserId = id;
 
             try
             {
                 // save 
-                _userService.Update(user, userDto.Password);
+                _userService.Update(userDto, userDto.Password);
                 return Ok();
             }
             catch (AppException ex)

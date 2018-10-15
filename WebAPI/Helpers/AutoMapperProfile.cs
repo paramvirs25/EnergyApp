@@ -11,6 +11,9 @@ namespace WebApi.Helpers
         {
             CreateMap<UsersTbl, UserModel>();
             CreateMap<UserModel, UsersTbl>();
+
+            CreateMap<UserDetailsTbl, UserDetailsModel>();
+            CreateMap<UserDetailsModel, UserDetailsTbl>();
         }
     }
 }

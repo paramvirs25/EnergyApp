@@ -32,8 +32,8 @@
           </form>
         </li>
         <li class="nav-item dropdown ml-xl-5" >
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            {{currentUser.username}}
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" *ngIf="currentUser">
+            {{currentUser.userFirstName}}
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item"> Edit Profile </a>
@@ -48,17 +48,3 @@
 <div class="centerContent padContent">
   <router-outlet></router-outlet>
 </div>
-
-
-<!--<h1>Hi {{currentUser.firstName}}!</h1>
-<p>You're logged in with Angular 6!!</p>
-<h3>All registered users:</h3>
-<ul>
-  <li *ngFor="let user of users">
-    {{user.username}} ({{user.firstName}} {{user.lastName}})
-    - <a (click)="deleteUser(user.id)" class="text-danger">Delete</a>
-  </li>
-</ul>
-<p><a [routerLink]="['/login']">Sign Out</a></p>-->
-
-

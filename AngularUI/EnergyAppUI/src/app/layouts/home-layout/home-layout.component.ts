@@ -3,6 +3,7 @@ import { first } from 'rxjs/operators';
 
 import { User } from '../../_models';
 import { UserService } from '../../_services';
+import { UserShared } from '../../_shared';
 
 @Component({
   selector: 'app-home-layout',
@@ -11,25 +12,31 @@ import { UserService } from '../../_services';
 })
 export class HomeLayoutComponent implements OnInit {
   currentUser: User;
-  users: User[] = [];
-
-  constructor(private userService: UserService) {
-    this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
-  }
+  
+  constructor(private userService: UserService, private userShared: UserShared) {}
 
   ngOnInit() {
-    this.loadAllUsers();
+    this.loadUser();
   }
 
-  deleteUser(id: number) {
-    this.userService.delete(id).pipe(first()).subscribe(() => {
-      this.loadAllUsers()
-    });
+  private loadUser() {
+    this.userService.getById(this.userShared.getLoggedInUser().userid)
+      .pipe(first())
+      .subscribe(
+        user => {
+          this.currentUser = user;
+        });
   }
 
-  private loadAllUsers() {
-    this.userService.getAll().pipe(first()).subscribe(users => {
-      this.users = users;
-    });
-  }
+  //deleteUser(id: number) {
+  //  this.userService.delete(id).pipe(first()).subscribe(() => {
+  //    this.loadAllUsers()
+  //  });
+  //}
+
+  //private loadAllUsers() {
+  //  this.userService.getAll().pipe(first()).subscribe(users => {
+  //    this.users = users;
+  //  });
+  //}
 }
