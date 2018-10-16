@@ -1,6 +1,6 @@
-namespace WebApi.Dtos
+namespace WebApi.Models
 {
-    public class UserDto
+    public class UserModel
     {
         public int UserId { get; set; }
         public string Username { get; set; }

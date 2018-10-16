@@ -10,8 +10,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using WebApi.Services;
-using WebApi.Dtos;
-//using DAL.Entities;
+
+using WebApi.Models;
+using DAL.Entities;
 
 namespace WebApi.Controllers
 {
@@ -47,17 +48,17 @@ namespace WebApi.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="userDto"></param>
+        /// <param name="userModel"></param>
         /// <returns>Authenticated user details</returns>
-        /// <response code="201">Returns authenticated user</response>
+        /// <response code="200">Returns authenticated user</response>
         /// <response code="400">If user is not valid</response> 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        [ProducesResponseType(201)]
+        [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Authenticate([FromBody]UserDto userDto)
+        public IActionResult Authenticate([FromBody]UserModel userModel)
         {
-            var user = _userService.Authenticate(userDto.Username, userDto.Password);
+            var user = _userService.Authenticate(userModel.Username, userModel.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -78,75 +79,86 @@ namespace WebApi.Controllers
 
             // return basic user info (without password) and token to store client side
             return Ok(new {
-                Id = user.UserId,
-                Username = user.Username,
-                //FirstName = user.FirstName,
-                //LastName = user.LastName,
-                Token = tokenString
+                userid = user.UserId,
+                token = tokenString
             });
         }
 
-        //[AllowAnonymous]
-        //[HttpPost("register")]
-        //public IActionResult Register([FromBody]UserDto userDto)
-        //{
-        //    // map dto to entity
-        //    var user = _mapper.Map<User>(userDto);
+        /// <summary>
+        /// Registers a user if it already doesnot exits
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        /// <response code="200">If Registratin succeeds</response>
+        /// <response code="400">If registration failed</response> 
+        [AllowAnonymous]
+        [HttpPost("register")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Register([FromBody]UserModel userModel)
+        {
+            try
+            {
+                // save 
+                _userService.Create(userModel);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
-        //    try 
-        //    {
-        //        // save 
-        //        _userService.Create(user, userDto.Password);
-        //        return Ok();
-        //    } 
-        //    catch(AppException ex)
-        //    {
-        //        // return error message if there was an exception
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
-
+        /// <summary>
+        /// Gets a list of all users
+        /// </summary>
+        /// <returns>Gets a list of all users</returns>
         [HttpGet]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
-            var userDtos = _mapper.Map<IList<UserDto>>(users);
-            return Ok(userDtos);
+            //var users = _userService.GetAll();
+            //var userDtos = _mapper.Map<IList<UserModel>>(users);
+            return Ok(_userService.GetAll());
         }
 
+        /// <summary>
+        /// Gets user by Id
+        /// </summary>
+        /// <param name="id">Id of user to find</param>
+        /// <returns>Returns User</returns>
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
             var user = _userService.GetById(id);
-            var userDto = _mapper.Map<UserDto>(user);
-            return Ok(userDto);
+            return Ok(user);
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, [FromBody]UserDto userDto)
-        //{
-        //    // map dto to entity and set id
-        //    var user = _mapper.Map<User>(userDto);
-        //    user.Id = id;
+        [HttpPut("{id}")]
+        public IActionResult Update(int id, [FromBody]UserModel userDto)
+        {
+            // map dto to entity and set id
+            //var user = _mapper.Map<UsersTbl>(userDto);
+            //user.UserId = id;
 
-        //    try 
-        //    {
-        //        // save 
-        //        _userService.Update(user, userDto.Password);
-        //        return Ok();
-        //    } 
-        //    catch(AppException ex)
-        //    {
-        //        // return error message if there was an exception
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
+            try
+            {
+                // save 
+                _userService.Update(userDto, userDto.Password);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    _userService.Delete(id);
-        //    return Ok();
-        //}
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            _userService.Delete(id);
+            return Ok();
+        }
     }
 }
