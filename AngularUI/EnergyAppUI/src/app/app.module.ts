@@ -3,6 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { ReactiveFormsModule }    from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 // used to create fake backend
 //import { fakeBackendProvider } from './_helpers';
@@ -34,6 +35,7 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
         HttpClientModule,
         FormsModule,
         routing,
+        FontAwesomeModule,
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         ModalModule.forRoot()
