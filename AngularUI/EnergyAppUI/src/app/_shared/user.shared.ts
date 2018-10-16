@@ -8,7 +8,8 @@ export class UserShared {
   }
 
   getLoggedInUser(): UserAuthenticated {
-    let currentUser = localStorage.getItem(UserShared.CURRENT_USER);
+    let currentUser = sessionStorage.getItem(UserShared.CURRENT_USER);
+      //localStorage.getItem(UserShared.CURRENT_USER);
     if (currentUser) {
       return JSON.parse(currentUser);
     }
@@ -18,11 +19,11 @@ export class UserShared {
 
   setLoggedInUser(user: UserAuthenticated) {
     // store user details and jwt token in local storage to keep user logged in between page refreshes
-    localStorage.setItem(UserShared.CURRENT_USER, JSON.stringify(user));
+    sessionStorage.setItem(UserShared.CURRENT_USER, JSON.stringify(user));
   }
 
   removeLoggedInUser() {
     // remove user from local storage to log user out
-    localStorage.removeItem(UserShared.CURRENT_USER);
+    sessionStorage.removeItem(UserShared.CURRENT_USER);
   }
 }
