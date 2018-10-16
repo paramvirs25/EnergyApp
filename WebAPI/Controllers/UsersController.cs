@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
-using System.IdentityModel.Tokens.Jwt;
-using WebApi.Helpers;
-using Microsoft.Extensions.Options;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
-using WebApi.Services;
-
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using WebApi.Helpers;
 using WebApi.Models;
-using DAL.Entities;
+using WebApi.Services;
 
 namespace WebApi.Controllers
 {
@@ -63,22 +60,11 @@ namespace WebApi.Controllers
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
 
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[] 
-                {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            var tokenString = tokenHandler.WriteToken(token);
+            string tokenString = JWTAuthentication.GetToken(user, _appSettings.Secret);
 
             // return basic user info (without password) and token to store client side
-            return Ok(new {
+            return Ok(new
+            {
                 userid = user.UserId,
                 token = tokenString
             });

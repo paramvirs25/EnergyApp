@@ -1,46 +1,40 @@
 USE [EnergyDB]
 GO
 
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_UserType_UserDetails]
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]') AND type in (N'U'))
+ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT IF EXISTS [FK_UserType_UserDetails]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]') AND type in (N'U'))
+ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT IF EXISTS [FK_User_UserDetails]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]') AND type in (N'U'))
+ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT IF EXISTS [FK_Role_UserDetails]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserContentTbl]') AND type in (N'U'))
+ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT IF EXISTS [FK_User_UserContent]
+GO
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserContentTbl]') AND type in (N'U'))
+ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT IF EXISTS [FK_Content_UserContent]
 GO
 
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_User_UserDetails]
-GO
 
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_Role_UserDetails]
+/****** Object:  Table [dbo].[UserTypesTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[UserTypesTbl]
 GO
-
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK__UserDetai__UserT__412EB0B6]
+/****** Object:  Table [dbo].[UsersTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[UsersTbl]
 GO
-
-ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [FK_User_UserContent]
+/****** Object:  Table [dbo].[UserDetailsTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[UserDetailsTbl]
 GO
-
-ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [FK_Content_UserContent]
+/****** Object:  Table [dbo].[UserContentTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[UserContentTbl]
 GO
-
-/****** Object:  Table [dbo].[UserTypesTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[UserTypesTbl]
+/****** Object:  Table [dbo].[RolesTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[RolesTbl]
 GO
-
-/****** Object:  Table [dbo].[UsersTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[UsersTbl]
-GO
-
-/****** Object:  Table [dbo].[UserDetailsTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[UserDetailsTbl]
-GO
-
-/****** Object:  Table [dbo].[UserContentTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[UserContentTbl]
-GO
-
-/****** Object:  Table [dbo].[RolesTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[RolesTbl]
-GO
-
-/****** Object:  Table [dbo].[ContentTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
-DROP TABLE [dbo].[ContentTbl]
+/****** Object:  Table [dbo].[ContentTbl]    Script Date: 10/16/2018 2:28:21 PM ******/
+DROP TABLE IF EXISTS [dbo].[ContentTbl]
 GO
 
 /****** Object:  Table [dbo].[ContentTbl]    Script Date: 10/12/2018 1:21:39 PM ******/
@@ -114,7 +108,7 @@ CREATE TABLE [dbo].[UserDetailsTbl](
 	[UserTypeId] [int] NOT NULL,
 	[UserFirstName] [nvarchar](50) NOT NULL,
 	[UserLastName] [nvarchar](50) NULL,
-	[UserEmail] [nchar](10) NULL,
+	[UserEmail] [nvarchar](50) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[UserId] ASC
@@ -172,10 +166,6 @@ REFERENCES [dbo].[UsersTbl] ([UserId])
 GO
 
 ALTER TABLE [dbo].[UserContentTbl] CHECK CONSTRAINT [FK_User_UserContent]
-GO
-
-ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD FOREIGN KEY([UserTypeId])
-REFERENCES [dbo].[UsersTbl] ([UserId])
 GO
 
 ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_Role_UserDetails] FOREIGN KEY([RoleId])
