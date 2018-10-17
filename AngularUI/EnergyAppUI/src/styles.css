@@ -12,7 +12,7 @@
   overflow-y: auto;
 }
 .userIconBig {
-  font-size: 60pt;
+  font-size: 80pt;
   color: lightgrey;
 }
 
@@ -26,6 +26,11 @@
 .floatL {float:left;}
 .floatR {float: right;}
 
-.mBottom30 {margin-bottom:30px;}
+
 .mBottom10 {margin-bottom: 10px;}
-.mTop20 {margin-top: 20px;}
+.mBottom12 {margin-bottom: 12px;}
+.mBottom30 {margin-bottom:30px;}
+  
+.mTop20 {
+  margin-top: 20px;
+}
