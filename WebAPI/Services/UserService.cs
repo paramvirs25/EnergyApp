@@ -6,13 +6,14 @@ using WebApi.Helpers;
 using AutoMapper;
 using WebApi.Models;
 using DAL.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Services
 {
     public interface IUserService
     {
         UserModel Authenticate(string username, string password);
-        IEnumerable<UserModel> GetAll();
+        IEnumerable<UserDetailsModel> GetAll();
         UserDetailsModel GetById(int id);
         UserModel Create(UserModel user);
         void Update(UserModel user, string password = null);
@@ -72,9 +73,20 @@ namespace WebApi.Services
             return _mapper.Map<UserModel>(_context.UsersTbl.SingleOrDefault(x => x.Username == userModel.Username));
         }
 
-        public IEnumerable<UserModel> GetAll()
+        public IEnumerable<UserDetailsModel> GetAll()
         {
-            return _mapper.Map<IList<UserModel>>(_context.UsersTbl);
+            //Mapper.CreateMap<Student, StudentAddressDetails>();
+
+            //var details = Mapper.Map<IEnumerable<Student>, IEnumerable<StudentAddressDetails>>(context.Students).ToList();
+
+            //var details = Mapper.Map<IEnumerable<UserDetailsTbl>, IEnumerable<UserModel>>(_context.UserDetailsTbl).ToList();
+            //return details;
+
+            //List<UserDetailsTbl> ud = _context.UserDetailsTbl.ToList<UserDetailsTbl>();
+
+            //return _mapper.Map<List<UserModel>>(ud);
+
+            return MapFromDAL(_context.UserDetailsTbl.ToList());
         }
 
         public UserDetailsModel GetById(int id)
@@ -123,6 +135,48 @@ namespace WebApi.Services
                 _context.UsersTbl.Remove(user);
                 _context.SaveChanges();
             }
+        }
+
+        public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
+        {
+            List<UserDetailsModel> udm = new List<UserDetailsModel>();
+            foreach(UserDetailsTbl ud in emp)
+            {
+                udm.Add(MapFromDAL(ud));
+            }
+
+            return udm;
+            //return emp.Select(x => MapFromDAL(x)).ToList();
+        }
+
+        public UserDetailsModel MapFromDAL(UserDetailsTbl ud)
+        {
+            return new UserDetailsModel()
+            {
+                UserId = ud.UserId,
+                RoleId = ud.RoleId,
+                UserTypeId = ud.UserTypeId,
+                UserFirstName = ud.UserFirstName,
+                UserLastName = ud.UserLastName,
+                UserEmail = ud.UserEmail
+            };
+        }
+
+        public UserDetailsTbl MapToDAL(UserDetailsModel udm, UserDetailsTbl ud)
+        {
+            if (ud == null)
+            {
+                ud = new UserDetailsTbl();
+            }
+
+            ud.UserId = udm.UserId;
+            ud.RoleId = udm.RoleId;
+            ud.UserTypeId = udm.UserTypeId;
+            ud.UserFirstName = udm.UserFirstName;
+            ud.UserLastName = udm.UserLastName;
+            ud.UserEmail = udm.UserEmail;
+
+            return ud;
         }
 
         // private helper methods

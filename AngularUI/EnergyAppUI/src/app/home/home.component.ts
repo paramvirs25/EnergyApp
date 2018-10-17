@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { first } from 'rxjs/operators';
+
+import { User } from '../_models';
+import { UserService } from '../_services';
+import { UserShared } from '../_shared';
 
 @Component({
   selector: 'app-home',
@@ -6,9 +11,20 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['home.component.css']
 })
 export class HomeComponent implements OnInit {
-  constructor() { }
-  
+  constructor(private userService: UserService, private userShared: UserShared) { }
+
+  private loadUser() {
+    this.userService.getAll()
+      .pipe(first())
+      .subscribe(
+        users => {
+          console.log(users);
+        });
+  }
+
   ngOnInit(): void {
+    this.loadUser();
+
     //var myOptions = {
     //  autoplay: true,
     //  controls: true,
