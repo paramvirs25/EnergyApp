@@ -17,7 +17,6 @@
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\home-layout\home-layout.component.css" />
     <None Remove="EnergyAppUI\src\app\layouts\home-layout\home-layout.component.spec.ts" />
-    <None Remove="EnergyAppUI\src\app\layouts\login-layout\login-layout.component.css" />
     <None Remove="EnergyAppUI\src\app\layouts\login-layout\login-layout.component.spec.ts" />
   </ItemGroup>
 

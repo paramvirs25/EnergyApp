@@ -11,11 +11,16 @@
   height: 300px;
   overflow-y: auto;
 }
+.userIconBig {
+  font-size: 60pt;
+  color: lightgrey;
+}
 
 .padContent { padding: 50px 10px 50px 10px; }
+
 .padAll20 { padding: 20px 20px 20px 20px; }
 .padL50 {
-  padding-left: 100px;
+  padding-left: 50px;
 }
 
 .floatL {float:left;}
