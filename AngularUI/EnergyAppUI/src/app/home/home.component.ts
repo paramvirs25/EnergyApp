@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
       .pipe(first())
       .subscribe(
         users => {
+          console.log("Home - ");
           console.log(users);
         });
   }

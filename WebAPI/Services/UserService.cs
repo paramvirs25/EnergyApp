@@ -12,7 +12,7 @@ namespace WebApi.Services
 {
     public interface IUserService
     {
-        UserModel Authenticate(string username, string password);
+        UserDetailsModel Authenticate(string username, string password);
         IEnumerable<UserDetailsModel> GetAll();
         UserDetailsModel GetById(int id);
         UserModel Create(UserModel user);
@@ -33,7 +33,7 @@ namespace WebApi.Services
             _mapper = mapper;
         }
 
-        public UserModel Authenticate(string username, string password)
+        public UserDetailsModel Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
@@ -42,14 +42,19 @@ namespace WebApi.Services
 
             // check if username exists
             if (user == null)
+            {
                 return null;
+            }
+            else
+            {
+                // authentication successful
+                return MapFromDAL(_context.UserDetailsTbl.SingleOrDefault(x => x.UserId == user.UserId));
+            }
+                
 
             // check if password is correct
             //if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             //    return null;
-
-            // authentication successful
-            return _mapper.Map<UserModel>(user);
         }
 
         public UserModel Create(UserModel userModel)

@@ -2,14 +2,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+
 using WebApi.Helpers;
 using WebApi.Models;
 using WebApi.Services;
+using WebApi.Helpers.Authorization;
 
 namespace WebApi.Controllers
 {
@@ -100,6 +97,7 @@ namespace WebApi.Controllers
         /// Gets a list of all users
         /// </summary>
         /// <returns>Gets a list of all users</returns>
+        [Authorize(Policy = Policies.AgentsAndAbove)]
         [HttpGet]
         public IActionResult GetAll()
         {

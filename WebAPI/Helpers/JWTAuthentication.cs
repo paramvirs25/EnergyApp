@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using WebApi.Services;
 
+using WebApi.Helpers.Authorization;
 using WebApi.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System;
+using System.Linq;
 
 namespace WebApi.Helpers
 {
@@ -22,6 +24,15 @@ namespace WebApi.Helpers
         public static void Configure(IServiceCollection services, string secretKey)
         {
             var key = Encoding.ASCII.GetBytes(secretKey);
+
+            //Add access policies and roles
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy(Policies.AgentsAndAbove, policy => policy.RequireRole(Role.GetSpecifiedAndHigherRoles(Role.RoleId.Agent).Select(x => x.ToString()).ToArray()));
+                options.AddPolicy(Policies.AdminsAndAbove, policy => policy.RequireRole(Role.GetSpecifiedAndHigherRoles(Role.RoleId.Admin).Select(x => x.ToString()).ToArray()));
+            });
+
+
             services.AddAuthentication(x =>
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -56,7 +67,7 @@ namespace WebApi.Helpers
             });
         }
 
-        public static string GetToken(UserModel user, string secretKey)
+        public static string GetToken(UserDetailsModel user, string secretKey)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(secretKey);
@@ -64,7 +75,8 @@ namespace WebApi.Helpers
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.UserId.ToString())
+                    new Claim(ClaimTypes.Name, user.UserId.ToString()),
+                    new Claim(ClaimTypes.Role, user.RoleId.ToString())
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
