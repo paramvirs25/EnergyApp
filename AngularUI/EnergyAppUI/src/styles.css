@@ -17,6 +17,10 @@
   color: lightgrey;
 }
 
+.snackBar-customClass {
+  font-weight: bold;
+}
+
 .floatL {  float: left;}
 .floatR {  float: right;}
 
