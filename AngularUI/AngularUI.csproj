@@ -7,9 +7,13 @@
 
   <ItemGroup>
     <Compile Remove="EnergyAppUI\e2e\**" />
+    <Compile Remove="EnergyAppUI\src\app\admin\**" />
     <Content Remove="EnergyAppUI\e2e\**" />
+    <Content Remove="EnergyAppUI\src\app\admin\**" />
     <EmbeddedResource Remove="EnergyAppUI\e2e\**" />
+    <EmbeddedResource Remove="EnergyAppUI\src\app\admin\**" />
     <None Remove="EnergyAppUI\e2e\**" />
+    <None Remove="EnergyAppUI\src\app\admin\**" />
   </ItemGroup>
 
   <ItemGroup>
