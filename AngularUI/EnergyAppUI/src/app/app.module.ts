@@ -31,6 +31,7 @@ import { RegisterComponent } from './register';
 import { DashboardComponent } from './dashboard';
 import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
 
 @NgModule({
@@ -39,7 +40,8 @@ import { LoginLayoutComponent } from './layouts/login-layout/login-layout.compon
     MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule,
     MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
     MatTreeModule
-  ]
+  ],
+  declarations: [AdminLayoutComponent]
 })
 export class AngularMaterialModule { }
 
