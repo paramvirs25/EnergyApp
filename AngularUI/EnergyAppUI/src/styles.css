@@ -2,6 +2,7 @@
 .centerContent {
   margin: auto;
   width: 75%;
+  max-width: 1200px;
 }
 .tabContentStyle {
   font-family: Tahoma;
@@ -12,20 +13,65 @@
   overflow-y: auto;
 }
 .userIconBig {
-  font-size: 60pt;
+  font-size: 80pt;
   color: lightgrey;
 }
+
+.snackBar-customClass {
+  font-weight: bold;
+}
+
+.floatL {  float: left;}
+.floatR {  float: right;}
 
 .padContent { padding: 50px 10px 50px 10px; }
 
 .padAll20 { padding: 20px 20px 20px 20px; }
-.padL50 {
-  padding-left: 50px;
-}
 
-.floatL {float:left;}
-.floatR {float: right;}
+.padL10 {  padding-left: 10px;}
+.padL20 {  padding-left: 20px;}
+.padL30 {  padding-left: 30px;}
+.padL40 {  padding-left: 40px;}
+.padL50 {  padding-left: 50px;}
 
-.mBottom30 {margin-bottom:30px;}
-.mBottom10 {margin-bottom: 10px;}
-.mTop20 {margin-top: 20px;}
+.padT10 {  padding-top: 10px;}
+.padT20 {  padding-top: 20px;}
+.padT30 {  padding-top: 30px;}
+.padT40 {  padding-top: 40px;}
+.padT50 {  padding-top: 50px;}
+
+.padR10 {  padding-right: 10px;}
+.padR20 {  padding-right: 20px;}
+.padR30 {  padding-right: 30px;}
+.padR40 {  padding-right: 40px;}
+.padR50 {  padding-right: 50px;}
+
+.padB10 {  padding-bottom: 10px;}
+.padB20 {  padding-bottom: 20px;}
+.padB30 {  padding-bottom: 30px;}
+.padB40 {  padding-bottom: 40px;}
+.padB50 {  padding-bottom: 50px;}
+
+.mBottom10 {  margin-bottom: 10px;}
+.mBottom15 {  margin-bottom: 15px;}
+.mBottom20 {  margin-bottom: 20px;}
+.mBottom25 {  margin-bottom: 25px;}
+.mBottom30 {  margin-bottom: 30px;}
+
+.mTop10 {  margin-top: 10px;}
+.mTop15 {  margin-top: 15px;}
+.mTop20 {  margin-top: 20px;}
+.mTop25 {  margin-top: 25px;}
+.mTop30 {  margin-top: 30px;}
+
+.mLeft10 {  margin-left: 10px;}
+.mLeft15 {  margin-left: 15px;}
+.mLeft20 {  margin-left: 20px;}
+.mLeft25 {  margin-left: 25px;}
+.mLeft30 {  margin-left: 30px;}
+
+.mRight10 {  margin-right: 10px;}
+.mRight15 {  margin-right: 15px;}
+.mRight20 {  margin-right: 20px;}
+.mRight25 {  margin-right: 25px;}
+.mRight30 {  margin-right: 30px;}
