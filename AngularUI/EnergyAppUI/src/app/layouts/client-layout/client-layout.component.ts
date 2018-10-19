@@ -6,15 +6,15 @@ import { UserService } from '../../_services';
 import { UserShared } from '../../_shared';
 
 @Component({
-  selector: 'app-home-layout',
-  templateUrl: './home-layout.component.html',
-  styleUrls: ['./home-layout.component.css']
+  selector: 'app-client-layout',
+  templateUrl: './client-layout.component.html',
+  styleUrls: ['./client-layout.component.css']
 })
-export class HomeLayoutComponent implements OnInit {
+export class ClientLayoutComponent implements OnInit {
   currentUser: User;
-  
-  constructor(private userService: UserService, private userShared: UserShared) {}
 
+  constructor(private userService: UserService, private userShared: UserShared) { }
+  
   ngOnInit() {
     this.loadUser();
   }

@@ -6,19 +6,32 @@ import { RegisterComponent } from './register';
 import { AuthGuard } from './_guards';
 import { DashboardComponent } from './dashboard';
 
-import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
+import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
+import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 
+import { UserListComponent } from './admin/user-list/user-list.component';
+import { UserDetailComponent } from './admin/user-detail/user-detail.component';
+
 const appRoutes: Routes = [
-   {
+  // {
+  //  path: '',
+  //  component: ClientLayoutComponent,
+  //  canActivate: [AuthGuard],
+  //  children: [
+  //    { path: '', component: HomeComponent },
+  //    { path: 'dashboard', component: DashboardComponent }
+  //  ]
+  //},
+  {
     path: '',
-    component: HomeLayoutComponent,
+    component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: '', component: HomeComponent },
-      { path: 'dashboard', component: DashboardComponent }
+      { path: 'userlist', component: UserListComponent },
+      { path: 'userdetail', component: UserDetailComponent },
     ]
-   },
+  },
    {
     path: '',
     component: LoginLayoutComponent,

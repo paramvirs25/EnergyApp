@@ -25,7 +25,7 @@ export class ErrorInterceptor implements HttpInterceptor {
 
           //Show error as popup in the page
           this.snackBar.open(error, "Error", {
-            duration: 3000,
+            duration: 5000,
             panelClass: ['snackBar-customClass']
           });
 
