@@ -13,9 +13,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="EnergyAppUI\src\app\admin\user-detail\user-detail.component.spec.ts" />
+    <None Remove="EnergyAppUI\src\app\admin\user-list\user-list.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.css" />
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.spec.ts" />
-    <None Remove="EnergyAppUI\src\app\layouts\admin-layout\admin-layout.component.css" />
     <None Remove="EnergyAppUI\src\app\layouts\admin-layout\admin-layout.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\client-layout\client-layout.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\login-layout\login-layout.component.spec.ts" />

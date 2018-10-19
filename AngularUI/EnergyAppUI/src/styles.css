@@ -1,8 +1,22 @@
-/* You can add global styles to this file, and also import other style files */
+
+body, html {
+  height: 100%;
+}
+
+#mainDiv {
+  height: 100%;
+  background-color: #EDEFF0;
+}
 .centerContent {
   margin: auto;
-  width: 75%;
+  width: 80%;
   max-width: 1200px;
+  height: 100%;
+}
+.headerLogin {
+  -webkit-border-radius: 5px 5px 0px 0px;
+  border-radius: 5px 5px 0px 0px;
+  padding: 5px 5px 5px 5px;
 }
 .tabContentStyle {
   font-family: Tahoma;
@@ -16,6 +30,9 @@
   font-size: 80pt;
   color: lightgrey;
 }
+.BgWhite {
+  background-color: white;
+}
 
 .snackBar-customClass {
   font-weight: bold;
@@ -24,7 +41,7 @@
 .floatL {  float: left;}
 .floatR {  float: right;}
 
-.padContent { padding: 50px 10px 50px 10px; }
+.padContent {  padding: 50px 10px 50px 10px;}
 
 .padAll20 { padding: 20px 20px 20px 20px; }
 

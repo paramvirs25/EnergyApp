@@ -28,7 +28,7 @@ const appRoutes: Routes = [
     component: AdminLayoutComponent,
     canActivate: [AuthGuard],
     children: [
-      { path: 'userlist', component: UserListComponent },
+      { path: '', component: UserListComponent },
       { path: 'userdetail', component: UserDetailComponent },
     ]
   },
