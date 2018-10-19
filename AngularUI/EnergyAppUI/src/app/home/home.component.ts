@@ -14,13 +14,13 @@ export class HomeComponent implements OnInit {
   constructor(private userService: UserService, private userShared: UserShared) { }
 
   private loadUser() {
-    this.userService.getAll()
-      .pipe(first())
-      .subscribe(
-        users => {
-          console.log("Home - ");
-          console.log(users);
-        });
+    //this.userService.getAll()
+    //  .pipe(first())
+    //  .subscribe(
+    //    users => {
+    //      console.log("Home - ");
+    //      console.log(users);
+    //    });
   }
 
   ngOnInit(): void {

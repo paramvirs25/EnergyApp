@@ -6,18 +6,19 @@ using WebApi.Helpers;
 using AutoMapper;
 using WebApi.Models;
 using DAL.Entities;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Services
 {
     public interface IUserService
     {
-        UserDetailsModel Authenticate(string username, string password);
-        IEnumerable<UserDetailsModel> GetAll();
-        UserDetailsModel GetById(int id);
-        UserModel Create(UserModel user);
-        void Update(UserModel user, string password = null);
-        void Delete(int id);
+        Task<UserDetailsModel> Authenticate(string username, string password);
+        Task<IEnumerable<UserDetailsModel>> GetAll();
+        Task<UserDetailsModel> GetById(int id);
+        //UserModel Create(UserModel user);
+        //void Update(UserModel user, string password = null);
+        //void Delete(int id);
     }
 
     public class UserService : IUserService
@@ -33,12 +34,13 @@ namespace WebApi.Services
             _mapper = mapper;
         }
 
-        public UserDetailsModel Authenticate(string username, string password)
+        public async Task<UserDetailsModel> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.UsersTbl.SingleOrDefault(x => x.Username == username && x.Password == password);
+            //Verify username and password
+            var user = await _context.UsersTbl.SingleOrDefaultAsync(x => x.Username == username && x.Password == password);
 
             // check if username exists
             if (user == null)
@@ -48,7 +50,8 @@ namespace WebApi.Services
             else
             {
                 // authentication successful
-                return MapFromDAL(_context.UserDetailsTbl.SingleOrDefault(x => x.UserId == user.UserId));
+                var userDetails = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == user.UserId);
+                return MapFromDAL(userDetails);
             }
                 
 
@@ -57,28 +60,7 @@ namespace WebApi.Services
             //    return null;
         }
 
-        public UserModel Create(UserModel userModel)
-        {
-            // validation
-            if (string.IsNullOrWhiteSpace(userModel.Username) || string.IsNullOrWhiteSpace(userModel.Password))
-                throw new AppException("Username and Password are required");
-
-            if (_context.UsersTbl.Any(x => x.Username == userModel.Username))
-                throw new AppException("Username \"" + userModel.Username + "\" is already taken");
-
-            //byte[] passwordHash, passwordSalt;
-            //CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-            //user.PasswordHash = passwordHash;
-            //user.PasswordSalt = passwordSalt;
-
-            _context.UsersTbl.Add(_mapper.Map<UsersTbl>(userModel));
-            _context.SaveChanges();
-
-            return _mapper.Map<UserModel>(_context.UsersTbl.SingleOrDefault(x => x.Username == userModel.Username));
-        }
-
-        public IEnumerable<UserDetailsModel> GetAll()
+        public async Task<IEnumerable<UserDetailsModel>> GetAll()
         {
             //Mapper.CreateMap<Student, StudentAddressDetails>();
 
@@ -90,57 +72,77 @@ namespace WebApi.Services
             //List<UserDetailsTbl> ud = _context.UserDetailsTbl.ToList<UserDetailsTbl>();
 
             //return _mapper.Map<List<UserModel>>(ud);
-
-            return MapFromDAL(_context.UserDetailsTbl.ToList());
+            return MapFromDAL(await _context.UserDetailsTbl.ToListAsync());
         }
 
-        public UserDetailsModel GetById(int id)
+        public async Task<UserDetailsModel> GetById(int id)
         {
-            return _mapper.Map<UserDetailsModel>(_context.UserDetailsTbl.Find(id));
+            return _mapper.Map<UserDetailsModel>(await _context.UserDetailsTbl.FindAsync(id));
         }
 
-        public void Update(UserModel userParam, string password = null)
-        {
-            var user = _context.UsersTbl.Find(userParam.UserId);
+        //public UserModel Create(UserModel userModel)
+        //{
+        //    // validation
+        //    if (string.IsNullOrWhiteSpace(userModel.Username) || string.IsNullOrWhiteSpace(userModel.Password))
+        //        throw new AppException("Username and Password are required");
 
-            if (user == null)
-                throw new AppException("User not found");
+        //    if (_context.UsersTbl.Any(x => x.Username == userModel.Username))
+        //        throw new AppException("Username \"" + userModel.Username + "\" is already taken");
 
-            if (userParam.Username != user.Username)
-            {
-                // username has changed so check if the new username is already taken
-                if (_context.UsersTbl.Any(x => x.Username == userParam.Username))
-                    throw new AppException("Username " + userParam.Username + " is already taken");
-            }
+        //    //byte[] passwordHash, passwordSalt;
+        //    //CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-            // update user properties
-            //user.FirstName = userParam.FirstName;
-            //user.LastName = userParam.LastName;
-            //user.Username = userParam.Username;
+        //    //user.PasswordHash = passwordHash;
+        //    //user.PasswordSalt = passwordSalt;
 
-            // update password if it was entered
-            //if (!string.IsNullOrWhiteSpace(password))
-            //{
-            //    byte[] passwordHash, passwordSalt;
-            //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
+        //    _context.UsersTbl.Add(_mapper.Map<UsersTbl>(userModel));
+        //    _context.SaveChanges();
 
-            //    user.PasswordHash = passwordHash;
-            //    user.PasswordSalt = passwordSalt;
-            //}
+        //    return _mapper.Map<UserModel>(_context.UsersTbl.SingleOrDefault(x => x.Username == userModel.Username));
+        //}
 
-            _context.UsersTbl.Update(user);
-            _context.SaveChanges();
-        }
+        //public void Update(UserModel userParam, string password = null)
+        //{
+        //    var user = _context.UsersTbl.Find(userParam.UserId);
 
-        public void Delete(int id)
-        {
-            var user = _context.UsersTbl.Find(id);
-            if (user != null)
-            {
-                _context.UsersTbl.Remove(user);
-                _context.SaveChanges();
-            }
-        }
+        //    if (user == null)
+        //        throw new AppException("User not found");
+
+        //    if (userParam.Username != user.Username)
+        //    {
+        //        // username has changed so check if the new username is already taken
+        //        if (_context.UsersTbl.Any(x => x.Username == userParam.Username))
+        //            throw new AppException("Username " + userParam.Username + " is already taken");
+        //    }
+
+        //    // update user properties
+        //    //user.FirstName = userParam.FirstName;
+        //    //user.LastName = userParam.LastName;
+        //    //user.Username = userParam.Username;
+
+        //    // update password if it was entered
+        //    //if (!string.IsNullOrWhiteSpace(password))
+        //    //{
+        //    //    byte[] passwordHash, passwordSalt;
+        //    //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
+
+        //    //    user.PasswordHash = passwordHash;
+        //    //    user.PasswordSalt = passwordSalt;
+        //    //}
+
+        //    _context.UsersTbl.Update(user);
+        //    _context.SaveChanges();
+        //}
+
+        //public void Delete(int id)
+        //{
+        //    var user = _context.UsersTbl.Find(id);
+        //    if (user != null)
+        //    {
+        //        _context.UsersTbl.Remove(user);
+        //        _context.SaveChanges();
+        //    }
+        //}
 
         public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
         {

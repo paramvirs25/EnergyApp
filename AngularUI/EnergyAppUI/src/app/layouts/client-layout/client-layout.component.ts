@@ -21,7 +21,7 @@ export class ClientLayoutComponent implements OnInit {
 
   private loadUser() {
     this.userService.getById(this.userShared.getLoggedInUser().userid)
-      .pipe(first())
+      //.pipe(first())
       .subscribe(
         user => {
           this.currentUser = user;
