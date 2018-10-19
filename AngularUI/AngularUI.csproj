@@ -7,13 +7,9 @@
 
   <ItemGroup>
     <Compile Remove="EnergyAppUI\e2e\**" />
-    <Compile Remove="EnergyAppUI\src\app\admin\**" />
     <Content Remove="EnergyAppUI\e2e\**" />
-    <Content Remove="EnergyAppUI\src\app\admin\**" />
     <EmbeddedResource Remove="EnergyAppUI\e2e\**" />
-    <EmbeddedResource Remove="EnergyAppUI\src\app\admin\**" />
     <None Remove="EnergyAppUI\e2e\**" />
-    <None Remove="EnergyAppUI\src\app\admin\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,13 +17,16 @@
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\admin-layout\admin-layout.component.css" />
     <None Remove="EnergyAppUI\src\app\layouts\admin-layout\admin-layout.component.spec.ts" />
-    <None Remove="EnergyAppUI\src\app\layouts\home-layout\home-layout.component.css" />
-    <None Remove="EnergyAppUI\src\app\layouts\home-layout\home-layout.component.spec.ts" />
+    <None Remove="EnergyAppUI\src\app\layouts\client-layout\client-layout.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\login-layout\login-layout.component.spec.ts" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EnergyAppUI\src\app\admin\" />
   </ItemGroup>
 
 </Project>

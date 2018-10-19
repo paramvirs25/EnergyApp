@@ -29,9 +29,11 @@ import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { DashboardComponent } from './dashboard';
-import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
 import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
+import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
+import { UserListComponent } from './admin/user-list/user-list.component';
+import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 
 
 @NgModule({
@@ -41,7 +43,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
     MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
     MatTreeModule
   ],
-  declarations: [AdminLayoutComponent]
+  declarations: [UserListComponent, UserDetailComponent]
 })
 export class AngularMaterialModule { }
 
@@ -62,12 +64,13 @@ export class AngularMaterialModule { }
   declarations: [
     AppComponent,
     AlertComponent,
+    LoginLayoutComponent,
+    AdminLayoutComponent,
+    ClientLayoutComponent,
     HomeComponent,
     LoginComponent,
     RegisterComponent,
-    DashboardComponent,
-    HomeLayoutComponent,
-    LoginLayoutComponent
+    DashboardComponent
   ],
   providers: [
     AuthGuard,
