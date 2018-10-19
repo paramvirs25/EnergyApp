@@ -31,7 +31,7 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Authenticates is username and password belongs to a valid user
+        /// Checks if username and password belongs to a valid user
         /// </summary>
         /// <remarks>
         /// Sample request:
@@ -69,42 +69,16 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Registers a user if it already doesnot exits
-        /// </summary>
-        /// <param name="userModel"></param>
-        /// <returns></returns>
-        /// <response code="200">If Registratin succeeds</response>
-        /// <response code="400">If registration failed</response> 
-        [AllowAnonymous]
-        [HttpPost("register")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public IActionResult Register([FromBody]UserModel userModel)
-        {
-            try
-            {
-                // save 
-                _userService.Create(userModel);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
-
-        /// <summary>
         /// Gets a list of all users
         /// </summary>
         /// <returns>Gets a list of all users</returns>
-        [Authorize(Policy = Policies.AgentsAndAbove)]
+        [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpGet]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
             //var users = _userService.GetAll();
             //var userDtos = _mapper.Map<IList<UserModel>>(users);
-            return Ok(_userService.GetAll());
+            return Ok(await _userService.GetAll());
         }
 
         /// <summary>
@@ -113,37 +87,62 @@ namespace WebApi.Controllers
         /// <param name="id">Id of user to find</param>
         /// <returns>Returns User</returns>
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var user = _userService.GetById(id);
-            return Ok(user);
+            return Ok(await _userService.GetById(id));
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Update(int id, [FromBody]UserModel userDto)
-        {
-            // map dto to entity and set id
-            //var user = _mapper.Map<UsersTbl>(userDto);
-            //user.UserId = id;
+        //[HttpPut("{id}")]
+        //public IActionResult Update(int id, [FromBody]UserModel userDto)
+        //{
+        //    // map dto to entity and set id
+        //    //var user = _mapper.Map<UsersTbl>(userDto);
+        //    //user.UserId = id;
 
-            try
-            {
-                // save 
-                _userService.Update(userDto, userDto.Password);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
-        }
+        //    try
+        //    {
+        //        // save 
+        //        _userService.Update(userDto, userDto.Password);
+        //        return Ok();
+        //    }
+        //    catch (AppException ex)
+        //    {
+        //        // return error message if there was an exception
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
 
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
-        {
-            _userService.Delete(id);
-            return Ok();
-        }
+        //[HttpDelete("{id}")]
+        //public IActionResult Delete(int id)
+        //{
+        //    _userService.Delete(id);
+        //    return Ok();
+        //}
+
+        /// <summary>
+        /// Registers a user if it already doesnot exits
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        /// <response code="200">If Registratin succeeds</response>
+        /// <response code="400">If registration failed</response> 
+        //[AllowAnonymous]
+        //[HttpPost("register")]
+        //[ProducesResponseType(200)]
+        //[ProducesResponseType(400)]
+        //public IActionResult Register([FromBody]UserModel userModel)
+        //{
+        //    try
+        //    {
+        //        // save 
+        //        _userService.Create(userModel);
+        //        return Ok();
+        //    }
+        //    catch (AppException ex)
+        //    {
+        //        // return error message if there was an exception
+        //        return BadRequest(new { message = ex.Message });
+        //    }
+        //}
     }
 }
