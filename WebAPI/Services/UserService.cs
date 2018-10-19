@@ -6,13 +6,14 @@ using WebApi.Helpers;
 using AutoMapper;
 using WebApi.Models;
 using DAL.Entities;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
 namespace WebApi.Services
 {
     public interface IUserService
     {
-        UserDetailsModel Authenticate(string username, string password);
+        Task<UserDetailsModel> Authenticate(string username, string password);
         IEnumerable<UserDetailsModel> GetAll();
         UserDetailsModel GetById(int id);
         UserModel Create(UserModel user);
@@ -33,12 +34,13 @@ namespace WebApi.Services
             _mapper = mapper;
         }
 
-        public UserDetailsModel Authenticate(string username, string password)
+        public async Task<UserDetailsModel> Authenticate(string username, string password)
         {
             if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
                 return null;
 
-            var user = _context.UsersTbl.SingleOrDefault(x => x.Username == username && x.Password == password);
+            //Verify username and password
+            var user = await _context.UsersTbl.SingleOrDefaultAsync(x => x.Username == username && x.Password == password);
 
             // check if username exists
             if (user == null)
@@ -48,7 +50,8 @@ namespace WebApi.Services
             else
             {
                 // authentication successful
-                return MapFromDAL(_context.UserDetailsTbl.SingleOrDefault(x => x.UserId == user.UserId));
+                var userDetails = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == user.UserId);
+                return MapFromDAL(userDetails);
             }
                 
 

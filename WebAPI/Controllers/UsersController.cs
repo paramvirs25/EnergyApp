@@ -7,6 +7,7 @@ using WebApi.Helpers;
 using WebApi.Models;
 using WebApi.Services;
 using WebApi.Helpers.Authorization;
+using System.Threading.Tasks;
 
 namespace WebApi.Controllers
 {
@@ -50,9 +51,9 @@ namespace WebApi.Controllers
         [HttpPost("authenticate")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Authenticate([FromBody]UserModel userModel)
+        public async Task<IActionResult> Authenticate([FromBody]UserModel userModel)
         {
-            var user = _userService.Authenticate(userModel.Username, userModel.Password);
+            var user = await _userService.Authenticate(userModel.Username, userModel.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
