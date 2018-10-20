@@ -74,7 +74,17 @@ export class UserListComponent implements OnInit {
     //    })
     //  ).subscribe(data => this.data = data);
   }
+
+    //applyFilter(filterValue: string) {
+    //    this.data.filter = filterValue.trim().toLowerCase();
+
+    //    if (this.data.paginator) {
+    //        this.data.paginator.firstPage();
+    //    }
+    //}
 }
+
+
 
 export class UserDataSource extends DataSource<any> {
   constructor(private userService: UserService) {
