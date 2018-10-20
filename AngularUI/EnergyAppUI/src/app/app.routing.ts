@@ -14,15 +14,15 @@ import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 
 const appRoutes: Routes = [
-  // {
-  //  path: '',
-  //  component: ClientLayoutComponent,
-  //  canActivate: [AuthGuard],
-  //  children: [
-  //    { path: '', component: HomeComponent },
-  //    { path: 'dashboard', component: DashboardComponent }
-  //  ]
-  //},
+   {
+    path: '',
+    component: ClientLayoutComponent,
+    canActivate: [AuthGuard],
+    children: [
+      { path: '', component: HomeComponent },
+      { path: 'dashboard', component: DashboardComponent }
+    ]
+  },
   {
     path: '',
     component: AdminLayoutComponent,

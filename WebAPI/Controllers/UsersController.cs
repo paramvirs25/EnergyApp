@@ -82,10 +82,24 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
+        /// Get logged in user
+        /// </summary>
+        /// <returns>Returns details of logged in user</returns>
+        [Authorize(Policy = Policies.AgentsAndAbove)]
+        [Route("GetLoggedIn")]
+        [HttpGet]
+        public async Task<IActionResult> GetLoggedIn()
+        {
+            var userId = int.Parse(HttpContext.User.Identity.Name);
+            return Ok(await _userService.GetById(userId));
+        }
+
+        /// <summary>
         /// Gets user by Id
         /// </summary>
         /// <param name="id">Id of user to find</param>
         /// <returns>Returns User</returns>
+        [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {

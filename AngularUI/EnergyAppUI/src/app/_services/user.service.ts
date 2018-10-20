@@ -19,6 +19,10 @@ export class UserService {
       return this.http.get<User>(`${environment.apiUrl}/users/` + id);
     }
 
+    getLoggedIn(): Observable<User> {
+        return this.http.get<User>(`${environment.apiUrl}/users/GetLoggedIn/`);
+    }
+
     register(user: User) {
         return this.http.post(`${environment.apiUrl}/users/register`, user);
     }

@@ -14,21 +14,26 @@ export class ErrorInterceptor implements HttpInterceptor {
 
     /*
      * Following error objects can be expected
-     * HttpErrorResponse{ProgressEvent, HttpHeaders, message, name: "HttpErrorResponse", ok: false, status: 0, statusText: "Unknown Error"}
+     * HttpErrorResponse{name: "HttpErrorResponse", ok: false, status: 0, statusText: "Unknown Error", message}
+     * HttpErrorResponse{name: "HttpErrorResponse", ok: false, status: 404, statusText: "Not Found", message: "Http failure response for {URL} 404 Not Found"}
     **/
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         return next.handle(request).pipe(catchError(err => {
-            if (err.status === 0) { //"Unknown Error"
+            switch (err.status) { //"Unknown Error"
+                case 0:
+                case 404:
                 this.alertService.error(`${err.name} - ${err.message}`);
             }
+
+            console.log(err);
             //if (err.status === 401) {
             //    // auto logout if 401 response returned from api
             //    this.authenticationService.logout();
             //    location.reload(true);
             //}
-
-            const error = err.error.message || err.statusText;
+            //err.error.message
+            const error = err.message || err.statusText;
 
             return throwError(error);
         }));
