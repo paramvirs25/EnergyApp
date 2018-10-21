@@ -10,22 +10,22 @@ import { DashboardComponent } from './dashboard';
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 
-import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
+import { AppComponent } from './app.component';
 
 const appRoutes: Routes = [
-    { path: '', redirectTo: '/login', pathMatch: 'full' },
+    { path: '', redirectTo: ('/' + AppConstants.clientLoginComponentPath), pathMatch: 'full' },
     {
         path: '',
         component: AdminLayoutComponent,
         canActivate: [AuthGuard, AdminGuard],
         children: [
-            //{ path: '', component: UserListComponent },
-            { path: 'userlist', component: UserListComponent },
-            { path: 'userdetail', component: UserDetailComponent }
+            { path: AppConstants.userListComponentPath, component: UserListComponent },
+            { path: AppConstants.userDetailComponentPath, component: UserDetailComponent }
         ]
     },
     {
@@ -33,17 +33,15 @@ const appRoutes: Routes = [
         component: ClientLayoutComponent,
         canActivate: [AuthGuard],
         children: [
-            //{ path: '', component: HomeComponent },
-            { path: 'home', component: HomeComponent },
-            { path: 'dashboard', component: DashboardComponent }
+            { path: AppConstants.homeComponentPath, component: HomeComponent },
+            { path: AppConstants.dashboardComponentPath, component: DashboardComponent }
         ]
     },
     {
         path: '',
-        component: LoginLayoutComponent,
+        component: ClientLoginLayoutComponent,
         children: [
-            //{ path: '', component: LoginComponent },
-            { path: 'login', component: LoginComponent }
+            { path: AppConstants.clientLoginComponentPath, component: LoginComponent }
             //,{ path: 'register', component: RegisterComponent }
         ]
     },

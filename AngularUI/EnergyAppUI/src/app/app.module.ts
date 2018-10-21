@@ -32,12 +32,12 @@ import { HomeComponent } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { DashboardComponent } from './dashboard';
-import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
+import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
 
 
 @NgModule({
@@ -47,7 +47,8 @@ import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-lo
     MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule,
     MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
     MatTreeModule
-  ]
+  ],
+  declarations: []
 })
 export class AngularMaterialModule { }
 
@@ -67,11 +68,11 @@ export class AngularMaterialModule { }
     ],
     declarations: [
         AppComponent,
-        AlertComponent,
-        LoginLayoutComponent,
+        AlertComponent,        
+        AdminLoginLayoutComponent,
+        ClientLoginLayoutComponent,
         AdminLayoutComponent,
         ClientLayoutComponent,
-        AdminLoginLayoutComponent,
         HomeComponent,
         LoginComponent,
         RegisterComponent,

@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 import { User } from '../../_models';
 import { UserService } from '../../_services';
 import { UserShared } from '../../_shared';
+import { AppConstants } from '../../app.constant';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,7 +16,7 @@ export class AdminLayoutComponent implements OnInit {
 
   currentUser: User;
 
-  constructor(private userService: UserService, private userShared: UserShared) { }
+  constructor(private userService: UserService, private router: Router, private userShared: UserShared) { }
 
   ngOnInit() {
     this.loadUser();
@@ -27,5 +29,14 @@ export class AdminLayoutComponent implements OnInit {
         user => {
           this.currentUser = user;
         });
-  }
+    }
+
+    // Go To User List Page
+    goUserListPage() {
+        this.router.navigate(['/', AppConstants.userListComponentPath]);
+    }
+    // Go To Admin Login Page
+    goAdminLoginPage() {
+        this.router.navigate(['/', AppConstants.adminLoginComponentPath]);
+    }
 }

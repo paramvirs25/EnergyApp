@@ -1,8 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
+import { Router } from '@angular/router';
 
 import { UserService } from '../../_services';
 import { User } from '../../_models';
+import { AppConstants } from '../../app.constant';
 
 @Component({
     selector: 'app-user-list',
@@ -19,7 +21,7 @@ export class UserListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor( private userService: UserService) { }
+    constructor(private userService: UserService, private router: Router) { }
 
     ngOnInit() {
 
@@ -35,6 +37,11 @@ export class UserListComponent implements OnInit {
     // Search Users
     applyFilter(filterValue: string) {
         this.gridDataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    // Go To Add Users
+    goAddUserDetails() {
+        this.router.navigate(['/', AppConstants.userDetailComponentPath]);
     }
 }
 
