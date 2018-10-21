@@ -1,19 +1,23 @@
 /* Structure */
-.example-container {
+.users-list-container {
   position: relative;
 }
 
-.example-table-container {
+.users-list-table-container {
   position: relative;
   max-height: 400px;
   overflow: auto;
 }
 
-table {
-  width: 100%;
+#tblUserList {
+    width: 100%;
+}
+#tblUserList th {
+    font:bold 14px arial;
+    background-color: lightgray;
 }
 
-.example-loading-shade {
+.users-list-loading-shade {
   position: absolute;
   top: 0;
   left: 0;
@@ -26,7 +30,7 @@ table {
   justify-content: center;
 }
 
-.example-rate-limit-reached {
+.users-list-rate-limit-reached {
   color: #980000;
   max-width: 360px;
   text-align: center;
