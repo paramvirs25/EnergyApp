@@ -53,17 +53,23 @@ namespace WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Authenticate([FromBody]UserModel userModel)
         {
-            var user = await _userService.Authenticate(userModel.Username, userModel.Password);
-
-            if (user == null)
+            var userDetails = await _userService.Authenticate(userModel.Username, userModel.Password);
+            if (userDetails == null)
+            {
                 return BadRequest(new { message = "Username or password is incorrect" });
+            }
+            //if admin role is to be verified and user is non-admin
+            if (userModel.CheckAdminRole && userDetails.RoleId < Role.RoleId.Admin)
+            {
+                return BadRequest(new { message = "User not authorized to access admin area" });
+            }
 
-            string tokenString = JWTAuthentication.GetToken(user, _appSettings.Secret);
+            string tokenString = JWTAuthentication.GetToken(userDetails, _appSettings.Secret);
 
             // return basic user info (without password) and token to store client side
             return Ok(new
             {
-                userid = user.UserId,
+                userid = userDetails.UserId,
                 token = tokenString
             });
         }

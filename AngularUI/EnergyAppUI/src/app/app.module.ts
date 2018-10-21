@@ -23,7 +23,7 @@ import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
 
 import { AlertComponent } from './_directives';
-import { AuthGuard } from './_guards';
+import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { AlertService, AuthenticationService, UserService } from './_services';
 import { UserShared } from './_shared';
@@ -37,6 +37,7 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
+import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 
 
 @NgModule({
@@ -51,44 +52,46 @@ import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 export class AngularMaterialModule { }
 
 @NgModule({
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    HttpClientModule,
-    AngularMaterialModule,
-    ReactiveFormsModule,
-    routing,
-    FontAwesomeModule,
-    BsDropdownModule.forRoot(),
-    TooltipModule.forRoot(),
-    ModalModule.forRoot()
-  ],
-  declarations: [
-    AppComponent,
-    AlertComponent,
-    LoginLayoutComponent,
-    AdminLayoutComponent,
-    ClientLayoutComponent,
-    HomeComponent,
-    LoginComponent,
-    RegisterComponent,
-    DashboardComponent,
-    UserListComponent,
-    UserDetailComponent
-  ],
-  providers: [
-    AuthGuard,
-    AlertService,
-    AuthenticationService,
-    UserService,
-    UserShared,
-    { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
-  ],
-  entryComponents: [UserListComponent],
-  exports: [BsDropdownModule, TooltipModule, ModalModule],
-  bootstrap: [AppComponent]
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        FormsModule,
+        HttpClientModule,
+        AngularMaterialModule,
+        ReactiveFormsModule,
+        routing,
+        FontAwesomeModule,
+        BsDropdownModule.forRoot(),
+        TooltipModule.forRoot(),
+        ModalModule.forRoot()
+    ],
+    declarations: [
+        AppComponent,
+        AlertComponent,
+        LoginLayoutComponent,
+        AdminLayoutComponent,
+        ClientLayoutComponent,
+        AdminLoginLayoutComponent,
+        HomeComponent,
+        LoginComponent,
+        RegisterComponent,
+        DashboardComponent,
+        UserListComponent,
+        UserDetailComponent
+    ],
+    providers: [
+        AuthGuard,
+        AdminGuard,
+        AlertService,
+        AuthenticationService,
+        UserService,
+        UserShared,
+        { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+    ],
+    entryComponents: [UserListComponent],
+    exports: [BsDropdownModule, TooltipModule, ModalModule],
+    bootstrap: [AppComponent]
 })
 
 export class AppModule { }
