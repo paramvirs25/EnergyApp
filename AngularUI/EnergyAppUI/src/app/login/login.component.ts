@@ -4,6 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AlertService, AuthenticationService } from '../_services';
+import { UserShared } from '../_shared';
+import { AppConstants } from '../app.constant';
 
 @Component({ templateUrl: 'login.component.html' })
 export class LoginComponent implements OnInit {
@@ -11,12 +13,14 @@ export class LoginComponent implements OnInit {
     loading = false;
     submitted = false;
     returnUrl: string;
+    isAdminMode = false;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private authenticationService: AuthenticationService,
+        private userShared: UserShared,
         private alertService: AlertService) { }
 
     ngOnInit() {
@@ -28,8 +32,14 @@ export class LoginComponent implements OnInit {
         // reset login status
         this.authenticationService.logout();
 
+        this.isAdminMode = this.route.snapshot.routeConfig.path == AppConstants.adminLoginComponentPath;
+
         // get return url from route parameters or default to '/'
-        this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+        //this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
+        //console.log(this.returnUrl);
+        if (this.returnUrl == undefined || this.returnUrl == "/" || this.returnUrl == "") {
+            this.returnUrl = this.isAdminMode ? "userlist" : "home";
+        }//this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
     // convenience getter for easy access to form fields
@@ -44,10 +54,14 @@ export class LoginComponent implements OnInit {
         }
 
         this.loading = true;
-        this.authenticationService.login(this.f.username.value, this.f.password.value)
+        this.authenticationService.login(this.f.username.value, this.f.password.value, this.isAdminMode)
             .pipe(first())
             .subscribe(
                 data => {
+                    //set true if user logged in from admin screen
+                    this.userShared.setAdminLoginFlag(this.isAdminMode);
+
+                    //console.log(this.returnUrl);
                     this.router.navigate([this.returnUrl]);
                 },
                 error => {

@@ -18,8 +18,10 @@
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.css" />
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\admin-layout\admin-layout.component.spec.ts" />
+    <None Remove="EnergyAppUI\src\app\layouts\admin-login-layout\admin-login-layout.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\client-layout\client-layout.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\layouts\login-layout\login-layout.component.spec.ts" />
+    <None Remove="EnergyAppUI\src\app\_guards\admin.guard.spec.ts" />
   </ItemGroup>
 
   <ItemGroup>

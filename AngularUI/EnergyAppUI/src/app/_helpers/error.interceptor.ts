@@ -20,11 +20,11 @@ export class ErrorInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
 
         return next.handle(request).pipe(catchError(err => {
-            switch (err.status) { //"Unknown Error"
-                case 0:
-                case 404:
-                this.alertService.error(`${err.name} - ${err.message}`);
-            }
+            //switch (err.status) { //"Unknown Error"
+            //    case 0:
+            //    case 404:
+            //    this.alertService.error(`${err.name} - ${err.message}`);
+            //}
 
             console.log(err);
             //if (err.status === 401) {
@@ -32,8 +32,16 @@ export class ErrorInterceptor implements HttpInterceptor {
             //    this.authenticationService.logout();
             //    location.reload(true);
             //}
+
             //err.error.message
-            const error = err.message || err.statusText;
+            let error:string = "";
+            if (err.error && err.error.message != undefined) {
+                error = err.error.message;
+                this.alertService.error(`${error}`);
+            }
+            else {
+                error = err.message || err.statusText;
+            }
 
             return throwError(error);
         }));
