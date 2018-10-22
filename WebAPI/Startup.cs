@@ -52,6 +52,7 @@ namespace WebApi
             // configure DI for application services
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserTypeService, UserTypeService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
