@@ -25,7 +25,7 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { AlertComponent } from './_directives';
 import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { AlertService, AuthenticationService, UserService } from './_services';
+import { AlertService, AuthenticationService, UserService, RolesService } from './_services';
 import { UserShared } from './_shared';
 
 import { HomeComponent } from './home';
@@ -38,6 +38,7 @@ import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
+import { Roles } from './_models';
 
 
 @NgModule({
@@ -86,6 +87,7 @@ export class AngularMaterialModule { }
         AlertService,
         AuthenticationService,
         UserService,
+        RolesService,
         UserShared,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }

@@ -26,16 +26,17 @@
         <div class="form-group row">
             <label class="col-sm-2 col-form-label">Role</label>
             <div class="col-sm-3">
-                <select class="form-control" id="ddRoles">
-                    <option>1</option>
-                    <option>2</option>
+                <select class="form-control" name="Role"
+                        [(ngModel)]="selectedRole">
+                    <option *ngFor="let op of roleOptions" [value]="op.roleId">
+                        {{op.roleDisplayName}}
+                    </option>
                 </select>
             </div>
             <label class="col-sm-2 col-form-label">User Type</label>
             <div class="col-sm-3">
-                <select class="form-control" id="ddUserType">
-                    <option>1</option>
-                    <option>2</option>
+                <select class="form-control" name="UserType">
+                    
                 </select>
             </div>
         </div>
