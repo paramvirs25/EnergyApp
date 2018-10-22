@@ -14,7 +14,6 @@ namespace DAL.Entities
 
         public RolesTbl Role { get; set; }
         public UsersTbl User { get; set; }
-        public UsersTbl UserType { get; set; }
-        public UserTypesTbl UserTypeNavigation { get; set; }
+        public UserTypesTbl UserType { get; set; }
     }
 }

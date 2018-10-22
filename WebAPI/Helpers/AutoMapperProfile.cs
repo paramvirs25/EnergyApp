@@ -12,6 +12,12 @@ namespace WebApi.Helpers
             CreateMap<UsersTbl, UserModel>();
             CreateMap<UserModel, UsersTbl>();
 
+            CreateMap<RolesTbl, RoleModel>();
+            CreateMap<RoleModel, RolesTbl>();
+
+            CreateMap<UserTypesTbl, UserTypesModel>();
+            CreateMap<UserTypesModel, UserTypesTbl>();
+
             CreateMap<UserDetailsTbl, UserDetailsModel>();
             CreateMap<UserDetailsModel, UserDetailsTbl>();
                 //.ForMember(dest => dest.Role, opt => opt.Ignore())

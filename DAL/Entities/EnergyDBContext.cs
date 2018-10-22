@@ -27,7 +27,7 @@ namespace DAL.Entities
 //            if (!optionsBuilder.IsConfigured)
 //            {
 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-//                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=EnergyDB;User ID=psingh;Password=psingh;");
+//                optionsBuilder.UseSqlServer("Server=.\\SQLExpress;Database=EnergyDB;Trusted_Connection=True;");
 //            }
 //        }
 
@@ -53,6 +53,11 @@ namespace DAL.Entities
                 entity.HasKey(e => e.RoleId);
 
                 entity.Property(e => e.RoleId).ValueGeneratedNever();
+
+                entity.Property(e => e.RoleDisplayName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
                 entity.Property(e => e.RoleName)
                     .IsRequired()
@@ -83,7 +88,7 @@ namespace DAL.Entities
 
                 entity.Property(e => e.UserId).ValueGeneratedNever();
 
-                entity.Property(e => e.UserEmail).HasMaxLength(10);
+                entity.Property(e => e.UserEmail).HasMaxLength(50);
 
                 entity.Property(e => e.UserFirstName)
                     .IsRequired()
@@ -98,18 +103,12 @@ namespace DAL.Entities
                     .HasConstraintName("FK_Role_UserDetails");
 
                 entity.HasOne(d => d.User)
-                    .WithOne(p => p.UserDetailsTblUser)
+                    .WithOne(p => p.UserDetailsTbl)
                     .HasForeignKey<UserDetailsTbl>(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_User_UserDetails");
 
                 entity.HasOne(d => d.UserType)
-                    .WithMany(p => p.UserDetailsTblUserType)
-                    .HasForeignKey(d => d.UserTypeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserDetai__UserT__412EB0B6");
-
-                entity.HasOne(d => d.UserTypeNavigation)
                     .WithMany(p => p.UserDetailsTbl)
                     .HasForeignKey(d => d.UserTypeId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -136,6 +135,10 @@ namespace DAL.Entities
                 entity.HasKey(e => e.UserTypeId);
 
                 entity.Property(e => e.UserTypeId).ValueGeneratedNever();
+
+                entity.Property(e => e.UserTypeDisplayName)
+                    .IsRequired()
+                    .HasMaxLength(50);
 
                 entity.Property(e => e.UserTypeName)
                     .IsRequired()

@@ -11,6 +11,7 @@ namespace DAL.Entities
         }
 
         public int UserTypeId { get; set; }
+        public string UserTypeDisplayName { get; set; }
         public string UserTypeName { get; set; }
 
         public ICollection<UserDetailsTbl> UserDetailsTbl { get; set; }
