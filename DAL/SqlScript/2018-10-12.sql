@@ -66,6 +66,7 @@ GO
 
 CREATE TABLE [dbo].[RolesTbl](
 	[RoleId] [int] NOT NULL,
+	[RoleDisplayName] [varchar](50) NOT NULL,
 	[RoleName] [varchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
@@ -145,6 +146,7 @@ GO
 
 CREATE TABLE [dbo].[UserTypesTbl](
 	[UserTypeId] [int] NOT NULL,
+	[UserTypeDisplayName] [nvarchar](50) NOT NULL,
 	[UserTypeName] [nvarchar](50) NOT NULL,
 PRIMARY KEY CLUSTERED 
 (

@@ -9,15 +9,15 @@ Delete from [RolesTbl]
 Go
 
 --Roles
-INSERT [dbo].[RolesTbl] ([RoleId], [RoleName]) VALUES (100, N'Agent')
+INSERT [dbo].[RolesTbl] ([RoleId], RoleDisplayName, [RoleName]) VALUES (100, N'Agent', N'Agent')
 GO
-INSERT [dbo].[RolesTbl] ([RoleId], [RoleName]) VALUES (200, N'Admin')
+INSERT [dbo].[RolesTbl] ([RoleId], RoleDisplayName, [RoleName]) VALUES (200, N'Admin', N'Admin')
 GO
-INSERT [dbo].[RolesTbl] ([RoleId], [RoleName]) VALUES (300, N'SuperAdmin')
+INSERT [dbo].[RolesTbl] ([RoleId], RoleDisplayName, [RoleName]) VALUES (300, N'Super Admin', N'SuperAdmin')
 GO
 
 
-INSERT [dbo].[UserTypesTbl] ([UserTypeId], [UserTypeName]) VALUES (1, N'NormalAgent')
+INSERT [dbo].[UserTypesTbl] ([UserTypeId], UserTypeDisplayName, [UserTypeName]) VALUES (1, N'Normal Agent', N'NormalAgent')
 GO
 
 --UsersTbl

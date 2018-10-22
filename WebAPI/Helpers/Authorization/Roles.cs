@@ -6,13 +6,6 @@ namespace WebApi.Helpers.Authorization
 {
     public class Role
     {
-        public class RoleName
-        {
-            public const string Agent = "Agent";
-            public const string Admin = "Admin";
-            public const string SuperAdmin = "SuperAdmin";
-        }
-
         public class RoleId
         {
             public const int Agent = 100;
@@ -20,13 +13,27 @@ namespace WebApi.Helpers.Authorization
             public const int SuperAdmin = 300;
         }
 
+        public class RoleDisplayName
+        {
+            public const string Agent = "Agent";
+            public const string Admin = "Admin";
+            public const string SuperAdmin = "Super Admin";
+        }
+
+        public class RoleName
+        {
+            public const string Agent = "Agent";
+            public const string Admin = "Admin";
+            public const string SuperAdmin = "SuperAdmin";
+        }
+
         public static List<RoleModel> GetAllRoles()
         {
             List<RoleModel> roles = new List<RoleModel>
             {
-                new RoleModel() { RoleId = RoleId.Agent, RoleName = RoleName.Agent },
-                new RoleModel() { RoleId = RoleId.Admin, RoleName = RoleName.Admin },
-                new RoleModel() { RoleId = RoleId.SuperAdmin, RoleName = RoleName.SuperAdmin }
+                new RoleModel() { RoleId = RoleId.Agent, RoleDisplayName=RoleDisplayName.Agent, RoleName = RoleName.Agent },
+                new RoleModel() { RoleId = RoleId.Admin, RoleDisplayName=RoleDisplayName.Admin, RoleName = RoleName.Admin },
+                new RoleModel() { RoleId = RoleId.SuperAdmin, RoleDisplayName=RoleDisplayName.SuperAdmin, RoleName = RoleName.SuperAdmin }
             };
 
             return roles;

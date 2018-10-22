@@ -11,6 +11,7 @@ namespace DAL.Entities
         }
 
         public int RoleId { get; set; }
+        public string RoleDisplayName { get; set; }
         public string RoleName { get; set; }
 
         public ICollection<UserDetailsTbl> UserDetailsTbl { get; set; }
