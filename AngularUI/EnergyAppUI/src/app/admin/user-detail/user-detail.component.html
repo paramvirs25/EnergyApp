@@ -1,14 +1,56 @@
-<form>
-    <div class="form-group row">
-        <label class="col-sm-2 col-form-label">Email</label>
-        <div class="col-sm-10">
-            <p class="form-control-static">email@example.com</p>
+<h3 class="headerLogin "><label>lblAddEdit</label> User Details</h3>
+<div class="padAll20 padT30">
+    <form>
+        <div class="form-group row">
+            <label class="col-sm-2 ">UserId</label>
+            <span class="col-sm-6 ">lblUserId</span>
         </div>
-    </div>
-    <div class="form-group row">
-        <label for="inputPassword" class="col-sm-1 col-form-label">Password</label>
-        <div class="col-sm-6">
-            <input type="password" class="form-control" id="inputPassword" placeholder="Password">
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">First Name</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="txtFirstName" required>
+            </div>
         </div>
-    </div>
-</form>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Last Name</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="txtLastName" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Email</label>
+            <div class="col-sm-6">
+                <input class="form-control" id="txtEmail" required>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-sm-2 col-form-label">Role</label>
+            <div class="col-sm-3">
+                <select class="form-control" id="ddRoles">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+            <label class="col-sm-2 col-form-label">User Type</label>
+            <div class="col-sm-3">
+                <select class="form-control" id="ddUserType">
+                    <option>1</option>
+                    <option>2</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group row padT40">
+            <div class="col-sm-2">
+                <button id="btnSave" class="btn btn-secondary btn-block">
+                    Save
+                </button>
+            </div>
+            <div class="col-sm-2">
+                <button id="btnCancel" class="btn btn-secondary btn-block">
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
