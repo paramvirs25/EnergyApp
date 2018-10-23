@@ -15,6 +15,7 @@ export class UserListComponent implements OnInit {
 
     displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleId', 'userTypeId', 'actions'];
     gridDataSource: MatTableDataSource<UserDetails>;
+    users: UserDetails[] = [];
 
     isLoadingResults = true;
 
@@ -27,6 +28,7 @@ export class UserListComponent implements OnInit {
 
         this.userService.getAll().subscribe(userlist => {
             this.gridDataSource = new MatTableDataSource(userlist);
+            this.users = userlist;
             this.isLoadingResults = false;
 
             this.gridDataSource.sort = this.sort;

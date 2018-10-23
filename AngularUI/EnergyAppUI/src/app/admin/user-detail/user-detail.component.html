@@ -1,53 +1,83 @@
-<h3 class="headerLogin "><label>lblAddEdit</label> User Details</h3>
-<div class="padAll20 padT30">
+
+<div class="padAll10 ">
+    <h3 ><label>{{lblAddEditUser}}</label> User</h3>
     <form>
-        <div class="form-group row">
-            <label class="col-sm-2 ">UserId</label>
-            <span class="col-sm-6 ">lblUserId</span>
+        <div class="padT10">
+            <h5> Login Details </h5>
+            <hr />
         </div>
-        <div class="form-group row">
+        <div class="form-group row padT10">
+            <label class="col-sm-2 col-form-label">User Name</label>
+            <div class="col-sm-5">
+                <input class="form-control" id="txtUserName" required>
+            </div>
+        </div>
+        <div class="form-group row padT10">
+            <label class="col-sm-2 col-form-label">Password</label>
+            <div class="col-sm-5">
+                <input class="form-control" id="txtPassword" type="password" required>
+            </div>
+        </div>
+        <div class="form-group row padT10">
+            <label class="col-sm-2 col-form-label">Confirm Password</label>
+            <div class="col-sm-5">
+                <input class="form-control" id="txtConfirmPassword" type="password" required>
+            </div>
+        </div>
+        <div class="padT10 ">
+            <h5 > User Details </h5>
+            <hr />
+        </div>
+        <div class="form-group row padT10" *ngIf="hasUserId">
+            <label class="col-sm-2 ">User Id</label>
+            <span class="col-sm-5 ">lblUserId</span>
+        </div>
+        <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">First Name</label>
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <input class="form-control" id="txtFirstName" required>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">Last Name</label>
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <input class="form-control" id="txtLastName" required>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-6">
+            <div class="col-sm-5">
                 <input class="form-control" id="txtEmail" required>
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">Role</label>
             <div class="col-sm-3">
-                <select class="form-control" name="Role"
-                        [(ngModel)]="selectedRole">
+                <select class="form-control" name="Role" [(ngModel)]="selectedRole">
                     <option *ngFor="let op of roleOptions" [value]="op.roleId">
                         {{op.roleDisplayName}}
                     </option>
                 </select>
             </div>
+        </div>
+        <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">User Type</label>
             <div class="col-sm-3">
-                <select class="form-control" name="UserType">
-                    
+                <select class="form-control" name="UserTypes" [(ngModel)]="selectedUserType">
+                    <option *ngFor="let op of userTypeOptions" [value]="op.userTypeId">
+                        {{op.userTypeDisplayName}}
+                    </option>
                 </select>
             </div>
         </div>
-        <div class="form-group row padT40">
+        <div class="form-group row padT40 ">
             <div class="col-sm-2">
-                <button id="btnSave" class="btn btn-secondary btn-block" (click)="save()">
+                <button id="btnSave" class="btn btn-dark btn-block" (click)="save()">
                     Save
                 </button>
             </div>
             <div class="col-sm-2">
-                <button id="btnCancel" class="btn btn-secondary btn-block">
+                <button id="btnCancel" class="btn btn-dark btn-block" (click)="goUserListPage()">
                     Cancel
                 </button>
             </div>

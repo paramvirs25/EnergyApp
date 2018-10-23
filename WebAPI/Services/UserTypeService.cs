@@ -1,8 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
-
-using WebApi.Helpers;
-
 using AutoMapper;
 using WebApi.Models;
 using DAL.Entities;
