@@ -142,27 +142,26 @@ namespace WebApi.Controllers
         /// <summary>
         /// Registers a user if it already doesnot exits
         /// </summary>
-        /// <param name="userModel"></param>
+        /// <param name="userCreateModel"></param>
         /// <returns></returns>
         /// <response code="200">If Registratin succeeds</response>
         /// <response code="400">If registration failed</response> 
-        //[AllowAnonymous]
-        //[HttpPost("register")]
-        //[ProducesResponseType(200)]
-        //[ProducesResponseType(400)]
-        //public IActionResult Register([FromBody]UserModel userModel)
-        //{
-        //    try
-        //    {
-        //        // save 
-        //        _userService.Create(userModel);
-        //        return Ok();
-        //    }
-        //    catch (AppException ex)
-        //    {
-        //        // return error message if there was an exception
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
+        [HttpPost("register")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        public IActionResult Register([FromBody]UserCreateModel userCreateModel)
+        {
+            try
+            {
+                // save 
+                //_userService.Create(userModel);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
     }
 }

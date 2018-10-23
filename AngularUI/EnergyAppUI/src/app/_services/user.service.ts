@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { User } from '../_models';
+import { UserLogin, UserDetails } from '../_models';
 import { Roles } from '../_models';
 
 import { Observable, of } from 'rxjs';
@@ -12,20 +12,22 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class UserService {
     constructor(private http: HttpClient) { }
 
-    getAll(): Observable<User[]> {
-        return this.http.get<User[]>(`${environment.apiUrl}/users`);
+    getAll(): Observable<UserDetails[]> {
+        return this.http.get<UserDetails[]>(`${environment.apiUrl}/users`);
     }
 
-    getById(id: number): Observable<User> {
-      return this.http.get<User>(`${environment.apiUrl}/users/` + id);
+    getById(id: number): Observable<UserDetails> {
+      return this.http.get<UserDetails>(`${environment.apiUrl}/users/` + id);
     }
 
-    getLoggedIn(): Observable<User> {
-        return this.http.get<User>(`${environment.apiUrl}/users/GetLoggedIn/`);
+    getLoggedIn(): Observable<UserDetails> {
+        return this.http.get<UserDetails>(`${environment.apiUrl}/users/GetLoggedIn/`);
     }
 
-    register(user: User) {
-        return this.http.post(`${environment.apiUrl}/users/register`, user);
+    register(userLogin: UserLogin, userDetails: UserDetails) {
+        console.log(userLogin);
+        console.log(userDetails);
+        return this.http.post(`${environment.apiUrl}/users/register`, { user: userLogin, userDetail: userDetails });
     }
 
     //update(user: User) {
