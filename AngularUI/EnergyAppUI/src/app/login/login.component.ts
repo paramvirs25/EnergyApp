@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit {
         //this.returnUrl = this.route.snapshot.queryParams['returnUrl'];
         //console.log(this.returnUrl);
         if (this.returnUrl == undefined || this.returnUrl == "/" || this.returnUrl == "") {
-            this.returnUrl = this.isAdminMode ? "userlist" : "home";
+            this.returnUrl = this.isAdminMode ? AppConstants.userListComponentPath : AppConstants.homeComponentPath ;
         }//this.route.snapshot.queryParams['returnUrl'] || '/';
     }
 
