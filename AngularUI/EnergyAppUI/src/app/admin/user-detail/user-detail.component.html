@@ -1,59 +1,87 @@
 
 <div class="padAll10 ">
     <h3 ><label>{{lblAddEditUser}}</label> User</h3>
-    <form>
+    <form [formGroup]="userDetailsForm" >
         <div class="padT10">
             <h5> Login Details </h5>
             <hr />
         </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">User Name</label>
+        <div class="row padT10">
+            <label class="col-sm-2 col-form-label">Username*</label>
             <div class="col-sm-5">
-                <input class="form-control" id="txtUserName" required>
+                <input formControlName="username" class="form-control" type="text" [ngClass]="{ 'is-invalid': submitted && f.username.errors }" autofocus>
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                    <div *ngIf="f.username.errors.required">Username is required</div>
+                </div>
+            </div>           
+        </div>
+        <div class="row padT10">
+            <label class="col-sm-2 col-form-label">Password*</label>
+            <div class="col-sm-5">
+                <input formControlName="password" class="form-control" type="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                    <div *ngIf="f.password.errors.required">Password is required</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                </div>
             </div>
         </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">Password</label>
+        <div class="row padT10">
+            <label class="col-sm-2 col-form-label">Confirm Password*</label>
             <div class="col-sm-5">
-                <input class="form-control" id="txtPassword" type="password" required>
+                <input formControlName="confirmpassword" class="form-control" type="password" [ngClass]="{ 'is-invalid': submitted && f.confirmpassword.errors }">
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
+                    <div *ngIf="f.confirmpassword.errors.required">Confirm Password is required</div>
+                    <div *ngIf="f.confirmpassword.errors.minlength">Confirm Password must be at least 6 characters</div>
+                    <!--<div *ngIf="f.confirmpassword.errors && f.confirmpassword.errors.compareEqual"> Passwords do not match </div>-->
+                </div>
             </div>
         </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">Confirm Password</label>
-            <div class="col-sm-5">
-                <input class="form-control" id="txtConfirmPassword" type="password" required>
-            </div>
-        </div>
-        <div class="padT10 ">
-            <h5 > User Details </h5>
+        <div class="padT10">
+            <h5> User Details </h5>
             <hr />
         </div>
-        <div class="form-group row padT10" *ngIf="hasUserId">
+        <div class="row padT10" *ngIf="hasUserId">
             <label class="col-sm-2 ">User Id</label>
-            <span class="col-sm-5 ">lblUserId</span>
+            <span class="col-sm-5 ">{{userId}}</span>
         </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">First Name</label>
+        <div class="row padT20">
+            <label class="col-sm-2 col-form-label">First Name*</label>
             <div class="col-sm-5">
-                <input class="form-control" id="txtFirstName" required>
+                <input formControlName="firstname" class="form-control" type="text" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+                    <div *ngIf="f.firstname.errors.required">First name is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row padT10">
+            <label class="col-sm-2 col-form-label">Last Name*</label>
+            <div class="col-sm-5">
+                <input formControlName="lastname" class="form-control" type="text" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+                    <div *ngIf="f.lastname.errors.required">Last name is required</div>
+                </div>
+            </div>
+        </div>
+        <div class="row padT10">
+            <label class="col-sm-2 col-form-label">Email*</label>
+            <div class="col-sm-5">
+                <input formControlName="email" class="form-control" type="email" [ngClass]="{ 'is-invalid': submitted && f.email.errors }">
+                <div class="floatL">&nbsp;</div>
+                <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                    <div *ngIf="f.email.errors.required">Email is required</div>
+                    <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                </div>
             </div>
         </div>
         <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">Last Name</label>
-            <div class="col-sm-5">
-                <input class="form-control" id="txtLastName" required>
-            </div>
-        </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">Email</label>
-            <div class="col-sm-5">
-                <input class="form-control" id="txtEmail" required>
-            </div>
-        </div>
-        <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">Role</label>
+            <label class="col-sm-2 col-form-label">Role*</label>
             <div class="col-sm-3">
-                <select class="form-control" name="Role" [(ngModel)]="selectedRole">
+                <select class="form-control" [(ngModel)]="selectedRole" [ngModelOptions]="{standalone: true}">
                     <option *ngFor="let op of roleOptions" [value]="op.roleId">
                         {{op.roleDisplayName}}
                     </option>
@@ -61,9 +89,9 @@
             </div>
         </div>
         <div class="form-group row padT10">
-            <label class="col-sm-2 col-form-label">User Type</label>
+            <label class="col-sm-2 col-form-label">User Type*</label>
             <div class="col-sm-3">
-                <select class="form-control" name="UserTypes" [(ngModel)]="selectedUserType">
+                <select class="form-control" [(ngModel)]="selectedUserType" [ngModelOptions]="{standalone: true}">
                     <option *ngFor="let op of userTypeOptions" [value]="op.userTypeId">
                         {{op.userTypeDisplayName}}
                     </option>
@@ -84,4 +112,6 @@
         </div>
     </form>
 </div>
+
+
 

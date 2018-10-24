@@ -21,6 +21,7 @@ import { routing } from './app.routing';
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { ModalModule } from 'ngx-bootstrap/modal';
+import { CompareValidatorModule } from 'angular-compare-validator';
 
 import { AlertComponent } from './_directives';
 import { AuthGuard, AdminGuard } from './_guards';
@@ -63,6 +64,7 @@ export class AngularMaterialModule { }
         ReactiveFormsModule,
         routing,
         FontAwesomeModule,
+        CompareValidatorModule,
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         ModalModule.forRoot()

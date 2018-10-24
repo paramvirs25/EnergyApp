@@ -22,7 +22,8 @@ export class UserListComponent implements OnInit {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(private userService: UserService, private router: Router) { }
+    constructor(private userService: UserService,
+        private router: Router) { }
 
     ngOnInit() {
 
@@ -44,7 +45,8 @@ export class UserListComponent implements OnInit {
 
     // Go To Add Users
     goAddUserDetails() {
-        this.router.navigate(['/', AppConstants.userDetailComponentPath]);
+        //this.router.navigate(['/', AppConstants.userDetailComponentPath]);
+        this.router.navigate(['/userdetail/0']);
     }
 }
 

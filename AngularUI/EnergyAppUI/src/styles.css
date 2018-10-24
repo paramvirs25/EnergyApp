@@ -41,7 +41,7 @@ body, html {
 .floatL {  float: left;}
 .floatR {  float: right;}
 
-.padContent {  padding: 50px 10px 50px 10px;}
+.padContent {  padding: 40px 10px 40px 10px;}
 
 .padAll10 { padding: 10px 10px 10px 10px; }
 .padAll20 { padding: 20px 20px 20px 20px; }
