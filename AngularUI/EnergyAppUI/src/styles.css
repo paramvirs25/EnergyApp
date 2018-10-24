@@ -1,11 +1,11 @@
 
 body, html {
-  height: 100%;
+    height: 100%;
+    background-color: #f9f9f9;
 }
 
 #mainDiv {
   height: 100%;
-  background-color: #EDEFF0;
 }
 .centerContent {
   margin: auto;
