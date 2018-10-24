@@ -28,7 +28,6 @@ export class UserListComponent implements OnInit {
     ngOnInit() {
 
         this.userService.getAll().subscribe(userlist => {
-            console.log(userlist);
             this.gridDataSource = new MatTableDataSource(userlist);
             this.users = userlist;
             this.isLoadingResults = false;

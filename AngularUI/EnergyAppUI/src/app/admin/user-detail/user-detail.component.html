@@ -23,7 +23,7 @@
                 <div class="floatL">&nbsp;</div>
                 <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
                     <div *ngIf="f.password.errors.required">Password is required</div>
-                    <div *ngIf="f.password.errors.minlength">Password must be at least 6 characters</div>
+                    <div *ngIf="f.password.errors.minlength">Password must be at least 4 characters</div>
                 </div>
             </div>
         </div>
@@ -34,7 +34,7 @@
                 <div class="floatL">&nbsp;</div>
                 <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
                     <div *ngIf="f.confirmpassword.errors.required">Confirm Password is required</div>
-                    <div *ngIf="f.confirmpassword.errors.minlength">Confirm Password must be at least 6 characters</div>
+                    <div *ngIf="f.confirmpassword.errors.minlength">Confirm Password must be at least 4 characters</div>
                     <!--<div *ngIf="f.confirmpassword.errors && f.confirmpassword.errors.compareEqual"> Passwords do not match </div>-->
                 </div>
             </div>
@@ -100,12 +100,12 @@
         </div>
         <div class="form-group row padT40 ">
             <div class="col-sm-2">
-                <button id="btnSave" class="btn btn-dark btn-block" (click)="save()">
+                <button id="btnSave" class="btn btn-dark btn-block" type="button" (click)="save()">
                     Save
                 </button>
             </div>
             <div class="col-sm-2">
-                <button id="btnCancel" class="btn btn-dark btn-block" (click)="goUserListPage()">
+                <button id="btnCancel" class="btn btn-dark btn-block" type="button" (click)="goUserListPage()">
                     Cancel
                 </button>
             </div>

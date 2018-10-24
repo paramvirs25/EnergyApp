@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { AlertService, UserService, RolesService, UserTypesService } from '../../_services';
+import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { UserLogin, UserDetails, Roles, UserTypes } from '../../_models';
 import { AppConstants } from '../../app.constant';
@@ -17,7 +19,9 @@ export class UserDetailComponent implements OnInit {
         private rolesService: RolesService,
         private userTypesService: UserTypesService,
         private router: Router,
-        private alertService: AlertService) { }
+        private alertService: AlertService,
+        private activeRoute: ActivatedRoute,
+        private formBuilder: FormBuilder) { }
 
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
@@ -26,11 +30,25 @@ export class UserDetailComponent implements OnInit {
     userLogin: UserLogin;
     userDetail: UserDetails;
 
+    userDetailsForm: FormGroup;
+    submitted = false;
+
     userId = 0; //Add Mode
     lblAddEditUser = "Add";
     hasUserId = false;
     
     ngOnInit() {
+
+        this.userId = +this.activeRoute.snapshot.paramMap.get('id');
+
+        this.userDetailsForm = this.formBuilder.group({
+            username: ['', Validators.required],
+            password: ['', [Validators.required, Validators.minLength(4)]],
+            confirmpassword: ['', [Validators.required, Validators.minLength(4)]],
+            firstname: ['', Validators.required],
+            lastname: ['', Validators.required],
+            email: ['', [Validators.required, Validators.email]]
+        });
 
         //Bind DropDowns
         this.bindRoles();
@@ -43,8 +61,19 @@ export class UserDetailComponent implements OnInit {
         }
     }
 
+    // convenience getter for easy access to form fields
+    get f() { return this.userDetailsForm.controls; }
+
     //save user
     save() {
+
+        this.submitted = true;
+        // stop here if form is invalid
+        if (this.userDetailsForm.invalid) {
+            return;
+        }
+
+        //Save user details
         this.userLogin = new UserLogin();
         this.userLogin.userId = 11;
         this.userLogin.username = "kaka1-yo";
