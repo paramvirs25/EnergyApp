@@ -82,8 +82,6 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
-            //var users = _userService.GetAll();
-            //var userDtos = _mapper.Map<IList<UserModel>>(users);
             return Ok(await _userService.GetAll());
         }
 
@@ -140,22 +138,22 @@ namespace WebApi.Controllers
         //}
 
         /// <summary>
-        /// Registers a user if it already doesnot exits
+        /// Creates a user if it already doesnot exits
         /// </summary>
         /// <param name="userCreateModel"></param>
         /// <returns></returns>
         /// <response code="200">If Registratin succeeds</response>
         /// <response code="400">If registration failed</response> 
-        [HttpPost("register")]
+        [HttpPost("addEdit")]
+        [Authorize(Policy = Policies.AdminsAndAbove)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public IActionResult Register([FromBody]UserCreateModel userCreateModel)
+        public async Task<IActionResult> AddEdit([FromBody]UserCreateModel userCreateModel)
         {
             try
             {
                 // save 
-                //_userService.Create(userModel);
-                return Ok();
+                return Ok(await _userService.AddEdit(userCreateModel));
             }
             catch (AppException ex)
             {

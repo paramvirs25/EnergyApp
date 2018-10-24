@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UserService, RolesService, UserTypesService } from '../../_services';
+import { AlertService, UserService, RolesService, UserTypesService } from '../../_services';
 import { Router } from '@angular/router';
 
 import { UserLogin, UserDetails, Roles, UserTypes } from '../../_models';
@@ -16,7 +16,8 @@ export class UserDetailComponent implements OnInit {
         private userService: UserService,
         private rolesService: RolesService,
         private userTypesService: UserTypesService,
-        private router: Router) { }
+        private router: Router,
+        private alertService: AlertService) { }
 
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
@@ -45,22 +46,22 @@ export class UserDetailComponent implements OnInit {
     //save user
     save() {
         this.userLogin = new UserLogin();
-        this.userLogin.username = "kaka";
-        this.userLogin.password = "kakapass";
+        this.userLogin.userId = 11;
+        this.userLogin.username = "kaka1-yo";
+        this.userLogin.password = "kakapass1-yo";
 
         this.userDetail = new UserDetails();
-        this.userDetail.userId = 0;
-        this.userDetail.roleId = 1;
+        this.userDetail.userId = 11;
+        this.userDetail.roleId = 300;
         this.userDetail.userTypeId = 1;
-        this.userDetail.userFirstName = "Kakulukia";
-        this.userDetail.userLastName = "Singh";
-        this.userDetail.userEmail = "kaka@kaki.com";
+        this.userDetail.userFirstName = "Kakuluki1-yo";
+        this.userDetail.userLastName = "Singh1-yo";
+        this.userDetail.userEmail = "kak1-yoa@kaki.com";
 
-        this.userService.register(this.userLogin, this.userDetail)
-            //.pipe(first())
+        this.userService.addEdit(this.userLogin, this.userDetail)
             .subscribe(
                 data => {
-                    //this.alertService.success('Registration successful', true);
+                    this.alertService.success('Registration successful', true);
                     //this.router.navigate(['/login']);
                 },
                 error => {

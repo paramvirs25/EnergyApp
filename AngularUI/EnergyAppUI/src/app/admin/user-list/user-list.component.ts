@@ -3,7 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../_services';
-import { UserDetails } from '../../_models';
+import { UserList } from '../../_models';
 import { AppConstants } from '../../app.constant';
 
 @Component({
@@ -14,8 +14,8 @@ import { AppConstants } from '../../app.constant';
 export class UserListComponent implements OnInit {
 
     displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleId', 'userTypeId', 'actions'];
-    gridDataSource: MatTableDataSource<UserDetails>;
-    users: UserDetails[] = [];
+    gridDataSource: MatTableDataSource<UserList>;
+    users: UserList[] = [];
 
     isLoadingResults = true;
 
@@ -27,6 +27,7 @@ export class UserListComponent implements OnInit {
     ngOnInit() {
 
         this.userService.getAll().subscribe(userlist => {
+            console.log(userlist);
             this.gridDataSource = new MatTableDataSource(userlist);
             this.users = userlist;
             this.isLoadingResults = false;

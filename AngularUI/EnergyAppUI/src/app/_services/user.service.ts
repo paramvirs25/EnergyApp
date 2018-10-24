@@ -24,10 +24,8 @@ export class UserService {
         return this.http.get<UserDetails>(`${environment.apiUrl}/users/GetLoggedIn/`);
     }
 
-    register(userLogin: UserLogin, userDetails: UserDetails) {
-        console.log(userLogin);
-        console.log(userDetails);
-        return this.http.post(`${environment.apiUrl}/users/register`, { user: userLogin, userDetail: userDetails });
+    addEdit(userLogin: UserLogin, userDetails: UserDetails) {
+        return this.http.post(`${environment.apiUrl}/users/addEdit`, { user: userLogin, userDetail: userDetails });
     }
 
     //update(user: User) {
