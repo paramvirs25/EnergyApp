@@ -14,9 +14,9 @@ namespace WebApi.Services
     public interface IUserService
     {
         Task<UserDetailsModel> Authenticate(string username, string password);
-        Task<IEnumerable<UserDetailsModel>> GetAll();
+        Task<IEnumerable<UserListModel>> GetAll();
         Task<UserDetailsModel> GetById(int id);
-        //UserModel Create(UserModel user);
+        Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel);
         //void Update(UserModel user, string password = null);
         //void Delete(int id);
     }
@@ -60,19 +60,10 @@ namespace WebApi.Services
             //    return null;
         }
 
-        public async Task<IEnumerable<UserDetailsModel>> GetAll()
+        public async Task<IEnumerable<UserListModel>> GetAll()
         {
-            //Mapper.CreateMap<Student, StudentAddressDetails>();
-
-            //var details = Mapper.Map<IEnumerable<Student>, IEnumerable<StudentAddressDetails>>(context.Students).ToList();
-
-            //var details = Mapper.Map<IEnumerable<UserDetailsTbl>, IEnumerable<UserModel>>(_context.UserDetailsTbl).ToList();
-            //return details;
-
-            //List<UserDetailsTbl> ud = _context.UserDetailsTbl.ToList<UserDetailsTbl>();
-
-            //return _mapper.Map<List<UserModel>>(ud);
-            return MapFromDAL(await _context.UserDetailsTbl.ToListAsync());
+            var userDetailTbl = await _context.UserDetailsTbl.Include(s => s.Role).Include(s => s.UserType).ToListAsync();
+            return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
         }
 
         public async Task<UserDetailsModel> GetById(int id)
@@ -80,26 +71,78 @@ namespace WebApi.Services
             return _mapper.Map<UserDetailsModel>(await _context.UserDetailsTbl.FindAsync(id));
         }
 
-        //public UserModel Create(UserModel userModel)
-        //{
-        //    // validation
-        //    if (string.IsNullOrWhiteSpace(userModel.Username) || string.IsNullOrWhiteSpace(userModel.Password))
-        //        throw new AppException("Username and Password are required");
+        public async Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel)
+        {
+            bool isCreateUser = userCreateModel.User.UserId == 0;
 
-        //    if (_context.UsersTbl.Any(x => x.Username == userModel.Username))
-        //        throw new AppException("Username \"" + userModel.Username + "\" is already taken");
+            // validation
+            if (string.IsNullOrWhiteSpace(userCreateModel.User.Username) || string.IsNullOrWhiteSpace(userCreateModel.User.Password))
+            {
+                throw new AppException("Username and Password are required");
+            }
 
-        //    //byte[] passwordHash, passwordSalt;
-        //    //CreatePasswordHash(password, out passwordHash, out passwordSalt);
+            //check for duplicate username
+            if (_context.UsersTbl.Any(x => x.Username == userCreateModel.User.Username && x.UserId != userCreateModel.User.UserId))
+            {
+                throw new AppException("Username \"" + userCreateModel.User.Username + "\" is already taken");
+            }
 
-        //    //user.PasswordHash = passwordHash;
-        //    //user.PasswordSalt = passwordSalt;
 
-        //    _context.UsersTbl.Add(_mapper.Map<UsersTbl>(userModel));
-        //    _context.SaveChanges();
+            //byte[] passwordHash, passwordSalt;
+            //CreatePasswordHash(password, out passwordHash, out passwordSalt);
 
-        //    return _mapper.Map<UserModel>(_context.UsersTbl.SingleOrDefault(x => x.Username == userModel.Username));
-        //}
+            //user.PasswordHash = passwordHash;
+            //user.PasswordSalt = passwordSalt;
+
+            UsersTbl usersTbl = new UsersTbl();
+            //UserDetailsTbl userDetailsTbl = new UserDetailsTbl();
+            if (isCreateUser)
+            {
+                usersTbl.UserDetailsTbl = new UserDetailsTbl();
+            }
+            else
+            {
+                usersTbl = await _context.UsersTbl
+                    .Where(u => u.UserId == userCreateModel.User.UserId)
+                    .Include(udt => udt.UserDetailsTbl)
+                    .FirstOrDefaultAsync();
+            }
+
+            //populate
+            usersTbl = _mapper.Map<UsersTbl>(userCreateModel.User);
+            usersTbl.UserDetailsTbl = _mapper.Map<UserDetailsTbl>(userCreateModel.UserDetail);
+
+            //usersTbl.UserId = userCreateModel.User.UserId;
+            //usersTbl.Username = userCreateModel.User.Username;
+            //usersTbl.Password = userCreateModel.User.Password;
+
+            //usersTbl.UserDetailsTbl.RoleId = userCreateModel.UserDetail.RoleId;
+            //usersTbl.UserDetailsTbl.UserTypeId = userCreateModel.UserDetail.UserTypeId;
+            //usersTbl.UserDetailsTbl.UserFirstName = userCreateModel.UserDetail.UserFirstName;
+            //usersTbl.UserDetailsTbl.UserLastName = userCreateModel.UserDetail.UserLastName;
+            //usersTbl.UserDetailsTbl.UserEmail = userCreateModel.UserDetail.UserEmail;
+
+            //Save to User table and user detaisl table
+            if (isCreateUser)
+            {
+                await _context.AddAsync(usersTbl);
+            }
+            else
+            {
+                _context.Update(usersTbl);
+            }
+                
+            await _context.SaveChangesAsync();
+
+            //after save update model with newly auto generated user id
+            if (isCreateUser)
+            {
+                userCreateModel.User.UserId = usersTbl.UserId;
+                usersTbl.UserDetailsTbl.UserId = usersTbl.UserId;
+            }
+
+            return userCreateModel;
+        }
 
         //public void Update(UserModel userParam, string password = null)
         //{
