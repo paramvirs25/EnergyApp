@@ -69,23 +69,23 @@ export class UserDetailComponent implements OnInit {
 
         this.submitted = true;
         // stop here if form is invalid
-        if (this.userDetailsForm.invalid) {
-            return;
-        }
+        //if (this.userDetailsForm.invalid) {
+        //    return;
+        //}
 
         //Save user details
         this.userLogin = new UserLogin();
         this.userLogin.userId = 11;
-        this.userLogin.username = "kaka1-yo";
-        this.userLogin.password = "kakapass1-yo";
+        this.userLogin.username = "kak-p1";
+        this.userLogin.password = "kak-p2";
 
         this.userDetail = new UserDetails();
         this.userDetail.userId = 11;
         this.userDetail.roleId = 300;
         this.userDetail.userTypeId = 1;
-        this.userDetail.userFirstName = "Kakuluki1-yo";
-        this.userDetail.userLastName = "Singh1-yo";
-        this.userDetail.userEmail = "kak1-yoa@kaki.com";
+        this.userDetail.userFirstName = "Kakuluk-p3";
+        this.userDetail.userLastName = "Singh-p4";
+        this.userDetail.userEmail = "kak-p5@kaki.com";
 
         this.userService.addEdit(this.userLogin, this.userDetail)
             .subscribe(

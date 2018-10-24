@@ -40,7 +40,10 @@ namespace WebApi.Services
                 return null;
 
             //Verify username and password
-            var user = await _context.UsersTbl.SingleOrDefaultAsync(x => x.Username == username && x.Password == password);
+            var user = await _context.UsersTbl
+                .Include(udt => udt.UserDetailsTbl)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.Username == username && x.Password == password);
 
             // check if username exists
             if (user == null)
@@ -50,8 +53,7 @@ namespace WebApi.Services
             else
             {
                 // authentication successful
-                var userDetails = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == user.UserId);
-                return MapFromDAL(userDetails);
+                return _mapper.Map<UserDetailsModel>(user.UserDetailsTbl);
             }
                 
 
@@ -62,13 +64,21 @@ namespace WebApi.Services
 
         public async Task<IEnumerable<UserListModel>> GetAll()
         {
-            var userDetailTbl = await _context.UserDetailsTbl.Include(s => s.Role).Include(s => s.UserType).ToListAsync();
+            var userDetailTbl = await _context.UserDetailsTbl
+                .Include(s => s.Role)
+                .Include(s => s.UserType)
+                .AsNoTracking()
+                .ToListAsync();
+
             return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
         }
 
         public async Task<UserDetailsModel> GetById(int id)
         {
-            return _mapper.Map<UserDetailsModel>(await _context.UserDetailsTbl.FindAsync(id));
+            var userDetailsTbl = await _context.UserDetailsTbl
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.UserId == id);
+            return _mapper.Map<UserDetailsModel>(userDetailsTbl);
         }
 
         public async Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel)
@@ -82,7 +92,13 @@ namespace WebApi.Services
             }
 
             //check for duplicate username
-            if (_context.UsersTbl.Any(x => x.Username == userCreateModel.User.Username && x.UserId != userCreateModel.User.UserId))
+            if (await _context.UsersTbl
+                .AsNoTracking()
+                .AnyAsync(x =>
+                    x.Username == userCreateModel.User.Username
+                    && x.UserId != userCreateModel.User.UserId
+                    )
+                )
             {
                 throw new AppException("Username \"" + userCreateModel.User.Username + "\" is already taken");
             }
@@ -94,52 +110,37 @@ namespace WebApi.Services
             //user.PasswordHash = passwordHash;
             //user.PasswordSalt = passwordSalt;
 
-            UsersTbl usersTbl = new UsersTbl();
-            //UserDetailsTbl userDetailsTbl = new UserDetailsTbl();
+            UsersTbl usersTbl = null;
             if (isCreateUser)
             {
-                usersTbl.UserDetailsTbl = new UserDetailsTbl();
+                usersTbl = new UsersTbl
+                {
+                    UserDetailsTbl = new UserDetailsTbl()
+                };
             }
             else
             {
                 usersTbl = await _context.UsersTbl
                     .Where(u => u.UserId == userCreateModel.User.UserId)
                     .Include(udt => udt.UserDetailsTbl)
-                    .FirstOrDefaultAsync();
+                    .SingleOrDefaultAsync();
             }
 
-            //populate
-            usersTbl = _mapper.Map<UsersTbl>(userCreateModel.User);
-            usersTbl.UserDetailsTbl = _mapper.Map<UserDetailsTbl>(userCreateModel.UserDetail);
-
-            //usersTbl.UserId = userCreateModel.User.UserId;
-            //usersTbl.Username = userCreateModel.User.Username;
-            //usersTbl.Password = userCreateModel.User.Password;
-
-            //usersTbl.UserDetailsTbl.RoleId = userCreateModel.UserDetail.RoleId;
-            //usersTbl.UserDetailsTbl.UserTypeId = userCreateModel.UserDetail.UserTypeId;
-            //usersTbl.UserDetailsTbl.UserFirstName = userCreateModel.UserDetail.UserFirstName;
-            //usersTbl.UserDetailsTbl.UserLastName = userCreateModel.UserDetail.UserLastName;
-            //usersTbl.UserDetailsTbl.UserEmail = userCreateModel.UserDetail.UserEmail;
+            //populate table objects
+            _mapper.Map(userCreateModel.User, usersTbl);
+            _mapper.Map(userCreateModel.UserDetail, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
             if (isCreateUser)
             {
                 await _context.AddAsync(usersTbl);
             }
-            else
-            {
-                _context.Update(usersTbl);
-            }
                 
             await _context.SaveChangesAsync();
 
-            //after save update model with newly auto generated user id
-            if (isCreateUser)
-            {
-                userCreateModel.User.UserId = usersTbl.UserId;
-                usersTbl.UserDetailsTbl.UserId = usersTbl.UserId;
-            }
+            //after save update models with data
+            _mapper.Map(usersTbl, userCreateModel.User);
+            _mapper.Map(usersTbl.UserDetailsTbl, userCreateModel.UserDetail);
 
             return userCreateModel;
         }
@@ -187,47 +188,47 @@ namespace WebApi.Services
         //    }
         //}
 
-        public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
-        {
-            List<UserDetailsModel> udm = new List<UserDetailsModel>();
-            foreach(UserDetailsTbl ud in emp)
-            {
-                udm.Add(MapFromDAL(ud));
-            }
+        //public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
+        //{
+        //    List<UserDetailsModel> udm = new List<UserDetailsModel>();
+        //    foreach(UserDetailsTbl ud in emp)
+        //    {
+        //        udm.Add(MapFromDAL(ud));
+        //    }
 
-            return udm;
-            //return emp.Select(x => MapFromDAL(x)).ToList();
-        }
+        //    return udm;
+        //    //return emp.Select(x => MapFromDAL(x)).ToList();
+        //}
 
-        public UserDetailsModel MapFromDAL(UserDetailsTbl ud)
-        {
-            return new UserDetailsModel()
-            {
-                UserId = ud.UserId,
-                RoleId = ud.RoleId,
-                UserTypeId = ud.UserTypeId,
-                UserFirstName = ud.UserFirstName,
-                UserLastName = ud.UserLastName,
-                UserEmail = ud.UserEmail
-            };
-        }
+        //public UserDetailsModel MapFromDAL(UserDetailsTbl ud)
+        //{
+        //    return new UserDetailsModel()
+        //    {
+        //        UserId = ud.UserId,
+        //        RoleId = ud.RoleId,
+        //        UserTypeId = ud.UserTypeId,
+        //        UserFirstName = ud.UserFirstName,
+        //        UserLastName = ud.UserLastName,
+        //        UserEmail = ud.UserEmail
+        //    };
+        //}
 
-        public UserDetailsTbl MapToDAL(UserDetailsModel udm, UserDetailsTbl ud)
-        {
-            if (ud == null)
-            {
-                ud = new UserDetailsTbl();
-            }
+        //public UserDetailsTbl MapToDAL(UserDetailsModel udm, UserDetailsTbl ud)
+        //{
+        //    if (ud == null)
+        //    {
+        //        ud = new UserDetailsTbl();
+        //    }
 
-            ud.UserId = udm.UserId;
-            ud.RoleId = udm.RoleId;
-            ud.UserTypeId = udm.UserTypeId;
-            ud.UserFirstName = udm.UserFirstName;
-            ud.UserLastName = udm.UserLastName;
-            ud.UserEmail = udm.UserEmail;
+        //    ud.UserId = udm.UserId;
+        //    ud.RoleId = udm.RoleId;
+        //    ud.UserTypeId = udm.UserTypeId;
+        //    ud.UserFirstName = udm.UserFirstName;
+        //    ud.UserLastName = udm.UserLastName;
+        //    ud.UserEmail = udm.UserEmail;
 
-            return ud;
-        }
+        //    return ud;
+        //}
 
         // private helper methods
 

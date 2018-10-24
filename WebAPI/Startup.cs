@@ -56,7 +56,7 @@ namespace WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IMapper mapper)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -67,6 +67,9 @@ namespace WebApi
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials());
+
+            //Throws exception incase automapper configuration have unmapped properties bewteen source type and destination type
+            mapper.ConfigurationProvider.AssertConfigurationIsValid();
 
             app.UseAuthentication();
 
