@@ -13,7 +13,7 @@ import { AppConstants } from '../../app.constant';
 })
 export class UserListComponent implements OnInit {
 
-    displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleId', 'userTypeId', 'actions'];
+    displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleName', 'userTypeName', 'actions'];
     gridDataSource: MatTableDataSource<UserList>;
     users: UserList[] = [];
 

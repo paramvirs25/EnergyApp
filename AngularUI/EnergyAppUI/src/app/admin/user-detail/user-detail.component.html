@@ -50,7 +50,7 @@
         <div class="row padT20">
             <label class="col-sm-2 col-form-label">First Name*</label>
             <div class="col-sm-5">
-                <input formControlName="firstname" class="form-control" type="text" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+                <input formControlName="firstname" class="form-control" type="text" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }" >
                 <div class="floatL">&nbsp;</div>
                 <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
                     <div *ngIf="f.firstname.errors.required">First name is required</div>
@@ -81,7 +81,7 @@
         <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">Role*</label>
             <div class="col-sm-3">
-                <select class="form-control" [(ngModel)]="selectedRole" [ngModelOptions]="{standalone: true}">
+                <select class="form-control" formControlName="ddrole" >
                     <option *ngFor="let op of roleOptions" [value]="op.roleId">
                         {{op.roleDisplayName}}
                     </option>
@@ -91,7 +91,7 @@
         <div class="form-group row padT10">
             <label class="col-sm-2 col-form-label">User Type*</label>
             <div class="col-sm-3">
-                <select class="form-control" [(ngModel)]="selectedUserType" [ngModelOptions]="{standalone: true}">
+                <select class="form-control" formControlName="ddusertype">
                     <option *ngFor="let op of userTypeOptions" [value]="op.userTypeId">
                         {{op.userTypeDisplayName}}
                     </option>
