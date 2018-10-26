@@ -32,6 +32,7 @@ export class UserDetailComponent implements OnInit {
     userLogin: UserLogin;
     userDetail: UserDetails;
     isLoadingResults = false;
+    isSaving = false;
 
     userDetailsForm: FormGroup;
     submitted = false;
@@ -88,8 +89,8 @@ export class UserDetailComponent implements OnInit {
 
     //save user
     save() {
-
         this.submitted = true;
+
         // stop here if form is invalid
         if (this.userDetailsForm.invalid) {
             return;
@@ -111,15 +112,18 @@ export class UserDetailComponent implements OnInit {
 
         console.log(this.userLogin);
         console.log(this.userDetail);
+
+        this.isSaving = true;
         this.userService.addEdit(this.userLogin, this.userDetail)
             .subscribe(
                 data => {
                     this.alertService.success('Registration successful', true);
                     //this.router.navigate(['/login']);
+                    this.router.navigate(['/', AppConstants.userListComponentPath]);
                 },
                 error => {
                     //this.alertService.error(error);
-                    //this.loading = false;
+                    this.isSaving = false;
                 });
 
         //this.router.navigate(['/', AppConstants.userListComponentPath]);
