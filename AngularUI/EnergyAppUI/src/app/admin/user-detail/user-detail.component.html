@@ -1,4 +1,7 @@
 
+<div class="loading-spinner" *ngIf="isLoadingResults">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+</div>
 <div class="padAll10 ">
     <h3 ><label>{{lblAddEditUser}}</label> User</h3>
     <form [formGroup]="userDetailsForm" >

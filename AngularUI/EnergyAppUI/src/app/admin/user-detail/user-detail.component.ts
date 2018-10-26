@@ -13,9 +13,7 @@ import { AbstractControl } from '@angular/forms';
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.css']
 })
-export class UserDetailComponent implements OnInit {
-
-    //public static adminLoginComponentPath = 'admin';
+export class UserDetailComponent implements OnInit {    
 
     constructor(
         private userService: UserService,
@@ -33,6 +31,8 @@ export class UserDetailComponent implements OnInit {
     areControlsLoaded = false;
     userLogin: UserLogin;
     userDetail: UserDetails;
+
+    isLoadingResults = true;
 
     userDetailsForm: FormGroup;
     submitted = false;
@@ -153,6 +153,8 @@ export class UserDetailComponent implements OnInit {
         if (this.hasRoles && this.hasUserTypes && this.areControlsLoaded) {
             this.f.ddrole.setValue(this.userDetail.roleId);
             this.f.ddusertype.setValue(this.userDetail.userTypeId);
+
+            this.isLoadingResults = false;
         }
     }
 
