@@ -6,6 +6,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 
 import { UserLogin, UserDetails, Roles, UserTypes } from '../../_models';
 import { AppConstants } from '../../app.constant';
+import { AbstractControl } from '@angular/forms';
 
 @Component({
     selector: 'app-user-detail',
@@ -13,6 +14,8 @@ import { AppConstants } from '../../app.constant';
     styleUrls: ['./user-detail.component.css']
 })
 export class UserDetailComponent implements OnInit {
+
+    //public static adminLoginComponentPath = 'admin';
 
     constructor(
         private userService: UserService,
@@ -52,12 +55,14 @@ export class UserDetailComponent implements OnInit {
             email: ['', [Validators.required, Validators.email]],
             ddrole: new FormControl(null),
             ddusertype: new FormControl(null)
-        });
+        }, {
+                validator: PasswordValidation.MatchPassword
+            });
 
         //Initialise DropDowns
         this.initRoles();
         this.initUserTypes();
-   
+
         //Edit Mode
         if (this.userId > 0) {
             this.hasUserId = true;
@@ -91,7 +96,7 @@ export class UserDetailComponent implements OnInit {
         }
 
         //Save user details
-        this.userLogin = new UserLogin();        
+        this.userLogin = new UserLogin();
         this.userLogin.username = this.f.username.value;
         this.userLogin.password = this.f.password.value;
         this.userLogin.userId = this.userId;
@@ -115,7 +120,7 @@ export class UserDetailComponent implements OnInit {
                 error => {
                     //this.alertService.error(error);
                     //this.loading = false;
-            });
+                });
 
         //this.router.navigate(['/', AppConstants.userListComponentPath]);
     }
@@ -156,3 +161,26 @@ export class UserDetailComponent implements OnInit {
         this.router.navigate(['/', AppConstants.userListComponentPath]);
     }
 }
+
+export class PasswordValidation {
+
+    static MatchPassword(ac: AbstractControl) {
+        if (ac.get(ControlNames.password).value != ac.get(ControlNames.confirmpassword).value) {
+            ac.get(ControlNames.confirmpassword).setErrors({ MatchPassword: true })
+        } else {
+            return null
+        }
+    }
+}
+
+export class ControlNames {
+    static username = 'username';
+    static password = 'password';
+    static confirmpassword = 'confirmpassword';
+    static firstname = 'firstname';
+    static lastname = 'lastname';
+    static email = 'email';
+    static ddrole = 'ddrole';
+    static ddusertype = 'ddusertype';
+}
+

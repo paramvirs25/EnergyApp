@@ -35,7 +35,7 @@
                 <div *ngIf="submitted && f.confirmpassword.errors" class="invalid-feedback">
                     <div *ngIf="f.confirmpassword.errors.required">Confirm Password is required</div>
                     <div *ngIf="f.confirmpassword.errors.minlength">Confirm Password must be at least 4 characters</div>
-                    <!--<div *ngIf="f.confirmpassword.errors && f.confirmpassword.errors.compareEqual"> Passwords do not match </div>-->
+                    <div *ngIf="f.confirmpassword.errors?.MatchPassword"> Passwords do not match </div>
                 </div>
             </div>
         </div>
