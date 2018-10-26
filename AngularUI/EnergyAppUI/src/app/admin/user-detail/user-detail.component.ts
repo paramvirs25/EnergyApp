@@ -31,8 +31,7 @@ export class UserDetailComponent implements OnInit {
     areControlsLoaded = false;
     userLogin: UserLogin;
     userDetail: UserDetails;
-
-    isLoadingResults = true;
+    isLoadingResults = false;
 
     userDetailsForm: FormGroup;
     submitted = false;
@@ -66,7 +65,8 @@ export class UserDetailComponent implements OnInit {
         //Edit Mode
         if (this.userId > 0) {
             this.hasUserId = true;
-            this.lblAddEditUser = "Edit"
+            this.lblAddEditUser = "Edit";
+            this.isLoadingResults = true;
 
             this.userService.getById(this.userId).subscribe(user => {
 
