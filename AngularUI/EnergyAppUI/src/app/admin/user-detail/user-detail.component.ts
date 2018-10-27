@@ -13,7 +13,7 @@ import { AbstractControl } from '@angular/forms';
     templateUrl: './user-detail.component.html',
     styleUrls: ['./user-detail.component.css']
 })
-export class UserDetailComponent implements OnInit {    
+export class UserDetailComponent implements OnInit {
 
     constructor(
         private userService: UserService,
@@ -79,7 +79,7 @@ export class UserDetailComponent implements OnInit {
                 this.f.email.setValue(user.userEmail);
 
                 this.areControlsLoaded = true;
-                this.bindDropdowns();
+                this.bindAfterCallControls();
             });
         }
     }
@@ -131,34 +131,44 @@ export class UserDetailComponent implements OnInit {
 
     // Initialise Dropdown Roles
     initRoles() {
+        this.isLoadingResults = true;
         this.rolesService.getRoles().subscribe(roles => {
             this.roleOptions = roles;
             this.f.ddrole.setValue(this.roleOptions[0].roleId); // Set Default value
 
             this.hasRoles = true;
-            this.bindDropdowns();
+            this.bindAfterCallControls();
         });
     }
 
     // Initialise Dropdown UserTypes
     initUserTypes() {
+        this.isLoadingResults = true;
         this.userTypesService.getUserTypes().subscribe(userTypes => {
             this.userTypeOptions = userTypes;
             this.f.ddusertype.setValue(this.userTypeOptions[0].userTypeId); // Set Default value
 
             this.hasUserTypes = true;
-            this.bindDropdowns();
+            this.bindAfterCallControls();
         });
     }
 
     // bind Dropdowns
     // Call this method on all calls
-    bindDropdowns() {
-        if (this.hasRoles && this.hasUserTypes && this.areControlsLoaded) {
-            this.f.ddrole.setValue(this.userDetail.roleId);
-            this.f.ddusertype.setValue(this.userDetail.userTypeId);
+    bindAfterCallControls() {
+        //If Edit Mode- bind Dropdowns after all http calls have been completed and disable Loading Spinner
+        if (this.userId > 0) {
+            if (this.hasRoles && this.hasUserTypes && this.areControlsLoaded) {
+                this.f.ddrole.setValue(this.userDetail.roleId);
+                this.f.ddusertype.setValue(this.userDetail.userTypeId);
 
-            this.isLoadingResults = false;
+                this.isLoadingResults = false;
+            }
+        } //If Add Mode - disable Loading Spinner when all controls have been initialised
+        else {
+            if (this.hasRoles && this.hasUserTypes) {
+                this.isLoadingResults = false;
+            }
         }
     }
 
