@@ -1,3 +1,5 @@
+using System;
+
 namespace WebApi.Models
 {
     public class UserDetailsModel
@@ -8,5 +10,10 @@ namespace WebApi.Models
         public string UserFirstName { get; set; }
         public string UserLastName { get; set; }
         public string UserEmail { get; set; }
+        public bool IsDeleted { get; set; }
+        public DateTime CreatedDate { get; set; }
+        public int CreatedBy { get; set; }
+        public DateTime ModifiedDate { get; set; }
+        public int ModifiedBy { get; set; }
     }
 }

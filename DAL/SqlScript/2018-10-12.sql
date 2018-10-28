@@ -1,11 +1,11 @@
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserType_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_UserType_UserDetails]
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_User_UserDetails_ModifiedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_UserDetailsTbl_UserDetails_ModifiedBy]
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_User_UserDetails_CreatedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_UserDetailsTbl_UserDetails_CreatedBy]
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_User_UserDetails]
@@ -13,17 +13,17 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Role_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl] DROP CONSTRAINT [FK_Role_UserDetails]
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
-ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [FK_User_UserContent]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
+ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [FK_UserDetailsTbl_UserContent]
 GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Content_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
 ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [FK_Content_UserContent]
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [FK_User_ContentTbl_ModifiedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [FK_UserDetailsTbl_ContentTbl_ModifiedBy]
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [FK_User_ContentTbl_CreatedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [FK_UserDetailsTbl_ContentTbl_CreatedBy]
 GO
 IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__UserConte__DateC__28B808A7]') AND type = 'D')
 BEGIN
@@ -209,6 +209,8 @@ CREATE TABLE [dbo].[UserTypesTbl](
 ) ON [PRIMARY]
 END
 GO
+
+
 IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__IsDel__29AC2CE0]') AND type = 'D')
 BEGIN
 ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF__ContentTb__IsDel__29AC2CE0]  DEFAULT ((0)) FOR [IsDeleted]
@@ -233,19 +235,19 @@ ALTER TABLE [dbo].[UserContentTbl] ADD  CONSTRAINT [DF__UserConte__DateC__28B808
 END
 
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_User_ContentTbl_CreatedBy] FOREIGN KEY([CreatedBy])
-REFERENCES [dbo].[UsersTbl] ([UserId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserDetailsTbl_ContentTbl_CreatedBy] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[UserDetailsTbl] ([UserId])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl] CHECK CONSTRAINT [FK_User_ContentTbl_CreatedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl] CHECK CONSTRAINT [FK_UserDetailsTbl_ContentTbl_CreatedBy]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_User_ContentTbl_ModifiedBy] FOREIGN KEY([ModifiedBy])
-REFERENCES [dbo].[UsersTbl] ([UserId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserDetailsTbl_ContentTbl_ModifiedBy] FOREIGN KEY([ModifiedBy])
+REFERENCES [dbo].[UserDetailsTbl] ([UserId])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
-ALTER TABLE [dbo].[ContentTbl] CHECK CONSTRAINT [FK_User_ContentTbl_ModifiedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
+ALTER TABLE [dbo].[ContentTbl] CHECK CONSTRAINT [FK_UserDetailsTbl_ContentTbl_ModifiedBy]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Content_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
 ALTER TABLE [dbo].[UserContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_Content_UserContent] FOREIGN KEY([ContentId])
@@ -254,12 +256,12 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Content_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
 ALTER TABLE [dbo].[UserContentTbl] CHECK CONSTRAINT [FK_Content_UserContent]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
-ALTER TABLE [dbo].[UserContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_User_UserContent] FOREIGN KEY([UserId])
-REFERENCES [dbo].[UsersTbl] ([UserId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
+ALTER TABLE [dbo].[UserContentTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserDetailsTbl_UserContent] FOREIGN KEY([UserId])
+REFERENCES [dbo].[UserDetailsTbl] ([UserId])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
-ALTER TABLE [dbo].[UserContentTbl] CHECK CONSTRAINT [FK_User_UserContent]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserContent]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserContentTbl]'))
+ALTER TABLE [dbo].[UserContentTbl] CHECK CONSTRAINT [FK_UserDetailsTbl_UserContent]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_Role_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_Role_UserDetails] FOREIGN KEY([RoleId])
@@ -275,19 +277,19 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl] CHECK CONSTRAINT [FK_User_UserDetails]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_User_UserDetails_CreatedBy] FOREIGN KEY([CreatedBy])
-REFERENCES [dbo].[UsersTbl] ([UserId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserDetailsTbl_UserDetails_CreatedBy] FOREIGN KEY([CreatedBy])
+REFERENCES [dbo].[UserDetailsTbl] ([UserId])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl] CHECK CONSTRAINT [FK_User_UserDetails_CreatedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl] CHECK CONSTRAINT [FK_UserDetailsTbl_UserDetails_CreatedBy]
 GO
-IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_User_UserDetails_ModifiedBy] FOREIGN KEY([ModifiedBy])
-REFERENCES [dbo].[UsersTbl] ([UserId])
+IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserDetailsTbl_UserDetails_ModifiedBy] FOREIGN KEY([ModifiedBy])
+REFERENCES [dbo].[UserDetailsTbl] ([UserId])
 GO
-IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_User_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
-ALTER TABLE [dbo].[UserDetailsTbl] CHECK CONSTRAINT [FK_User_UserDetails_ModifiedBy]
+IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_UserDetails_ModifiedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
+ALTER TABLE [dbo].[UserDetailsTbl] CHECK CONSTRAINT [FK_UserDetailsTbl_UserDetails_ModifiedBy]
 GO
 IF NOT EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserType_UserDetails]') AND parent_object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]'))
 ALTER TABLE [dbo].[UserDetailsTbl]  WITH CHECK ADD  CONSTRAINT [FK_UserType_UserDetails] FOREIGN KEY([UserTypeId])
