@@ -12,8 +12,8 @@ import { catchError, map, tap } from 'rxjs/operators';
 export class UserService {
     constructor(private http: HttpClient) { }
 
-    getAll(): Observable<UserList[]> {
-        return this.http.get<UserList[]>(`${environment.apiUrl}/users`);
+    getList(): Observable<UserList[]> {
+        return this.http.get<UserList[]>(`${environment.apiUrl}/users/list`);
     }
 
     getById(id: number): Observable<UserDetails> {

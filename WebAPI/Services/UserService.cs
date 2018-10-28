@@ -14,7 +14,8 @@ namespace WebApi.Services
     public interface IUserService
     {
         Task<UserDetailsModel> Authenticate(string username, string password);
-        Task<IEnumerable<UserListModel>> GetAll();
+        //Task<IEnumerable<UserListModel>> GetAll();
+        Task<IEnumerable<UserListModel>> GetList();
         Task<UserDetailsModel> GetById(int id);
         Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel);
         //void Update(UserModel user, string password = null);
@@ -55,16 +56,36 @@ namespace WebApi.Services
                 // authentication successful
                 return _mapper.Map<UserDetailsModel>(user.UserDetailsTbl);
             }
-                
+
 
             // check if password is correct
             //if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             //    return null;
         }
 
-        public async Task<IEnumerable<UserListModel>> GetAll()
+        //public async Task<IEnumerable<UserListModel>> GetAll()
+        //{
+        //    var userDetailTbl = await _context.UserDetailsTbl
+        //        .Include(s => s.Role)
+        //        .Include(s => s.UserType)
+        //        .AsNoTracking()
+        //        .ToListAsync();
+
+        //    return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
+        //}
+
+        /// <summary>
+        /// Gets list of all users excluding 
+        /// * super admin user and 
+        /// * non-active users
+        /// </summary>
+        /// <returns>Returns list of users</returns>
+        public async Task<IEnumerable<UserListModel>> GetList()
         {
             var userDetailTbl = await _context.UserDetailsTbl
+                .Where(ud => ud.IsDeleted == false && ud.UserId > 1)
+                .Include(s => s.CreatedByNavigation)
+                .Include(s => s.ModifiedByNavigation)
                 .Include(s => s.Role)
                 .Include(s => s.UserType)
                 .AsNoTracking()
@@ -135,7 +156,7 @@ namespace WebApi.Services
             {
                 await _context.AddAsync(usersTbl);
             }
-                
+
             await _context.SaveChangesAsync();
 
             //after save update models with data

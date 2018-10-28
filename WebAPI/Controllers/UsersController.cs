@@ -78,11 +78,23 @@ namespace WebApi.Controllers
         /// Gets a list of all users
         /// </summary>
         /// <returns>Gets a list of all users</returns>
+        //[Authorize(Policy = Policies.AdminsAndAbove)]
+        //[HttpGet]
+        //public async Task<IActionResult> GetAll()
+        //{
+        //    return Ok(await _userService.GetAll());
+        //}
+
+        /// <summary>
+        /// Gets a list of users
+        /// </summary>
+        /// <returns>Returns list of users</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
+        [Route("List")]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetList()
         {
-            return Ok(await _userService.GetAll());
+            return Ok(await _userService.GetList());
         }
 
         /// <summary>

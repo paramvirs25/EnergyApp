@@ -33,7 +33,7 @@ namespace WebApi.Helpers
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.CreatedByNavigation.UserFirstName))
                 .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.UserFirstName))
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
-                .ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
+                //.ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
                 .ForMember(dest => dest.UserTypeName, opt => opt.MapFrom(src => src.UserType.UserTypeDisplayName));
 
             CreateMap<UserDetailsTbl, UserDetailsModel>()
