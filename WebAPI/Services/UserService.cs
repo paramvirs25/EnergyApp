@@ -5,6 +5,7 @@ using WebApi.Helpers;
 
 using AutoMapper;
 using WebApi.Models;
+using WebApi.Models.UserModelExtensions;
 using DAL.Entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,13 @@ namespace WebApi.Services
     {
         Task<UserDetailsModel> Authenticate(string username, string password);
         //Task<IEnumerable<UserListModel>> GetAll();
+
         Task<IEnumerable<UserListModel>> GetList();
         Task<UserDetailsModel> GetById(int id);
-        Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel);
+        Task<UserCreateModel> GetForCreate();
+        Task<UserEditModel> GetForEdit(int id);
+
+        Task<UserSaveModel> Save(UserSaveModel userSaveModel);
         //void Update(UserModel user, string password = null);
         //void Delete(int id);
     }
@@ -26,13 +31,19 @@ namespace WebApi.Services
     {
         private DataContext _context;
         private IMapper _mapper;
+        private IRoleService _roleService;
+        private IUserTypeService _userTypeService;
 
         public UserService(
             DataContext context,
-            IMapper mapper)
+            IMapper mapper,
+            IRoleService roleService,
+            IUserTypeService userTypeService)
         {
             _context = context;
             _mapper = mapper;
+            _roleService = roleService;
+            _userTypeService = userTypeService;
         }
 
         public async Task<UserDetailsModel> Authenticate(string username, string password)
@@ -74,6 +85,14 @@ namespace WebApi.Services
         //    return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
         //}
 
+        public async Task<UserDetailsModel> GetById(int id)
+        {
+            var userDetailsTbl = await _context.UserDetailsTbl
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.UserId == id);
+            return _mapper.Map<UserDetailsModel>(userDetailsTbl);
+        }
+
         /// <summary>
         /// Gets list of all users excluding 
         /// * super admin user and 
@@ -94,20 +113,41 @@ namespace WebApi.Services
             return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
         }
 
-        public async Task<UserDetailsModel> GetById(int id)
+        public async Task<UserCreateModel> GetForCreate()
         {
-            var userDetailsTbl = await _context.UserDetailsTbl
-                .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == id);
-            return _mapper.Map<UserDetailsModel>(userDetailsTbl);
+            UserCreateModel userCreateModel = new UserCreateModel
+            {
+                Roles = _roleService.GetAll(),
+                UserTypes = await _userTypeService.GetAll()
+            };
+
+            return userCreateModel;
         }
 
-        public async Task<UserCreateModel> AddEdit(UserCreateModel userCreateModel)
+        public async Task<UserEditModel> GetForEdit(int id)
         {
-            bool isCreateUser = userCreateModel.User.UserId == 0;
+            UserEditModel userEditModel = new UserEditModel
+            {
+                UserDetail = await GetById(id),
+                Roles = _roleService.GetAll(),
+                UserTypes = await _userTypeService.GetAll()
+            };
+
+            var userTbl = await _context.UsersTbl
+               .AsNoTracking()
+               .SingleOrDefaultAsync(x => x.UserId == id);
+
+            userEditModel.User = _mapper.Map<UserAuthenticateModel>(userTbl);
+
+            return userEditModel;
+        }
+
+        public async Task<UserSaveModel> Save(UserSaveModel userSaveModel)
+        {
+            bool isCreateUser = userSaveModel.User.UserId == 0;
 
             // validation
-            if (string.IsNullOrWhiteSpace(userCreateModel.User.Username) || string.IsNullOrWhiteSpace(userCreateModel.User.Password))
+            if (string.IsNullOrWhiteSpace(userSaveModel.User.Username) || string.IsNullOrWhiteSpace(userSaveModel.User.Password))
             {
                 throw new AppException("Username and Password are required");
             }
@@ -116,12 +156,12 @@ namespace WebApi.Services
             if (await _context.UsersTbl
                 .AsNoTracking()
                 .AnyAsync(x =>
-                    x.Username == userCreateModel.User.Username
-                    && x.UserId != userCreateModel.User.UserId
+                    x.Username == userSaveModel.User.Username
+                    && x.UserId != userSaveModel.User.UserId
                     )
                 )
             {
-                throw new AppException("Username \"" + userCreateModel.User.Username + "\" is already taken");
+                throw new AppException("Username \"" + userSaveModel.User.Username + "\" is already taken");
             }
 
 
@@ -142,14 +182,14 @@ namespace WebApi.Services
             else
             {
                 usersTbl = await _context.UsersTbl
-                    .Where(u => u.UserId == userCreateModel.User.UserId)
+                    .Where(u => u.UserId == userSaveModel.User.UserId)
                     .Include(udt => udt.UserDetailsTbl)
                     .SingleOrDefaultAsync();
             }
 
             //populate table objects
-            _mapper.Map(userCreateModel.User, usersTbl);
-            _mapper.Map(userCreateModel.UserDetail, usersTbl.UserDetailsTbl);
+            _mapper.Map(userSaveModel.User, usersTbl);
+            _mapper.Map(userSaveModel.UserDetail, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
             if (isCreateUser)
@@ -160,10 +200,10 @@ namespace WebApi.Services
             await _context.SaveChangesAsync();
 
             //after save update models with data
-            _mapper.Map(usersTbl, userCreateModel.User);
-            _mapper.Map(usersTbl.UserDetailsTbl, userCreateModel.UserDetail);
+            _mapper.Map(usersTbl, userSaveModel.User);
+            _mapper.Map(usersTbl.UserDetailsTbl, userSaveModel.UserDetail);
 
-            return userCreateModel;
+            return userSaveModel;
         }
 
         //public void Update(UserModel userParam, string password = null)

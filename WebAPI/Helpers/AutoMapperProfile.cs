@@ -1,6 +1,6 @@
 using AutoMapper;
 using WebApi.Models;
-//using WebApi.Entities;
+using WebApi.Models.UserModelExtensions;
 using DAL.Entities;
 
 namespace WebApi.Helpers
@@ -13,10 +13,8 @@ namespace WebApi.Helpers
         public AutoMapperProfile()
         {
             CreateMap<UsersTbl, UserModel>()
-                .ForSourceMember(src => src.UserDetailsTbl, opt => opt.Ignore())
-                .ForMember(dest => dest.CheckAdminRole, opt => opt.Ignore());
+                .ForSourceMember(src => src.UserDetailsTbl, opt => opt.Ignore());
             CreateMap<UserModel, UsersTbl>()
-                .ForSourceMember(src => src.CheckAdminRole, opt => opt.Ignore())
                 .ForMember(src => src.UserDetailsTbl, opt => opt.Ignore());
 
             CreateMap<UserDetailsTbl, UserListModel>()
@@ -33,7 +31,6 @@ namespace WebApi.Helpers
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.CreatedByNavigation.UserFirstName))
                 .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.UserFirstName))
                 .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role.RoleName))
-                //.ForMember(dest => dest.Username, opt => opt.MapFrom(src => src.User.Username))
                 .ForMember(dest => dest.UserTypeName, opt => opt.MapFrom(src => src.UserType.UserTypeDisplayName));
 
             CreateMap<UserDetailsTbl, UserDetailsModel>()
