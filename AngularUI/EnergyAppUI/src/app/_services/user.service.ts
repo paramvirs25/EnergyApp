@@ -2,7 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
 import { environment } from '../../environments/environment';
-import { UserLogin, UserList, UserDetails } from '../_models';
+import { UserLogin, UserDetails } from '../_models';
+import { UserList, UserCreate, UserEdit, UserSave } from '../_models/userModelExtensions';
 import { Roles } from '../_models';
 
 import { Observable, of } from 'rxjs';
@@ -27,6 +28,21 @@ export class UserService {
     addEdit(userLogin: UserLogin, userDetails: UserDetails) {
         return this.http.post(`${environment.apiUrl}/users/addEdit`, { user: userLogin, userDetail: userDetails });
     }
+
+    getForCreate(): Observable<UserCreate[]> {
+        return this.http.get<UserCreate[]>(`${environment.apiUrl}/users/GetForCreate/`);
+    }
+
+    getForEdit(id: number): Observable<UserEdit[]> {
+        return this.http.get<UserEdit[]>(`${environment.apiUrl}/users/GetForEdit/` + id);
+    }
+
+    save(userSave: UserSave) {
+        return this.http.post(`${environment.apiUrl}/users/save`, { userSave: userSave });
+    }
+
+
+
 
     //update(user: User) {
     //  return this.http.put(`${environment.apiUrl}/users/` + user.UserId, user);

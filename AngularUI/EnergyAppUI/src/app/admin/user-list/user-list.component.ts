@@ -3,7 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { UserService } from '../../_services';
-import { UserList } from '../../_models';
+import { UserList } from '../../_models/userModelExtensions';
 import { AppConstants } from '../../app.constant';
 
 @Component({

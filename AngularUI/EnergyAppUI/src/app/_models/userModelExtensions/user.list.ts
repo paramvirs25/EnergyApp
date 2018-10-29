@@ -1,4 +1,4 @@
-import { UserDetails } from "./user.details";
+import { UserDetails } from "../user.details";
 
 export class UserList extends UserDetails {
     createdByName: string;
