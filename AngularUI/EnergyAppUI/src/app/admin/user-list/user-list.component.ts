@@ -16,6 +16,8 @@ export class UserListComponent implements OnInit {
     displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleName', 'userTypeName', 'actions'];
     gridDataSource: MatTableDataSource<UserList>;
     users: UserList[] = [];
+    showModal = false;
+    lblmodalContent = "";
 
     isLoadingResults = true;
 
@@ -48,6 +50,17 @@ export class UserListComponent implements OnInit {
     goAddUserDetails() {
         //this.router.navigate(['/', AppConstants.userDetailComponentPath]);
         this.router.navigate(['/userdetail/0']);
+    }
+
+    //Delete User
+    onDelete(user: UserList): void {
+        this.showModal = true;
+        this.lblmodalContent = "Are you sure you want to delete user " + user.userFirstName + " " + user.userLastName + " with UserId - " + user.userId + "?";
+        console.log(user);
+    }
+
+    closeModal() {
+        this.showModal = false;
     }
 }
 
