@@ -1,6 +1,6 @@
-namespace WebApi.Models
+namespace WebApi.Models.UserModelExtensions
 {
-    public class UserCreateModel
+    public class UserSaveModel
     {
         public UserModel User { get; set; }
         public UserDetailsModel UserDetail { get; set; }

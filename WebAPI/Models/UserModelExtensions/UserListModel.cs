@@ -1,4 +1,4 @@
-namespace WebApi.Models
+namespace WebApi.Models.UserModelExtensions
 {
     public class UserListModel : UserDetailsModel
     {

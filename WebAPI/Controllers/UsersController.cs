@@ -5,6 +5,7 @@ using Microsoft.Extensions.Options;
 
 using WebApi.Helpers;
 using WebApi.Models;
+using WebApi.Models.UserModelExtensions;
 using WebApi.Services;
 using WebApi.Helpers.Authorization;
 using System.Threading.Tasks;
@@ -51,7 +52,7 @@ namespace WebApi.Controllers
         [HttpPost("authenticate")]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Authenticate([FromBody]UserModel userModel)
+        public async Task<IActionResult> Authenticate([FromBody]UserAuthenticateModel userModel)
         {
             var userDetails = await _userService.Authenticate(userModel.Username, userModel.Password);
             if (userDetails == null)
@@ -86,18 +87,6 @@ namespace WebApi.Controllers
         //}
 
         /// <summary>
-        /// Gets a list of users
-        /// </summary>
-        /// <returns>Returns list of users</returns>
-        [Authorize(Policy = Policies.AdminsAndAbove)]
-        [Route("List")]
-        [HttpGet]
-        public async Task<IActionResult> GetList()
-        {
-            return Ok(await _userService.GetList());
-        }
-
-        /// <summary>
         /// Get logged in user
         /// </summary>
         /// <returns>Returns details of logged in user</returns>
@@ -120,6 +109,58 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetById(int id)
         {
             return Ok(await _userService.GetById(id));
+        }
+
+        /// <summary>
+        /// Gets a list of users
+        /// </summary>
+        /// <returns>Returns list of users</returns>
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [Route("List")]
+        [HttpGet]
+        public async Task<IActionResult> GetList()
+        {
+            return Ok(await _userService.GetList());
+        }
+
+        /// <summary>
+        /// Gets data for 'Create' user screen
+        /// </summary>
+        /// <returns>Returns data for 'Create' user screen</returns>
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [Route("GetForCreate")]
+        [HttpGet]
+        public async Task<IActionResult> GetForCreate()
+        {
+            try
+            {
+                return Ok(await _userService.GetForCreate());
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        /// <summary>
+        /// Gets data for 'Edit' user screen
+        /// </summary>
+        /// <returns>Returns data for 'Edit' user screen</returns>
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [Route("GetForEdit")]
+        [HttpGet]
+        public async Task<IActionResult> GetForEdit(int id)
+        {
+            try
+            {
+                return Ok(await _userService.GetForEdit(id));
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
         }
 
         //[HttpPut("{id}")]
@@ -152,20 +193,20 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a user if it already doesnot exits
         /// </summary>
-        /// <param name="userCreateModel"></param>
+        /// <param name="userSaveModel"></param>
         /// <returns></returns>
         /// <response code="200">If Registratin succeeds</response>
         /// <response code="400">If registration failed</response> 
-        [HttpPost("addEdit")]
+        [HttpPost("save")]
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> AddEdit([FromBody]UserCreateModel userCreateModel)
+        public async Task<IActionResult> Save([FromBody]UserSaveModel userSaveModel)
         {
             try
             {
                 // save 
-                return Ok(await _userService.AddEdit(userCreateModel));
+                return Ok(await _userService.Save(userSaveModel));
             }
             catch (AppException ex)
             {
