@@ -6,7 +6,7 @@
             <input class="form-control" type="search" placeholder="Search Users.." (keyup)="applyFilter($event.target.value)" aria-label="Search">
         </div>
         <div class="col-sm-8">
-            <button class="btn btn-dark floatR" (click)="goAddUserDetails()">+ Add User</button>
+            <button class="btn btn-dark floatR" (click)="goAddUserDetails()"><i class="fas fa-plus-square"></i>&nbsp; Add User</button>
         </div>
     </div>
     <div class="mTop20 users-list-container mat-elevation-z8">
@@ -45,11 +45,9 @@
                 <ng-container matColumnDef="actions">
                     <th mat-header-cell *matHeaderCellDef>Actions</th>
                     <td mat-cell *matCellDef="let row">
-                        <!--<a routerLink="/userdetail/{{row.userId}}">Edit</a> &nbsp;&nbsp;
-                        <a (click)="onDelete(row)">Delete</a>-->
-                        <button type="button" class="btn btn-outline-dark btn-sm" routerLink="/userdetail/{{row.userId}}">Edit</button>
+                        <button type="button" class="btn btn-outline-info btn-sm" routerLink="/userdetail/{{row.userId}}">Edit</button>
                         &nbsp;&nbsp;&nbsp;
-                        <button type="button" class="btn btn-outline-dark btn-sm" (click)="onDelete(row)">Delete</button>
+                        <button type="button" class="btn btn-outline-info btn-sm" (click)="onDelete(row)">Delete</button>
                     </td>
                 </ng-container>
 
@@ -63,7 +61,7 @@
 
 <!-- Delete Modal -->
 <div class="backdrop" [ngStyle]="{'display': showModal ? 'block' : 'none'}"></div>
-<div class="modal" id="deleteModal" role="dialog" aria-labelledby="deleteModalLabel" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
+<div class="modal" role="dialog" aria-labelledby="deleteModalLabel" [ngStyle]="{'display': showModal ? 'block' : 'none'}">
     <div class="modal-dialog" role="document" >
         <div class="modal-content">
             <div class="modal-header">
@@ -76,7 +74,7 @@
                   <p>{{lblmodalContent}}</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-outline-dark">Yes</button>
+                <button type="button" class="btn btn-outline-dark">Yes</button>&nbsp;
                 <button type="button" class="btn btn-outline-dark" (click)="closeModal()">No</button>
             </div>
         </div>

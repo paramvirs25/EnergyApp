@@ -50,19 +50,6 @@ END
 
 GO
 
-
-/****** Object:  Table [dbo].[UserTypesTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserTypesTbl]') AND type in (N'U'))
-DROP TABLE [dbo].[UserTypesTbl]
-GO
-/****** Object:  Table [dbo].[UsersTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UsersTbl]') AND type in (N'U'))
-DROP TABLE [dbo].[UsersTbl]
-GO
-/****** Object:  Table [dbo].[UserDetailsTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
-IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]') AND type in (N'U'))
-DROP TABLE [dbo].[UserDetailsTbl]
-GO
 /****** Object:  Table [dbo].[UserContentTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserContentTbl]') AND type in (N'U'))
 DROP TABLE [dbo].[UserContentTbl]
@@ -74,6 +61,18 @@ GO
 /****** Object:  Table [dbo].[ContentTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
 IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ContentTbl]') AND type in (N'U'))
 DROP TABLE [dbo].[ContentTbl]
+GO
+/****** Object:  Table [dbo].[UserTypesTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserTypesTbl]') AND type in (N'U'))
+DROP TABLE [dbo].[UserTypesTbl]
+GO
+/****** Object:  Table [dbo].[UserDetailsTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UserDetailsTbl]') AND type in (N'U'))
+DROP TABLE [dbo].[UserDetailsTbl]
+GO
+/****** Object:  Table [dbo].[UsersTbl]    Script Date: 10/27/2018 12:57:33 PM ******/
+IF  EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[UsersTbl]') AND type in (N'U'))
+DROP TABLE [dbo].[UsersTbl]
 GO
 
 
