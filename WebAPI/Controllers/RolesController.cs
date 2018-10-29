@@ -29,9 +29,9 @@ namespace WebApi.Controllers
         /// <returns>Returns users roles</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public IActionResult GetAll()
         {
-            return Ok(await _roleService.GetAll());
+            return Ok(_roleService.GetAll());
         }
     }
 }

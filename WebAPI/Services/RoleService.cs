@@ -9,7 +9,7 @@ namespace WebApi.Services
 {
     public interface IRoleService
     {
-        Task<IEnumerable<RoleModel>> GetAll();
+        IEnumerable<RoleModel> GetAll();
     }
 
     public class RoleService : IRoleService
@@ -25,7 +25,7 @@ namespace WebApi.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<RoleModel>> GetAll()
+        public IEnumerable<RoleModel> GetAll()
         {
             return Role.GetAllRoles();
         }

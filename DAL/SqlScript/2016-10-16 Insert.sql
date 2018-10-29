@@ -1,3 +1,4 @@
+
 --Delete
 Delete from [UserDetailsTbl]
 Go
@@ -20,22 +21,25 @@ GO
 INSERT [dbo].[UserTypesTbl] ([UserTypeId], UserTypeDisplayName, [UserTypeName]) VALUES (1, N'Normal Agent', N'NormalAgent')
 GO
 
---UsersTbl
+----UsersTbl
 SET IDENTITY_INSERT [dbo].[UsersTbl] ON 
 GO
-INSERT [dbo].[UsersTbl] ([UserId], [Username], [Password]) VALUES (1, N'psingh', N'psingh')
+INSERT [dbo].[UsersTbl] ([UserId], [Username], [Password]) VALUES (1, N'superadmin', N'superadmin')
 GO
 INSERT [dbo].[UsersTbl] ([UserId], [Username], [Password]) VALUES (2, N'admin', N'admin')
 GO
-INSERT [dbo].[UsersTbl] ([UserId], [Username], [Password]) VALUES (3, N'super', N'super')
+INSERT [dbo].[UsersTbl] ([UserId], [Username], [Password]) VALUES (3, N'psingh', N'psingh')
 GO
 SET IDENTITY_INSERT [dbo].[UsersTbl] OFF
 GO
 
---UserDetailsTbl
-INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail]) VALUES (1, 100, 1, N'Param', N'Singh', N'papu@singh.com')
+----UserDetailsTbl
+INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail], [CreatedBy], [ModifiedBy]) 
+VALUES (1, 300, 1, N'Super', N'Admin', N'super@admin.com', 1, 1)
 GO
-INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail]) VALUES (2, 200, 1, N'Shaminder', N'Hayabusa', N'shaminder@shaminder.com')
+INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail], [CreatedBy], [ModifiedBy]) 
+VALUES (2, 200, 1, N'Admin', N'Hayabusa', N'shaminder@shaminder.com', 1, 1)
 GO
-INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail]) VALUES (3, 300, 1, N'Super', N'User', N'super@user.com')
+INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail], [CreatedBy], [ModifiedBy]) 
+VALUES (3, 100, 1, N'Agent', N'User', N'agent@user.com', 2, 2)
 GO

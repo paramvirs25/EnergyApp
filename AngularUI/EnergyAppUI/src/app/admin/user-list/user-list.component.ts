@@ -29,10 +29,12 @@ export class UserListComponent implements OnInit {
 
     ngOnInit() {
 
-        this.userService.getAll().subscribe(userlist => {
+        this.userService.getList().subscribe(userlist => {
             this.gridDataSource = new MatTableDataSource(userlist);
             this.users = userlist;
             this.isLoadingResults = false;
+
+            console.log(userlist);
 
             this.gridDataSource.sort = this.sort;
             this.gridDataSource.paginator = this.paginator;

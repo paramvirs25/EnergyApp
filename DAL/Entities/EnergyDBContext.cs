@@ -46,6 +46,26 @@ namespace DAL.Entities
                 entity.Property(e => e.ContentUrl)
                     .HasColumnName("ContentURL")
                     .HasMaxLength(1000);
+
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.ContentTblCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserDetailsTbl_ContentTbl_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.ContentTblModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserDetailsTbl_ContentTbl_ModifiedBy");
             });
 
             modelBuilder.Entity<RolesTbl>(entity =>
@@ -69,6 +89,10 @@ namespace DAL.Entities
             {
                 entity.HasKey(e => new { e.UserId, e.ContentId });
 
+                entity.Property(e => e.DateCompleted)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.HasOne(d => d.Content)
                     .WithMany(p => p.UserContentTbl)
                     .HasForeignKey(d => d.ContentId)
@@ -79,7 +103,7 @@ namespace DAL.Entities
                     .WithMany(p => p.UserContentTbl)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_UserContent");
+                    .HasConstraintName("FK_UserDetailsTbl_UserContent");
             });
 
             modelBuilder.Entity<UserDetailsTbl>(entity =>
@@ -88,6 +112,14 @@ namespace DAL.Entities
 
                 entity.Property(e => e.UserId).ValueGeneratedNever();
 
+                entity.Property(e => e.CreatedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.ModifiedDate)
+                    .HasColumnType("datetime")
+                    .HasDefaultValueSql("(getdate())");
+
                 entity.Property(e => e.UserEmail).HasMaxLength(50);
 
                 entity.Property(e => e.UserFirstName)
@@ -95,6 +127,18 @@ namespace DAL.Entities
                     .HasMaxLength(50);
 
                 entity.Property(e => e.UserLastName).HasMaxLength(50);
+
+                entity.HasOne(d => d.CreatedByNavigation)
+                    .WithMany(p => p.InverseCreatedByNavigation)
+                    .HasForeignKey(d => d.CreatedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserDetailsTbl_UserDetails_CreatedBy");
+
+                entity.HasOne(d => d.ModifiedByNavigation)
+                    .WithMany(p => p.InverseModifiedByNavigation)
+                    .HasForeignKey(d => d.ModifiedBy)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_UserDetailsTbl_UserDetails_ModifiedBy");
 
                 entity.HasOne(d => d.Role)
                     .WithMany(p => p.UserDetailsTbl)
