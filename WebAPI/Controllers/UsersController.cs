@@ -148,7 +148,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns>Returns data for 'Edit' user screen</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
-        [Route("GetForEdit")]
+        [Route("GetForEdit/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetForEdit(int id)
         {

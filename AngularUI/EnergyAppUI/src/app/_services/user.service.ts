@@ -29,21 +29,18 @@ export class UserService {
         return this.http.post(`${environment.apiUrl}/users/addEdit`, { user: userLogin, userDetail: userDetails });
     }
 
-    getForCreate(): Observable<UserCreate[]> {
-        return this.http.get<UserCreate[]>(`${environment.apiUrl}/users/GetForCreate/`);
+    getForCreate(): Observable<UserCreate> {
+        return this.http.get<UserCreate>(`${environment.apiUrl}/users/GetForCreate/`);
     }
 
-    getForEdit(id: number): Observable<UserEdit[]> {
-        return this.http.get<UserEdit[]>(`${environment.apiUrl}/users/GetForEdit/` + id);
+    getForEdit(id: number): Observable<UserEdit> {
+        return this.http.get<UserEdit>(`${environment.apiUrl}/users/GetForEdit/` + id);
     }
 
     save(userSave: UserSave) {
         return this.http.post(`${environment.apiUrl}/users/save`, { userSave: userSave });
     }
-
-
-
-
+    
     //update(user: User) {
     //  return this.http.put(`${environment.apiUrl}/users/` + user.UserId, user);
     //}

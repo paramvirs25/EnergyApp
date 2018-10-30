@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AlertService, UserService, RolesService, UserTypesService } from '../../_services';
+import { AlertService, UserService } from '../../_services';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -7,6 +7,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { UserLogin, UserDetails, Roles, UserTypes } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { AbstractControl } from '@angular/forms';
+import { UserSave } from '../../_models/userModelExtensions';
 
 @Component({
     selector: 'app-user-detail',
@@ -17,8 +18,6 @@ export class UserDetailComponent implements OnInit {
 
     constructor(
         private userService: UserService,
-        private rolesService: RolesService,
-        private userTypesService: UserTypesService,
         private router: Router,
         private alertService: AlertService,
         private activeRoute: ActivatedRoute,
@@ -26,11 +25,7 @@ export class UserDetailComponent implements OnInit {
 
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
-    hasRoles = false;
-    hasUserTypes = false;
-    areControlsLoaded = false;
-    userLogin: UserLogin;
-    userDetail: UserDetails;
+    userSave: UserSave;
     isLoadingResults = false;
     isSaving = false;
 
@@ -38,7 +33,7 @@ export class UserDetailComponent implements OnInit {
     submitted = false;
 
     userId = 0; //Add Mode
-    lblAddEditUser = "Add";
+    lblAddEditUser: string;
     hasUserId = false;
 
     ngOnInit() {
@@ -59,27 +54,46 @@ export class UserDetailComponent implements OnInit {
                 validator: PasswordValidation.MatchPassword
             });
 
-        //Initialise DropDowns
-        this.initRoles();
-        this.initUserTypes();
+        //Add Mode
+        if (this.userId == 0) {
+            this.lblAddEditUser = "Add";
+            this.isLoadingResults = true;
 
-        //Edit Mode
-        if (this.userId > 0) {
+            //Get Data for Create Mode
+            this.userService.getForCreate().subscribe(userCreate => {
+
+                //Initialise dropdowns
+                this.initRoles(userCreate.roles);
+                this.initUserTypes(userCreate.userTypes);
+
+                this.isLoadingResults = false;
+            });
+        } //Edit Mode
+        else if (this.userId > 0) {
             this.hasUserId = true;
             this.lblAddEditUser = "Edit";
             this.isLoadingResults = true;
 
-            this.userService.getById(this.userId).subscribe(user => {
+            this.userService.getForEdit(this.userId).subscribe(userEdit => {
+                console.log(userEdit);
 
-                this.userDetail = new UserDetails();
-                this.userDetail = user; // bind modal to load controls
+                this.f.username.setValue(userEdit.user.username);
+                this.f.password.setValue(userEdit.user.password);
+                this.f.confirmpassword.setValue(userEdit.user.password);
 
-                this.f.firstname.setValue(user.userFirstName);
-                this.f.lastname.setValue(user.userLastName);
-                this.f.email.setValue(user.userEmail);
+                this.f.firstname.setValue(userEdit.userdetail.userFirstName);
+                this.f.lastname.setValue(userEdit.userdetail.userLastName);
+                this.f.email.setValue(userEdit.userdetail.userEmail);
 
-                this.areControlsLoaded = true;
-                this.bindAfterCallControls();
+                //Initialise dropdowns
+                this.initRoles(userEdit.roles);
+                this.initUserTypes(userEdit.userTypes);
+
+                //Bind Dropdowns
+                this.f.ddrole.setValue(userEdit.userdetail.roleId);
+                this.f.ddusertype.setValue(userEdit.userdetail.userTypeId);
+
+                this.isLoadingResults = false;
             });
         }
     }
@@ -97,79 +111,48 @@ export class UserDetailComponent implements OnInit {
         }
 
         //Save user details
-        this.userLogin = new UserLogin();
-        this.userLogin.username = this.f.username.value;
-        this.userLogin.password = this.f.password.value;
-        this.userLogin.userId = this.userId;
+        this.userSave = new UserSave();
 
-        this.userDetail = new UserDetails();
-        this.userDetail.userId = this.userId;
-        this.userDetail.roleId = this.f.ddrole.value;
-        this.userDetail.userTypeId = this.f.ddusertype.value;
-        this.userDetail.userFirstName = this.f.firstname.value;
-        this.userDetail.userLastName = this.f.lastname.value;
-        this.userDetail.userEmail = this.f.email.value;
+        this.userSave.user = new UserLogin();
+        this.userSave.user.userId = this.userId;
+        this.userSave.user.username = this.f.username.value;
+        this.userSave.user.password = this.f.password.value;
 
-        console.log(this.userLogin);
-        console.log(this.userDetail);
+        this.userSave.userdetail = new UserDetails();
+        this.userSave.userdetail.userId = this.userId;
+        this.userSave.userdetail.userFirstName = this.f.firstname.value;
+        this.userSave.userdetail.userLastName = this.f.lastname.value;
+        this.userSave.userdetail.userEmail = this.f.email.value;
+        this.userSave.userdetail.roleId = this.f.ddrole.value;
+        this.userSave.userdetail.userTypeId = this.f.ddusertype.value;
+       
+        console.log(this.userSave);
 
         this.isSaving = true;
-        this.userService.addEdit(this.userLogin, this.userDetail)
-            .subscribe(
-                data => {
-                    this.alertService.success('Registration successful', true);
-                    //this.router.navigate(['/login']);
-                    this.router.navigate(['/', AppConstants.userListComponentPath]);
-                },
-                error => {
-                    //this.alertService.error(error);
-                    this.isSaving = false;
-                });
+        this.userService.save(this.userSave).subscribe(
+            data => {
+                this.alertService.success('Registration successful', true);
+                //this.router.navigate(['/login']);
+                this.router.navigate(['/', AppConstants.userListComponentPath]);
+            },
+            error => {
+                //this.alertService.error(error);
+                this.isSaving = false;
+            });        
 
         //this.router.navigate(['/', AppConstants.userListComponentPath]);
     }
 
     // Initialise Dropdown Roles
-    initRoles() {
-        this.isLoadingResults = true;
-        this.rolesService.getRoles().subscribe(roles => {
-            this.roleOptions = roles;
-            this.f.ddrole.setValue(this.roleOptions[0].roleId); // Set Default value
-
-            this.hasRoles = true;
-            this.bindAfterCallControls();
-        });
+    initRoles(roles: Roles[]) {
+        this.roleOptions = roles;
+        this.f.ddrole.setValue(this.roleOptions[0].roleId); // Set Default value
     }
 
     // Initialise Dropdown UserTypes
-    initUserTypes() {
-        this.isLoadingResults = true;
-        this.userTypesService.getUserTypes().subscribe(userTypes => {
-            this.userTypeOptions = userTypes;
-            this.f.ddusertype.setValue(this.userTypeOptions[0].userTypeId); // Set Default value
-
-            this.hasUserTypes = true;
-            this.bindAfterCallControls();
-        });
-    }
-
-    // bind Dropdowns
-    // Call this method on all calls
-    bindAfterCallControls() {
-        //If Edit Mode- bind Dropdowns after all http calls have been completed and disable Loading Spinner
-        if (this.userId > 0) {
-            if (this.hasRoles && this.hasUserTypes && this.areControlsLoaded) {
-                this.f.ddrole.setValue(this.userDetail.roleId);
-                this.f.ddusertype.setValue(this.userDetail.userTypeId);
-
-                this.isLoadingResults = false;
-            }
-        } //If Add Mode - disable Loading Spinner when all controls have been initialised
-        else {
-            if (this.hasRoles && this.hasUserTypes) {
-                this.isLoadingResults = false;
-            }
-        }
+    initUserTypes(userTypes: UserTypes[]) {
+        this.userTypeOptions = userTypes;
+        this.f.ddusertype.setValue(this.userTypeOptions[0].userTypeId); // Set Default value
     }
 
     // Go To Add Users
