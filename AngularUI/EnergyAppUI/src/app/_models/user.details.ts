@@ -1,4 +1,4 @@
-export class UserDetails {
+export class UserDetail {
     userId: number;
     roleId: number;
     userTypeId: number;

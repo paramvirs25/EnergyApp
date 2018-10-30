@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { UserLogin, UserDetails, Roles, UserTypes } from '../../_models';
+import { UserLogin, UserDetail, Roles, UserTypes } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { AbstractControl } from '@angular/forms';
 import { UserSave } from '../../_models/userModelExtensions';
@@ -81,17 +81,17 @@ export class UserDetailComponent implements OnInit {
                 this.f.password.setValue(userEdit.user.password);
                 this.f.confirmpassword.setValue(userEdit.user.password);
 
-                this.f.firstname.setValue(userEdit.userdetail.userFirstName);
-                this.f.lastname.setValue(userEdit.userdetail.userLastName);
-                this.f.email.setValue(userEdit.userdetail.userEmail);
+                this.f.firstname.setValue(userEdit.userDetail.userFirstName);
+                this.f.lastname.setValue(userEdit.userDetail.userLastName);
+                this.f.email.setValue(userEdit.userDetail.userEmail);
 
                 //Initialise dropdowns
                 this.initRoles(userEdit.roles);
                 this.initUserTypes(userEdit.userTypes);
 
                 //Bind Dropdowns
-                this.f.ddrole.setValue(userEdit.userdetail.roleId);
-                this.f.ddusertype.setValue(userEdit.userdetail.userTypeId);
+                this.f.ddrole.setValue(userEdit.userDetail.roleId);
+                this.f.ddusertype.setValue(userEdit.userDetail.userTypeId);
 
                 this.isLoadingResults = false;
             });
@@ -113,20 +113,18 @@ export class UserDetailComponent implements OnInit {
         //Save user details
         this.userSave = new UserSave();
 
-        this.userSave.user = new UserLogin();
-        this.userSave.user.userId = this.userId;
-        this.userSave.user.username = this.f.username.value;
-        this.userSave.user.password = this.f.password.value;
+        this.userSave = new UserSave();
+        this.userSave.userId = this.userId;
+        this.userSave.username = this.f.username.value;
+        this.userSave.password = this.f.password.value;
 
-        this.userSave.userdetail = new UserDetails();
-        this.userSave.userdetail.userId = this.userId;
-        this.userSave.userdetail.userFirstName = this.f.firstname.value;
-        this.userSave.userdetail.userLastName = this.f.lastname.value;
-        this.userSave.userdetail.userEmail = this.f.email.value;
-        this.userSave.userdetail.roleId = this.f.ddrole.value;
-        this.userSave.userdetail.userTypeId = this.f.ddusertype.value;
+        this.userSave.userFirstName = this.f.firstname.value;
+        this.userSave.userLastName = this.f.lastname.value;
+        this.userSave.userEmail = this.f.email.value;
+        this.userSave.roleId = this.f.ddrole.value;
+        this.userSave.userTypeId = this.f.ddusertype.value;
        
-        console.log(this.userSave);
+        //console.log(this.userSave);
 
         this.isSaving = true;
         this.userService.save(this.userSave).subscribe(

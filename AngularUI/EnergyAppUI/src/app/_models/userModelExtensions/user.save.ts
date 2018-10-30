@@ -1,8 +1,12 @@
-import { UserLogin } from "../user.login";
-import { UserDetails } from "../user.details";
-
 export class UserSave {
-    user: UserLogin;
-    userdetail: UserDetails;
+    userId: number;
+    username: string;
+    password: string;
+
+    roleId: number;
+    userTypeId: number;
+    userFirstName: string;
+    userLastName: string;
+    userEmail: string;
 }
 

@@ -6,9 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="EnergyAppUI\dist\**" />
     <Compile Remove="EnergyAppUI\e2e\**" />
+    <Content Remove="EnergyAppUI\dist\**" />
     <Content Remove="EnergyAppUI\e2e\**" />
+    <EmbeddedResource Remove="EnergyAppUI\dist\**" />
     <EmbeddedResource Remove="EnergyAppUI\e2e\**" />
+    <None Remove="EnergyAppUI\dist\**" />
     <None Remove="EnergyAppUI\e2e\**" />
   </ItemGroup>
 

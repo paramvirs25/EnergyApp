@@ -1,6 +1,6 @@
-import { UserDetails } from "../user.details";
+import { UserDetail } from "../user.details";
 
-export class UserList extends UserDetails {
+export class UserList extends UserDetail {
     createdByName: string;
     modifiedByName: string;
     roleName: string;

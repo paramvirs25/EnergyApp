@@ -9,6 +9,7 @@ using WebApi.Models.UserModelExtensions;
 using DAL.Entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace WebApi.Services
 {
@@ -22,7 +23,7 @@ namespace WebApi.Services
         Task<UserCreateModel> GetForCreate();
         Task<UserEditModel> GetForEdit(int id);
 
-        Task<UserSaveModel> Save(UserSaveModel userSaveModel);
+        Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId);
         //void Update(UserModel user, string password = null);
         //void Delete(int id);
     }
@@ -128,26 +129,27 @@ namespace WebApi.Services
         {
             UserEditModel userEditModel = new UserEditModel
             {
-                UserDetail = await GetById(id),
                 Roles = _roleService.GetAll(),
                 UserTypes = await _userTypeService.GetAll()
             };
 
             var userTbl = await _context.UsersTbl
-               .AsNoTracking()
-               .SingleOrDefaultAsync(x => x.UserId == id);
+                .Include(u => u.UserDetailsTbl)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(x => x.UserId == id);
 
-            userEditModel.User = _mapper.Map<UserAuthenticateModel>(userTbl);
+            userEditModel.User = _mapper.Map<UserModel>(userTbl);
+            userEditModel.UserDetail = _mapper.Map<UserDetailsModel>(userTbl.UserDetailsTbl);
 
             return userEditModel;
         }
 
-        public async Task<UserSaveModel> Save(UserSaveModel userSaveModel)
+        public async Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId)
         {
-            bool isCreateUser = userSaveModel.User.UserId == 0;
+            bool isCreateUser = userSaveModel.UserId == 0;
 
             // validation
-            if (string.IsNullOrWhiteSpace(userSaveModel.User.Username) || string.IsNullOrWhiteSpace(userSaveModel.User.Password))
+            if (string.IsNullOrWhiteSpace(userSaveModel.Username) || string.IsNullOrWhiteSpace(userSaveModel.Password))
             {
                 throw new AppException("Username and Password are required");
             }
@@ -156,12 +158,12 @@ namespace WebApi.Services
             if (await _context.UsersTbl
                 .AsNoTracking()
                 .AnyAsync(x =>
-                    x.Username == userSaveModel.User.Username
-                    && x.UserId != userSaveModel.User.UserId
+                    x.Username == userSaveModel.Username
+                    && x.UserId != userSaveModel.UserId
                     )
                 )
             {
-                throw new AppException("Username \"" + userSaveModel.User.Username + "\" is already taken");
+                throw new AppException("Username \"" + userSaveModel.Username + "\" is already taken");
             }
 
 
@@ -182,26 +184,34 @@ namespace WebApi.Services
             else
             {
                 usersTbl = await _context.UsersTbl
-                    .Where(u => u.UserId == userSaveModel.User.UserId)
+                    .Where(u => u.UserId == userSaveModel.UserId)
                     .Include(udt => udt.UserDetailsTbl)
                     .SingleOrDefaultAsync();
             }
 
             //populate table objects
-            _mapper.Map(userSaveModel.User, usersTbl);
-            _mapper.Map(userSaveModel.UserDetail, usersTbl.UserDetailsTbl);
+            _mapper.Map(userSaveModel, usersTbl);
+            _mapper.Map(userSaveModel, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
             if (isCreateUser)
             {
+                usersTbl.UserDetailsTbl.CreatedBy = operatingUserId;
+                usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
+                
                 await _context.AddAsync(usersTbl);
+            }
+            else
+            {
+                usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
+                usersTbl.UserDetailsTbl.ModifiedDate = DateTime.Now;
             }
 
             await _context.SaveChangesAsync();
 
             //after save update models with data
-            _mapper.Map(usersTbl, userSaveModel.User);
-            _mapper.Map(usersTbl.UserDetailsTbl, userSaveModel.UserDetail);
+            //_mapper.Map(usersTbl, userSaveModel.User);
+            //_mapper.Map(usersTbl.UserDetailsTbl, userSaveModel.UserDetail);
 
             return userSaveModel;
         }

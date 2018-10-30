@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { UserDetails } from '../../_models';
+import { UserDetail } from '../../_models';
 import { UserService } from '../../_services';
 import { UserShared } from '../../_shared';
 import { AppConstants } from '../../app.constant';
@@ -13,7 +13,7 @@ import { AppConstants } from '../../app.constant';
     styleUrls: ['./client-layout.component.css']
 })
 export class ClientLayoutComponent implements OnInit {
-    currentUser: UserDetails;
+    currentUser: UserDetail;
 
     constructor(private userService: UserService, private router: Router, private userShared: UserShared) { }
 

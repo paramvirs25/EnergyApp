@@ -206,7 +206,8 @@ namespace WebApi.Controllers
             try
             {
                 // save 
-                return Ok(await _userService.Save(userSaveModel));
+                var operatingUserId = int.Parse(HttpContext.User.Identity.Name);
+                return Ok(await _userService.Save(userSaveModel, operatingUserId));
             }
             catch (AppException ex)
             {

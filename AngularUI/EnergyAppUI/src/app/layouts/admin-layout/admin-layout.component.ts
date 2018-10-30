@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { first } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { UserDetails } from '../../_models';
+import { UserDetail } from '../../_models';
 import { UserService } from '../../_services';
 import { UserShared } from '../../_shared';
 import { AppConstants } from '../../app.constant';
@@ -14,7 +14,7 @@ import { AppConstants } from '../../app.constant';
 })
 export class AdminLayoutComponent implements OnInit {
 
-  currentUser: UserDetails;
+  currentUser: UserDetail;
 
   constructor(private userService: UserService, private router: Router, private userShared: UserShared) { }
 
