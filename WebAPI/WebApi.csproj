@@ -6,7 +6,8 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     
     <!--To suppress warnings project-wide, define a semicolon-delimited list of warning codes to ignore in the project file.-->  
-    <NoWarn>$(NoWarn);1591</NoWarn>
+    <NoWarn>$(NoWarn);1591</NoWarn>  
+    <UserSecretsId>f4679ecd-cbaa-4041-bc74-c12fa8c9ef42</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.0.2" />
