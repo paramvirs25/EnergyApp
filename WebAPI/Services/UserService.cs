@@ -18,7 +18,7 @@ namespace WebApi.Services
         Task<UserDetailsModel> Authenticate(string username, string password);
         //Task<IEnumerable<UserListModel>> GetAll();
 
-        Task<IEnumerable<UserListModel>> GetList();
+        Task<List<UserListModel>> GetList();
         Task<UserDetailsModel> GetById(int id);
         Task<UserCreateModel> GetForCreate();
         Task<UserEditModel> GetForEdit(int id);
@@ -100,7 +100,7 @@ namespace WebApi.Services
         /// * non-active users
         /// </summary>
         /// <returns>Returns list of users</returns>
-        public async Task<IEnumerable<UserListModel>> GetList()
+        public async Task<List<UserListModel>> GetList()
         {
             var userDetailTbl = await _context.UserDetailsTbl
                 .Where(ud => ud.IsDeleted == false && ud.UserId > 1)
@@ -111,7 +111,7 @@ namespace WebApi.Services
                 .AsNoTracking()
                 .ToListAsync();
 
-            return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
+            return _mapper.Map<List<UserDetailsTbl>, List<UserListModel>>(userDetailTbl);
         }
 
         public async Task<UserCreateModel> GetForCreate()

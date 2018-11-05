@@ -1,13 +1,14 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 using WebApi.Helpers;
+using WebApi.Models;
 using WebApi.Models.UserModelExtensions;
 using WebApi.Services;
 using WebApi.Helpers.Authorization;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace WebApi.Controllers
 {
@@ -92,10 +93,10 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AgentsAndAbove)]
         [Route("GetLoggedIn")]
         [HttpGet]
-        public async Task<IActionResult> GetLoggedIn()
+        public async Task<ActionResult<UserDetailsModel>> GetLoggedIn()
         {
             var userId = int.Parse(HttpContext.User.Identity.Name);
-            return Ok(await _userService.GetById(userId));
+            return await _userService.GetById(userId);
         }
 
         /// <summary>
@@ -105,9 +106,9 @@ namespace WebApi.Controllers
         /// <returns>Returns User</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<ActionResult<UserDetailsModel>> GetById(int id)
         {
-            return Ok(await _userService.GetById(id));
+            return await _userService.GetById(id);
         }
 
         /// <summary>
@@ -117,9 +118,9 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [Route("List")]
         [HttpGet]
-        public async Task<IActionResult> GetList()
+        public async Task<ActionResult<IEnumerable<UserListModel>>> GetList()
         {
-            return Ok(await _userService.GetList());
+            return await _userService.GetList();
         }
 
         /// <summary>
@@ -129,11 +130,11 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [Route("GetForCreate")]
         [HttpGet]
-        public async Task<IActionResult> GetForCreate()
+        public async Task<ActionResult<UserCreateModel>> GetForCreate()
         {
             try
             {
-                return Ok(await _userService.GetForCreate());
+                return await _userService.GetForCreate();
             }
             catch (AppException ex)
             {
@@ -149,11 +150,11 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [Route("GetForEdit/{id}")]
         [HttpGet]
-        public async Task<IActionResult> GetForEdit(int id)
+        public async Task<ActionResult<UserEditModel>> GetForEdit(int id)
         {
             try
             {
-                return Ok(await _userService.GetForEdit(id));
+                return await _userService.GetForEdit(id);
             }
             catch (AppException ex)
             {
@@ -200,13 +201,13 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [ProducesResponseType(200)]
         [ProducesResponseType(400)]
-        public async Task<IActionResult> Save([FromBody]UserSaveModel userSaveModel)
+        public async Task<ActionResult<UserSaveModel>> Save([FromBody]UserSaveModel userSaveModel)
         {
             try
             {
                 // save 
                 var operatingUserId = int.Parse(HttpContext.User.Identity.Name);
-                return Ok(await _userService.Save(userSaveModel, operatingUserId));
+                return await _userService.Save(userSaveModel, operatingUserId);
             }
             catch (AppException ex)
             {
