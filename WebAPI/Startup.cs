@@ -8,13 +8,12 @@ using WebApi.Helpers;
 using WebApi.Services;
 using AutoMapper;
 
-using Microsoft.Extensions.Options;
-
 using Swashbuckle.AspNetCore.Swagger;
 using System.Reflection;
 using System;
 using System.IO;
 using DAL.Entities;
+using FluentValidation.AspNetCore;
 
 namespace WebApi
 {
@@ -32,7 +31,11 @@ namespace WebApi
         {
             services.AddCors();
             //services.AddDbContext<DataContext>(x => x.UseInMemoryDatabase("TestDb"));
-            services.AddMvc();
+            services.AddMvc(opt =>
+            {
+                opt.Filters.Add(typeof(ValidatorActionFilter));
+            }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+
             services.AddAutoMapper();
 
             // configure strongly typed settings objects

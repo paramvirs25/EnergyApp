@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 
 using WebApi.Helpers;
-using WebApi.Models;
 using WebApi.Models.UserModelExtensions;
 using WebApi.Services;
 using WebApi.Helpers.Authorization;
@@ -18,16 +17,16 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        private IMapper _mapper;
+        //private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
-            IMapper mapper,
+            //IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
-            _mapper = mapper;
+            //_mapper = mapper;
             _appSettings = appSettings.Value;
         }
 
