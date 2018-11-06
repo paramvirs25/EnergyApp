@@ -16,6 +16,7 @@ export class UserListComponent implements OnInit {
     displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleName', 'userTypeName', 'actions'];
     gridDataSource: MatTableDataSource<UserList>;
     users: UserList[] = [];
+    userIdToDelete =  0;
     showModal = false;
     lblmodalContent = "";
 
@@ -28,7 +29,11 @@ export class UserListComponent implements OnInit {
         private router: Router) { }
 
     ngOnInit() {
+        this.bindUserList();
+    }
 
+    //Bind Grid
+    bindUserList() {
         this.userService.getList().subscribe(userlist => {
             this.gridDataSource = new MatTableDataSource(userlist);
             this.users = userlist;
@@ -52,11 +57,19 @@ export class UserListComponent implements OnInit {
         this.router.navigate(['/userdetail/0']);
     }
 
-    //Delete User
-    onDelete(user: UserList): void {
+    //Delete User Modal
+    onDeleteModal(user: UserList): void {
         this.showModal = true;
         this.lblmodalContent = "Are you sure you want to delete user " + user.userFirstName + " " + user.userLastName + " with UserId - " + user.userId + "?";
-        console.log(user);
+        this.userIdToDelete = user.userId;        
+    }
+
+    //Delete user
+    deleteUser() {
+        this.userService.delete(this.userIdToDelete).subscribe(() => {
+            this.closeModal();
+            this.bindUserList();
+        }); 
     }
 
     closeModal() {

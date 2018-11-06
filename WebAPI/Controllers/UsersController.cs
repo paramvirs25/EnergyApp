@@ -183,12 +183,27 @@ namespace WebApi.Controllers
         //    }
         //}
 
-        //[HttpDelete("{id}")]
-        //public IActionResult Delete(int id)
-        //{
-        //    _userService.Delete(id);
-        //    return Ok();
-        //}
+        /// <summary>
+        /// Delete User by Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                var operatingUserId = int.Parse(HttpContext.User.Identity.Name);
+                await _userService.Delete(id, operatingUserId);
+                return Ok();
+            }
+            catch (AppException ex)
+            {
+                // return error message if there was an exception
+                return BadRequest(new { message = ex.Message });
+            }
+        }
 
         /// <summary>
         /// Creates a user if it already doesnot exits

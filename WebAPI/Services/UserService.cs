@@ -24,8 +24,8 @@ namespace WebApi.Services
         Task<UserEditModel> GetForEdit(int id);
 
         Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId);
-        //void Update(UserModel user, string password = null);
-        //void Delete(int id);
+        //void Update(UserModel user, string password = null);        
+        Task Delete(int id, int operatingUserId);
     }
 
     public class UserService : IUserService
@@ -249,15 +249,19 @@ namespace WebApi.Services
         //    _context.SaveChanges();
         //}
 
-        //public void Delete(int id)
-        //{
-        //    var user = _context.UsersTbl.Find(id);
-        //    if (user != null)
-        //    {
-        //        _context.UsersTbl.Remove(user);
-        //        _context.SaveChanges();
-        //    }
-        //}
+        public async Task Delete(int id, int operatingUserId)
+        {
+            var ud = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == id);
+
+            if (ud != null)
+            {
+                ud.IsDeleted = true;
+                ud.ModifiedBy = operatingUserId;
+                ud.ModifiedDate = DateTime.Now;
+
+                await _context.SaveChangesAsync();
+            }            
+        }
 
         //public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
         //{
