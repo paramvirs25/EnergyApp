@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { catchError} from 'rxjs/operators';
 
 import { AuthenticationService, AlertService } from '../_services';
 
@@ -33,17 +33,48 @@ export class ErrorInterceptor implements HttpInterceptor {
             //    location.reload(true);
             //}
 
-            //err.error.message
-            let error:string = "";
-            if (err.error && err.error.message != undefined) {
-                error = err.error.message;
-                this.alertService.error(`${error}`);
+            if (err.status == "400") //"Bad Request" - Some validation failed on server
+            {
+                let badReqMsg : string = this.formatBadRequestMsg(err.error);
+                if (badReqMsg == "") {
+                    badReqMsg = err.statusText;
+                }
+
+                this.alertService.error(badReqMsg);
             }
-            else {
-                error = err.message || err.statusText;
+            //else if (err.error && err.error.message != undefined) {
+            //    error = err.error.message;
+            //    this.alertService.error(`${error}`);
+            //}
+            //else {
+            //    error = err.message || err.statusText;
+            //}
+
+            return throwError(err);
+        }));
+    }
+
+    /*
+     * Expected object format is:
+     * {Key1: ArrayValue(1), Key2: ArrayValue(1)}
+     */
+    formatBadRequestMsg(error: object) : string {
+        let errMsgs: string[] = new Array();
+
+        if (error != null) {
+            for (let key in error) {
+                let value = error[key];
+                if (value instanceof Array) { //if key's value is array
+                    errMsgs = errMsgs.concat(value);
+                }
+                else { //if key's value is a string
+                    errMsgs.push(value);
+                }
             }
 
-            return throwError(error);
-        }));
+            return errMsgs.join("\n");
+        }
+
+        return "";
     }
 }
