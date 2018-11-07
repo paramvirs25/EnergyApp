@@ -64,6 +64,9 @@ namespace WebApi
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            //must be added before app.UseMvc();
+            app.UseMiddleware(typeof(ErrorHandlingMiddleware));
+
             // global cors policy
             app.UseCors(x => x
                 .AllowAnyOrigin()
