@@ -1,8 +1,20 @@
-﻿namespace WebApi.AppConstants
+﻿namespace WebApi.AppConstants.ValidationMessages
 {
-    public class ValidationMessage
+    public class UserValidationMessage
     {
         public const string USERNAME_PASSWORD_INCORRECT = "Username or password is incorrect.";
         public const string USER_NON_AUTHORIZED_ADMIN_AREA = "User not authorized to access admin area.";
+        
+        public const string USERNAME_ALREADY_TAKEN = "Username {0} is already taken.";
+
+        //Required
+        public const string USERNAME_PASSWORD_REQUIRED = "Username and Password are required.";
+        public const string USER_FIRSTNAME_REQUIRED = "First name is required.";
+        public const string USER_LASTNAME_REQUIRED = "Last name is required.";
+        public const string USER_EMAIL_REQUIRED = "Email is required.";
+        public const string USERNAME_REQUIRED = "Username is required.";
+        public const string PASSWORD_REQUIRED = "Password is required.";
+        public const string ROLE_REQUIRED = "Role is required.";
+        public const string USER_TYPE_REQUIRED = "User type is required.";
     }
 }

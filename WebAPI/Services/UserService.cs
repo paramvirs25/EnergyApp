@@ -10,7 +10,7 @@ using DAL.Entities;
 using WebApi.Models;
 using WebApi.Models.UserModelExtensions;
 using WebApi.Helpers;
-using WebApi.AppConstants;
+using WebApi.AppConstants.ValidationMessages;
 using WebApi.Helpers.Authorization;
 using WebApi.Helpers.Exceptions;
 
@@ -61,16 +61,16 @@ namespace WebApi.Services
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
-            // check if username exists
+            // check if user exists
             if (user == null)
             {
-                throw new BadRequestException(ValidationMessage.USERNAME_PASSWORD_INCORRECT);
+                throw new BadRequestException(UserValidationMessage.USERNAME_PASSWORD_INCORRECT);
             }
 
             //if admin role is to be verified and user is non-admin
             if (userAuthModel.CheckAdminRole && user.UserDetailsTbl.RoleId < Role.RoleId.Admin)
             {
-                throw new BadRequestException(ValidationMessage.USER_NON_AUTHORIZED_ADMIN_AREA);
+                throw new BadRequestException(UserValidationMessage.USER_NON_AUTHORIZED_ADMIN_AREA);
             }
 
             // authentication successful
@@ -131,8 +131,11 @@ namespace WebApi.Services
 
             var userTbl = await _context.UsersTbl
                 .Include(u => u.UserDetailsTbl)
+                .Where(u => 
+                    u.UserId == id && 
+                    !u.UserDetailsTbl.IsDeleted)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == id);
+                .SingleOrDefaultAsync();
 
             userEditModel.User = _mapper.Map<UserModel>(userTbl);
             userEditModel.UserDetail = _mapper.Map<UserDetailsModel>(userTbl.UserDetailsTbl);
@@ -144,10 +147,10 @@ namespace WebApi.Services
         {
             bool isCreateUser = userSaveModel.UserId == 0;
 
-            // validation
+            //validation
             if (string.IsNullOrWhiteSpace(userSaveModel.Username) || string.IsNullOrWhiteSpace(userSaveModel.Password))
             {
-                throw new BadRequestException("Username and Password are required");
+                throw new BadRequestException(UserValidationMessage.USERNAME_PASSWORD_REQUIRED);
             }
 
             //check for duplicate username
@@ -159,7 +162,7 @@ namespace WebApi.Services
                     )
                 )
             {
-                throw new BadRequestException("Username \"" + userSaveModel.Username + "\" is already taken");
+                throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userSaveModel.Username));
             }
 
 

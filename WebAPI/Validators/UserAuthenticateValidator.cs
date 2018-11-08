@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using WebApi.AppConstants.ValidationMessages;
 using WebApi.Models.UserModelExtensions;
 
 namespace WebApi.Validators
@@ -12,13 +13,13 @@ namespace WebApi.Validators
         {
             RuleFor(x => x.Password)
                 .NotEmpty()
-                .WithMessage("Password cannot be blank.");
+                .WithMessage(UserValidationMessage.PASSWORD_REQUIRED);
             //.Length(0, 100)
             //.WithMessage("The Product Name cannot be more than 100 characters.");
 
             RuleFor(x => x.Username)
                 .NotEmpty()
-                .WithMessage("Username cannot be blank.");
+                .WithMessage(UserValidationMessage.USERNAME_REQUIRED);
 
             //RuleFor(x => x.Id).GreaterThan(0).WithMessage("The Product ID must be at greather than 0.");
 
