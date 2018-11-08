@@ -18,12 +18,10 @@ namespace WebApi.Controllers
     public class UsersController : ControllerBase
     {
         private IUserService _userService;
-        //private IMapper _mapper;
         private readonly AppSettings _appSettings;
 
         public UsersController(
             IUserService userService,
-            //IMapper mapper,
             IOptions<AppSettings> appSettings)
         {
             _userService = userService;
@@ -54,16 +52,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<IActionResult> Authenticate([FromBody]UserAuthenticateModel userModel)
         {
-            var userDetails = await _userService.Authenticate(userModel.Username, userModel.Password);
-            if (userDetails == null)
-            {
-                return BadRequest(new { message = "Username or password is incorrect" });
-            }
-            //if admin role is to be verified and user is non-admin
-            if (userModel.CheckAdminRole && userDetails.RoleId < Role.RoleId.Admin)
-            {
-                return BadRequest(new { message = "User not authorized to access admin area" });
-            }
+            var userDetails = await _userService.Authenticate(userModel);
 
             string tokenString = JWTAuthentication.GetToken(userDetails, _appSettings.Secret);
 
@@ -76,17 +65,6 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Gets a list of all users
-        /// </summary>
-        /// <returns>Gets a list of all users</returns>
-        //[Authorize(Policy = Policies.AdminsAndAbove)]
-        //[HttpGet]
-        //public async Task<IActionResult> GetAll()
-        //{
-        //    return Ok(await _userService.GetAll());
-        //}
-
-        /// <summary>
         /// Get logged in user
         /// </summary>
         /// <returns>Returns details of logged in user</returns>
@@ -95,8 +73,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDetailsModel>> GetLoggedIn()
         {
-            var userId = int.Parse(HttpContext.User.Identity.Name);
-            return await _userService.GetById(userId);
+            return await _userService.GetById(GetOperatingUserId());
         }
 
         /// <summary>
@@ -132,15 +109,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<UserCreateModel>> GetForCreate()
         {
-            try
-            {
-                return await _userService.GetForCreate();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            return await _userService.GetForCreate();
         }
 
         /// <summary>
@@ -152,15 +121,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<UserEditModel>> GetForEdit(int id)
         {
-            try
-            {
-                return await _userService.GetForEdit(id);
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            return await _userService.GetForEdit(id);
         }
 
         //[HttpPut("{id}")]
@@ -192,17 +153,8 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            try
-            {
-                var operatingUserId = int.Parse(HttpContext.User.Identity.Name);
-                await _userService.Delete(id, operatingUserId);
-                return Ok();
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            await _userService.Delete(id, GetOperatingUserId());
+            return Ok();
         }
 
         /// <summary>
@@ -218,17 +170,12 @@ namespace WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<UserSaveModel>> Save([FromBody]UserSaveModel userSaveModel)
         {
-            try
-            {
-                // save 
-                var operatingUserId = int.Parse(HttpContext.User.Identity.Name);
-                return await _userService.Save(userSaveModel, operatingUserId);
-            }
-            catch (AppException ex)
-            {
-                // return error message if there was an exception
-                return BadRequest(new { message = ex.Message });
-            }
+            return await _userService.Save(userSaveModel, GetOperatingUserId());
+        }
+
+        private int GetOperatingUserId()
+        {
+            return int.Parse(HttpContext.User.Identity.Name);
         }
     }
 }

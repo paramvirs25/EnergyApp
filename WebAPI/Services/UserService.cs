@@ -1,30 +1,32 @@
 using System.Collections.Generic;
 using System.Linq;
-
-using WebApi.Helpers;
-
-using AutoMapper;
-using WebApi.Models;
-using WebApi.Models.UserModelExtensions;
-using DAL.Entities;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using System;
+
+using AutoMapper;
+using DAL.Entities;
+
+using WebApi.Models;
+using WebApi.Models.UserModelExtensions;
+using WebApi.Helpers;
+using WebApi.AppConstants;
+using WebApi.Helpers.Authorization;
+using WebApi.Helpers.Exceptions;
 
 namespace WebApi.Services
 {
     public interface IUserService
     {
-        Task<UserDetailsModel> Authenticate(string username, string password);
-        //Task<IEnumerable<UserListModel>> GetAll();
+        Task<UserDetailsModel> Authenticate(UserAuthenticateModel userAuthModel);
 
-        Task<List<UserListModel>> GetList();
         Task<UserDetailsModel> GetById(int id);
+        Task<List<UserListModel>> GetList();
+        
         Task<UserCreateModel> GetForCreate();
         Task<UserEditModel> GetForEdit(int id);
 
         Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId);
-        //void Update(UserModel user, string password = null);        
         Task Delete(int id, int operatingUserId);
     }
 
@@ -47,50 +49,44 @@ namespace WebApi.Services
             _userTypeService = userTypeService;
         }
 
-        public async Task<UserDetailsModel> Authenticate(string username, string password)
+        public async Task<UserDetailsModel> Authenticate(UserAuthenticateModel userAuthModel)
         {
-            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
-                return null;
-
             //Verify username and password
             var user = await _context.UsersTbl
                 .Include(udt => udt.UserDetailsTbl)
+                .Where(u => 
+                    u.Username == userAuthModel.Username
+                    && u.Password == userAuthModel.Password
+                    && u.UserDetailsTbl.IsDeleted == false)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.Username == username && x.Password == password);
+                .SingleOrDefaultAsync();
 
             // check if username exists
             if (user == null)
             {
-                return null;
-            }
-            else
-            {
-                // authentication successful
-                return _mapper.Map<UserDetailsModel>(user.UserDetailsTbl);
+                throw new BadRequestException(ValidationMessage.USERNAME_PASSWORD_INCORRECT);
             }
 
+            //if admin role is to be verified and user is non-admin
+            if (userAuthModel.CheckAdminRole && user.UserDetailsTbl.RoleId < Role.RoleId.Admin)
+            {
+                throw new BadRequestException(ValidationMessage.USER_NON_AUTHORIZED_ADMIN_AREA);
+            }
+
+            // authentication successful
+            return _mapper.Map<UserDetailsModel>(user.UserDetailsTbl);
 
             // check if password is correct
             //if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt))
             //    return null;
         }
 
-        //public async Task<IEnumerable<UserListModel>> GetAll()
-        //{
-        //    var userDetailTbl = await _context.UserDetailsTbl
-        //        .Include(s => s.Role)
-        //        .Include(s => s.UserType)
-        //        .AsNoTracking()
-        //        .ToListAsync();
-
-        //    return _mapper.Map<List<UserDetailsTbl>, IEnumerable<UserListModel>>(userDetailTbl);
-        //}
-
         public async Task<UserDetailsModel> GetById(int id)
         {
             var userDetailsTbl = await _context.UserDetailsTbl
+                .Where(ud => ud.UserId == id && !ud.IsDeleted)
                 .AsNoTracking()
-                .SingleOrDefaultAsync(x => x.UserId == id);
+                .SingleOrDefaultAsync();
             return _mapper.Map<UserDetailsModel>(userDetailsTbl);
         }
 
@@ -151,7 +147,7 @@ namespace WebApi.Services
             // validation
             if (string.IsNullOrWhiteSpace(userSaveModel.Username) || string.IsNullOrWhiteSpace(userSaveModel.Password))
             {
-                throw new AppException("Username and Password are required");
+                throw new BadRequestException("Username and Password are required");
             }
 
             //check for duplicate username
@@ -163,7 +159,7 @@ namespace WebApi.Services
                     )
                 )
             {
-                throw new AppException("Username \"" + userSaveModel.Username + "\" is already taken");
+                throw new BadRequestException("Username \"" + userSaveModel.Username + "\" is already taken");
             }
 
 
@@ -216,39 +212,6 @@ namespace WebApi.Services
             return userSaveModel;
         }
 
-        //public void Update(UserModel userParam, string password = null)
-        //{
-        //    var user = _context.UsersTbl.Find(userParam.UserId);
-
-        //    if (user == null)
-        //        throw new AppException("User not found");
-
-        //    if (userParam.Username != user.Username)
-        //    {
-        //        // username has changed so check if the new username is already taken
-        //        if (_context.UsersTbl.Any(x => x.Username == userParam.Username))
-        //            throw new AppException("Username " + userParam.Username + " is already taken");
-        //    }
-
-        //    // update user properties
-        //    //user.FirstName = userParam.FirstName;
-        //    //user.LastName = userParam.LastName;
-        //    //user.Username = userParam.Username;
-
-        //    // update password if it was entered
-        //    //if (!string.IsNullOrWhiteSpace(password))
-        //    //{
-        //    //    byte[] passwordHash, passwordSalt;
-        //    //    CreatePasswordHash(password, out passwordHash, out passwordSalt);
-
-        //    //    user.PasswordHash = passwordHash;
-        //    //    user.PasswordSalt = passwordSalt;
-        //    //}
-
-        //    _context.UsersTbl.Update(user);
-        //    _context.SaveChanges();
-        //}
-
         public async Task Delete(int id, int operatingUserId)
         {
             var ud = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == id);
@@ -262,48 +225,6 @@ namespace WebApi.Services
                 await _context.SaveChangesAsync();
             }            
         }
-
-        //public List<UserDetailsModel> MapFromDAL(List<UserDetailsTbl> emp)
-        //{
-        //    List<UserDetailsModel> udm = new List<UserDetailsModel>();
-        //    foreach(UserDetailsTbl ud in emp)
-        //    {
-        //        udm.Add(MapFromDAL(ud));
-        //    }
-
-        //    return udm;
-        //    //return emp.Select(x => MapFromDAL(x)).ToList();
-        //}
-
-        //public UserDetailsModel MapFromDAL(UserDetailsTbl ud)
-        //{
-        //    return new UserDetailsModel()
-        //    {
-        //        UserId = ud.UserId,
-        //        RoleId = ud.RoleId,
-        //        UserTypeId = ud.UserTypeId,
-        //        UserFirstName = ud.UserFirstName,
-        //        UserLastName = ud.UserLastName,
-        //        UserEmail = ud.UserEmail
-        //    };
-        //}
-
-        //public UserDetailsTbl MapToDAL(UserDetailsModel udm, UserDetailsTbl ud)
-        //{
-        //    if (ud == null)
-        //    {
-        //        ud = new UserDetailsTbl();
-        //    }
-
-        //    ud.UserId = udm.UserId;
-        //    ud.RoleId = udm.RoleId;
-        //    ud.UserTypeId = udm.UserTypeId;
-        //    ud.UserFirstName = udm.UserFirstName;
-        //    ud.UserLastName = udm.UserLastName;
-        //    ud.UserEmail = udm.UserEmail;
-
-        //    return ud;
-        //}
 
         // private helper methods
 
