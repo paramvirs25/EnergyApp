@@ -53,6 +53,7 @@ namespace WebApi
             services.AddDbContext<DataContext>(options => options.UseSqlServer(dbConnectionString));
 
             // configure DI for application services
+            services.AddScoped<OperatingUser, OperatingUser>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserTypeService, UserTypeService>();

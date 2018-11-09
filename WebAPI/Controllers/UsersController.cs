@@ -19,14 +19,17 @@ namespace WebApi.Controllers
     {
         private IUserService _userService;
         private readonly AppSettings _appSettings;
+        private OperatingUser _operatingUser;
 
         public UsersController(
             IUserService userService,
-            IOptions<AppSettings> appSettings)
+            IOptions<AppSettings> appSettings,
+            OperatingUser operatingUser)
         {
             _userService = userService;
             //_mapper = mapper;
             _appSettings = appSettings.Value;
+            _operatingUser = operatingUser;
         }
 
         /// <summary>
@@ -73,7 +76,7 @@ namespace WebApi.Controllers
         [HttpGet]
         public async Task<ActionResult<UserDetailsModel>> GetLoggedIn()
         {
-            return await _userService.GetById(GetOperatingUserId());
+            return await _userService.GetById(_operatingUser.GetOperatingUserId(HttpContext));
         }
 
         /// <summary>
@@ -153,7 +156,7 @@ namespace WebApi.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            await _userService.Delete(id, GetOperatingUserId());
+            await _userService.Delete(id, _operatingUser.GetOperatingUserId(HttpContext));
             return Ok();
         }
 
@@ -170,12 +173,7 @@ namespace WebApi.Controllers
         [ProducesResponseType(400)]
         public async Task<ActionResult<UserSaveModel>> Save([FromBody]UserSaveModel userSaveModel)
         {
-            return await _userService.Save(userSaveModel, GetOperatingUserId());
-        }
-
-        private int GetOperatingUserId()
-        {
-            return int.Parse(HttpContext.User.Identity.Name);
+            return await _userService.Save(userSaveModel, _operatingUser.GetOperatingUserId(HttpContext));
         }
     }
 }

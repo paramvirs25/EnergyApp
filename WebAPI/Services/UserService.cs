@@ -147,12 +147,6 @@ namespace WebApi.Services
         {
             bool isCreateUser = userSaveModel.UserId == 0;
 
-            //validation
-            if (string.IsNullOrWhiteSpace(userSaveModel.Username) || string.IsNullOrWhiteSpace(userSaveModel.Password))
-            {
-                throw new BadRequestException(UserValidationMessage.USERNAME_PASSWORD_REQUIRED);
-            }
-
             //check for duplicate username
             if (await _context.UsersTbl
                 .AsNoTracking()
