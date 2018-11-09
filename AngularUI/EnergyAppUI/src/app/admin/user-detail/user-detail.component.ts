@@ -60,41 +60,50 @@ export class UserDetailComponent implements OnInit {
             this.isLoadingResults = true;
 
             //Get Data for Create Mode
-            this.userService.getForCreate().subscribe(userCreate => {
+            this.userService.getForCreate().subscribe(
+                userCreate => {
+                    //Initialise dropdowns
+                    this.initRoles(userCreate.roles);
+                    this.initUserTypes(userCreate.userTypes);
 
-                //Initialise dropdowns
-                this.initRoles(userCreate.roles);
-                this.initUserTypes(userCreate.userTypes);
-
-                this.isLoadingResults = false;
-            });
+                    this.isLoadingResults = false;
+                },
+                error => {
+                    this.isLoadingResults = false;
+                    this.router.navigate(['/', AppConstants.userListComponentPath]);
+                });
         } //Edit Mode
         else if (this.userId > 0) {
             this.hasUserId = true;
             this.lblAddEditUser = "Edit";
             this.isLoadingResults = true;
 
-            this.userService.getForEdit(this.userId).subscribe(userEdit => {
-                console.log(userEdit);
+            this.userService.getForEdit(this.userId).subscribe(
+                userEdit => {
+                    console.log(userEdit);
 
-                this.f.username.setValue(userEdit.user.username);
-                this.f.password.setValue(userEdit.user.password);
-                this.f.confirmpassword.setValue(userEdit.user.password);
+                    this.f.username.setValue(userEdit.user.username);
+                    this.f.password.setValue(userEdit.user.password);
+                    this.f.confirmpassword.setValue(userEdit.user.password);
 
-                this.f.firstname.setValue(userEdit.userDetail.userFirstName);
-                this.f.lastname.setValue(userEdit.userDetail.userLastName);
-                this.f.email.setValue(userEdit.userDetail.userEmail);
+                    this.f.firstname.setValue(userEdit.userDetail.userFirstName);
+                    this.f.lastname.setValue(userEdit.userDetail.userLastName);
+                    this.f.email.setValue(userEdit.userDetail.userEmail);
 
-                //Initialise dropdowns
-                this.initRoles(userEdit.roles);
-                this.initUserTypes(userEdit.userTypes);
+                    //Initialise dropdowns
+                    this.initRoles(userEdit.roles);
+                    this.initUserTypes(userEdit.userTypes);
 
-                //Bind Dropdowns
-                this.f.ddrole.setValue(userEdit.userDetail.roleId);
-                this.f.ddusertype.setValue(userEdit.userDetail.userTypeId);
+                    //Bind Dropdowns
+                    this.f.ddrole.setValue(userEdit.userDetail.roleId);
+                    this.f.ddusertype.setValue(userEdit.userDetail.userTypeId);
 
-                this.isLoadingResults = false;
-            });
+                    this.isLoadingResults = false;
+                },
+                error => {
+                    this.isLoadingResults = false;
+                    this.router.navigate(['/', AppConstants.userListComponentPath]);
+                });
         }
     }
 
