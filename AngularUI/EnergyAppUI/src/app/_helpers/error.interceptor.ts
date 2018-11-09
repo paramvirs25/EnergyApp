@@ -33,14 +33,16 @@ export class ErrorInterceptor implements HttpInterceptor {
             //    location.reload(true);
             //}
 
-            if (err.status == "400") //"Bad Request" - Some validation failed on server
+            if (err.status == "400" //"Bad Request" - Some validation failed on server
+                || err.status == "404" //"Not Found" - Record not found on server
+            ) 
             {
-                let badReqMsg : string = this.formatBadRequestMsg(err.error);
-                if (badReqMsg == "") {
-                    badReqMsg = err.statusText;
+                let msg : string = this.formatErrorMsg(err.error);
+                if (msg == "") {
+                    msg = err.statusText;
                 }
 
-                this.alertService.error(badReqMsg);
+                this.alertService.error(msg);
             }
             //else if (err.error && err.error.message != undefined) {
             //    error = err.error.message;
@@ -58,7 +60,7 @@ export class ErrorInterceptor implements HttpInterceptor {
      * Expected object format is:
      * {Key1: ArrayValue(1), Key2: ArrayValue(1)}
      */
-    formatBadRequestMsg(error: object) : string {
+    formatErrorMsg(error: object) : string {
         let errMsgs: string[] = new Array();
 
         if (error != null) {

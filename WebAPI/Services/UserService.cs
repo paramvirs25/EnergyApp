@@ -51,27 +51,22 @@ namespace WebApi.Services
 
         public async Task<UserDetailsModel> Authenticate(UserAuthenticateModel userAuthModel)
         {
-            //Verify username and password
+            //get user with specified username and password
             var user = await _context.UsersTbl
                 .Include(udt => udt.UserDetailsTbl)
                 .Where(u => 
                     u.Username == userAuthModel.Username
                     && u.Password == userAuthModel.Password
-                    && u.UserDetailsTbl.IsDeleted == false)
+                    && !u.UserDetailsTbl.IsDeleted)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
-            // check if user exists
-            if (user == null)
-            {
-                throw new BadRequestException(UserValidationMessage.USERNAME_PASSWORD_INCORRECT);
-            }
+            // if user not found then show error
+            if (user == null) { throw new BadRequestException(UserValidationMessage.USERNAME_PASSWORD_INCORRECT); }
 
-            //if admin role is to be verified and user is non-admin
-            if (userAuthModel.CheckAdminRole && user.UserDetailsTbl.RoleId < Role.RoleId.Admin)
-            {
-                throw new BadRequestException(UserValidationMessage.USER_NON_AUTHORIZED_ADMIN_AREA);
-            }
+            //if admin role is to be verified and user is non-admin then show error
+            if (userAuthModel.CheckAdminRole &&
+                user.UserDetailsTbl.RoleId < Role.RoleId.Admin) { throw new BadRequestException(UserValidationMessage.USER_NON_AUTHORIZED_ADMIN_AREA); }
 
             // authentication successful
             return _mapper.Map<UserDetailsModel>(user.UserDetailsTbl);
@@ -84,9 +79,15 @@ namespace WebApi.Services
         public async Task<UserDetailsModel> GetById(int id)
         {
             var userDetailsTbl = await _context.UserDetailsTbl
-                .Where(ud => ud.UserId == id && !ud.IsDeleted)
+                .Where(ud => 
+                    ud.UserId == id 
+                    && !ud.IsDeleted)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
+
+            //if no user is found then show error
+            if (userDetailsTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
+
             return _mapper.Map<UserDetailsModel>(userDetailsTbl);
         }
 
@@ -99,7 +100,9 @@ namespace WebApi.Services
         public async Task<List<UserListModel>> GetList()
         {
             var userDetailTbl = await _context.UserDetailsTbl
-                .Where(ud => ud.IsDeleted == false && ud.UserId > 1)
+                .Where(ud =>
+                    ud.RoleId < Role.RoleId.SuperAdmin   //non superadmin user
+                    && !ud.IsDeleted)
                 .Include(s => s.CreatedByNavigation)
                 .Include(s => s.ModifiedByNavigation)
                 .Include(s => s.Role)
@@ -137,6 +140,9 @@ namespace WebApi.Services
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
+            //if no user is found then show error
+            if (userTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
+
             userEditModel.User = _mapper.Map<UserModel>(userTbl);
             userEditModel.UserDetail = _mapper.Map<UserDetailsModel>(userTbl.UserDetailsTbl);
 
@@ -149,15 +155,14 @@ namespace WebApi.Services
 
             //check for duplicate username
             if (await _context.UsersTbl
+                .Include(udt => udt.UserDetailsTbl)
                 .AsNoTracking()
-                .AnyAsync(x =>
-                    x.Username == userSaveModel.Username
-                    && x.UserId != userSaveModel.UserId
+                .AnyAsync(u =>
+                    u.Username == userSaveModel.Username
+                    && u.UserId != userSaveModel.UserId
+                    && !u.UserDetailsTbl.IsDeleted
                     )
-                )
-            {
-                throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userSaveModel.Username));
-            }
+                ) { throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userSaveModel.Username)); }
 
 
             //byte[] passwordHash, passwordSalt;
@@ -177,9 +182,14 @@ namespace WebApi.Services
             else
             {
                 usersTbl = await _context.UsersTbl
-                    .Where(u => u.UserId == userSaveModel.UserId)
                     .Include(udt => udt.UserDetailsTbl)
+                    .Where(u => 
+                        u.UserId == userSaveModel.UserId
+                        && !u.UserDetailsTbl.IsDeleted)
                     .SingleOrDefaultAsync();
+
+                //if no user is found then show error
+                if (usersTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
             }
 
             //populate table objects
@@ -213,14 +223,14 @@ namespace WebApi.Services
         {
             var ud = await _context.UserDetailsTbl.SingleOrDefaultAsync(x => x.UserId == id);
 
-            if (ud != null)
-            {
-                ud.IsDeleted = true;
-                ud.ModifiedBy = operatingUserId;
-                ud.ModifiedDate = DateTime.Now;
+            //if no user is found then show error
+            if ( ud == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
 
-                await _context.SaveChangesAsync();
-            }            
+            ud.IsDeleted = true;
+            ud.ModifiedBy = operatingUserId;
+            ud.ModifiedDate = DateTime.Now;
+
+            await _context.SaveChangesAsync();
         }
 
         // private helper methods

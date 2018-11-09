@@ -16,5 +16,6 @@
         public const string PASSWORD_REQUIRED = "Password is required.";
         public const string ROLE_REQUIRED = "Role is required.";
         public const string USER_TYPE_REQUIRED = "User type is required.";
+        public const string USER_NOT_FOUND = "User not found.";
     }
 }
