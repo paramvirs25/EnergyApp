@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 
-import { UserLogin, UserDetail, Roles, UserTypes } from '../../_models';
+import { Roles, UserTypes } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { AbstractControl } from '@angular/forms';
 import { UserSave } from '../../_models/userModelExtensions';

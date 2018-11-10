@@ -15,7 +15,7 @@ import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-lo
 
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
-import { AppComponent } from './app.component';
+import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: ('/' + AppConstants.clientLoginComponentPath), pathMatch: 'full' },
@@ -25,7 +25,8 @@ const appRoutes: Routes = [
         canActivate: [AuthGuard, AdminGuard],
         children: [
             { path: AppConstants.userListComponentPath, component: UserListComponent },
-            { path: AppConstants.userDetailComponentPath, component: UserDetailComponent }
+            { path: AppConstants.userDetailComponentPath, component: UserDetailComponent },
+            { path: AppConstants.userDetailMatComponentPath, component: UserDetailMatComponent }
         ]
     },
     {

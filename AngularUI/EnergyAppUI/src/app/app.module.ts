@@ -37,9 +37,9 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { ClientLayoutComponent } from './layouts/client-layout/client-layout.component';
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
+import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
-import { Roles } from './_models';
 
 
 @NgModule({
@@ -81,7 +81,8 @@ export class AngularMaterialModule { }
         RegisterComponent,
         DashboardComponent,
         UserListComponent,
-        UserDetailComponent
+        UserDetailComponent,
+        UserDetailMatComponent
     ],
     providers: [
         AuthGuard,

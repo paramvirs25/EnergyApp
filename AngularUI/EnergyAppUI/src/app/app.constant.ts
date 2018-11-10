@@ -5,4 +5,5 @@ export namespace AppConstants {
     export const dashboardComponentPath = "dashboard";
     export const userListComponentPath = "userlist";
     export const userDetailComponentPath = "userdetail/:id";
+    export const userDetailMatComponentPath = "userdetailmat/:id";
 }
