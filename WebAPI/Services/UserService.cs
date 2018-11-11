@@ -26,7 +26,7 @@ namespace WebApi.Services
         Task<UserCreateModel> GetForCreate();
         Task<UserEditModel> GetForEdit(int id);
 
-        Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId);
+        Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId);
         Task Delete(int id, int operatingUserId);
     }
 
@@ -117,6 +117,8 @@ namespace WebApi.Services
         {
             UserCreateModel userCreateModel = new UserCreateModel
             {
+                User = new UserModel(),
+                UserDetail = new UserDetailsModel(),
                 Roles = _roleService.GetAll(),
                 UserTypes = await _userTypeService.GetAll()
             };
@@ -149,20 +151,20 @@ namespace WebApi.Services
             return userEditModel;
         }
 
-        public async Task<UserSaveModel> Save(UserSaveModel userSaveModel, int operatingUserId)
+        public async Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId)
         {
-            bool isCreateUser = userSaveModel.UserId == 0;
+            //bool isCreateUser = userCreateModel.UserId == 0;
 
             //check for duplicate username
             if (await _context.UsersTbl
                 .Include(udt => udt.UserDetailsTbl)
                 .AsNoTracking()
                 .AnyAsync(u =>
-                    u.Username == userSaveModel.Username
-                    && u.UserId != userSaveModel.UserId
+                    u.Username == userCreateModel.User.Username
+                    && u.UserId != userCreateModel.User.UserId
                     && !u.UserDetailsTbl.IsDeleted
                     )
-                ) { throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userSaveModel.Username)); }
+                ) { throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userCreateModel.User.Username)); }
 
 
             //byte[] passwordHash, passwordSalt;
@@ -172,43 +174,43 @@ namespace WebApi.Services
             //user.PasswordSalt = passwordSalt;
 
             UsersTbl usersTbl = null;
-            if (isCreateUser)
-            {
+            //if (isCreateUser)
+            //{
                 usersTbl = new UsersTbl
                 {
                     UserDetailsTbl = new UserDetailsTbl()
                 };
-            }
-            else
-            {
-                usersTbl = await _context.UsersTbl
-                    .Include(udt => udt.UserDetailsTbl)
-                    .Where(u => 
-                        u.UserId == userSaveModel.UserId
-                        && !u.UserDetailsTbl.IsDeleted)
-                    .SingleOrDefaultAsync();
+            //}
+            //else
+            //{
+            //    usersTbl = await _context.UsersTbl
+            //        .Include(udt => udt.UserDetailsTbl)
+            //        .Where(u => 
+            //            u.UserId == userCreateModel.UserId
+            //            && !u.UserDetailsTbl.IsDeleted)
+            //        .SingleOrDefaultAsync();
 
-                //if no user is found then show error
-                if (usersTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
-            }
+            //    //if no user is found then show error
+            //    if (usersTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
+            //}
 
             //populate table objects
-            _mapper.Map(userSaveModel, usersTbl);
-            _mapper.Map(userSaveModel, usersTbl.UserDetailsTbl);
+            _mapper.Map(userCreateModel.User, usersTbl);
+            _mapper.Map(userCreateModel.UserDetail, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
-            if (isCreateUser)
-            {
+            //if (isCreateUser)
+            //{
                 usersTbl.UserDetailsTbl.CreatedBy = operatingUserId;
                 usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
                 
                 await _context.AddAsync(usersTbl);
-            }
-            else
-            {
-                usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
-                usersTbl.UserDetailsTbl.ModifiedDate = DateTime.Now;
-            }
+            //}
+            //else
+            //{
+            //    usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
+            //    usersTbl.UserDetailsTbl.ModifiedDate = DateTime.Now;
+            //}
 
             await _context.SaveChangesAsync();
 
@@ -216,7 +218,7 @@ namespace WebApi.Services
             //_mapper.Map(usersTbl, userSaveModel.User);
             //_mapper.Map(usersTbl.UserDetailsTbl, userSaveModel.UserDetail);
 
-            return userSaveModel;
+            return true;
         }
 
         public async Task Delete(int id, int operatingUserId)

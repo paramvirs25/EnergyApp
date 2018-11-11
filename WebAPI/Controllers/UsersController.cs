@@ -9,6 +9,8 @@ using WebApi.Services;
 using WebApi.Helpers.Authorization;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System;
+using System.Net;
 
 namespace WebApi.Controllers
 {
@@ -127,26 +129,6 @@ namespace WebApi.Controllers
             return await _userService.GetForEdit(id);
         }
 
-        //[HttpPut("{id}")]
-        //public IActionResult Update(int id, [FromBody]UserModel userDto)
-        //{
-        //    // map dto to entity and set id
-        //    //var user = _mapper.Map<UsersTbl>(userDto);
-        //    //user.UserId = id;
-
-        //    try
-        //    {
-        //        // save 
-        //        _userService.Update(userDto, userDto.Password);
-        //        return Ok();
-        //    }
-        //    catch (AppException ex)
-        //    {
-        //        // return error message if there was an exception
-        //        return BadRequest(new { message = ex.Message });
-        //    }
-        //}
-
         /// <summary>
         /// Delete User by Id
         /// </summary>
@@ -163,17 +145,16 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a user if it already doesnot exits
         /// </summary>
-        /// <param name="userSaveModel"></param>
+        /// <param name="userCreateModel"></param>
         /// <returns></returns>
         /// <response code="200">If Registratin succeeds</response>
         /// <response code="400">If registration failed</response> 
-        [HttpPost("save")]
+        [HttpPost("create")]
         [Authorize(Policy = Policies.AdminsAndAbove)]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
-        public async Task<ActionResult<UserSaveModel>> Save([FromBody]UserSaveModel userSaveModel)
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        public async Task<ActionResult<bool>> Create([FromBody]UserCreateModel userCreateModel)
         {
-            return await _userService.Save(userSaveModel, _operatingUser.GetOperatingUserId(HttpContext));
+            return await _userService.Create(userCreateModel, _operatingUser.GetOperatingUserId(HttpContext));
         }
     }
 }
