@@ -1,5 +1,6 @@
-# aspnet-core-registration-login-api
+# WebApi
 
-ASP.NET Core 2.1 - API for User Management, Authentication and Registration
-
-For documentation and instructions check out http://jasonwatmore.com/post/2018/06/26/aspnet-core-21-simple-api-for-authentication-registration-and-user-management
+* Adding New Model
+1 Create new Model class in 'Models' folder.
+2 Create a Validator class for each Model in 'Validators' folder.
+3 Create Validation message constants to be used in validators in AppConstants folder.

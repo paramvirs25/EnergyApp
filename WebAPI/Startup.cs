@@ -34,7 +34,10 @@ namespace WebApi
             services.AddMvc(opt =>
             {
                 opt.Filters.Add(typeof(ValidatorActionFilter));
-            }).AddFluentValidation(fvc => fvc.RegisterValidatorsFromAssemblyContaining<Startup>());
+            }).AddFluentValidation(fvc => {
+                fvc.RegisterValidatorsFromAssemblyContaining<Startup>();
+                fvc.ImplicitlyValidateChildProperties = true;
+            });
 
             services.AddAutoMapper();
 

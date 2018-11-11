@@ -6,6 +6,7 @@
         public const string USER_NON_AUTHORIZED_ADMIN_AREA = "User not authorized to access admin area.";
         
         public const string USERNAME_ALREADY_TAKEN = "Username {0} is already taken.";
+        public const string USER_NOT_FOUND = "User not found.";
 
         //Required
         public const string USERNAME_PASSWORD_REQUIRED = "Username and Password are required.";
@@ -15,7 +16,17 @@
         public const string USERNAME_REQUIRED = "Username is required.";
         public const string PASSWORD_REQUIRED = "Password is required.";
         public const string ROLE_REQUIRED = "Role is required.";
+        public const string USER_ID_REQUIRED = "User ID is required.";
+
+    }
+
+    public class RoleValidationMessage
+    {
+        public const string ROLE_ID_REQUIRED = "Role ID is required.";
+    }
+
+    public class UserTypeValidationMessage
+    {
         public const string USER_TYPE_REQUIRED = "User type is required.";
-        public const string USER_NOT_FOUND = "User not found.";
     }
 }
