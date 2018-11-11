@@ -112,7 +112,7 @@ namespace WebApi.Controllers
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [Route("GetForCreate")]
         [HttpGet]
-        public async Task<ActionResult<UserCreateModel>> GetForCreate()
+        public async Task<ActionResult<UserCreateGetModel>> GetForCreate()
         {
             return await _userService.GetForCreate();
         }

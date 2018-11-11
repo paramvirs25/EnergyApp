@@ -23,8 +23,8 @@ namespace WebApi.Services
         Task<UserDetailsModel> GetById(int id);
         Task<List<UserListModel>> GetList();
         
-        Task<UserCreateModel> GetForCreate();
-        Task<UserEditModel> GetForEdit(int id);
+        Task<UserCreateGetModel> GetForCreate();
+        Task<UserEditGetModel> GetForEdit(int id);
 
         Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId);
         Task Delete(int id, int operatingUserId);
@@ -113,42 +113,42 @@ namespace WebApi.Services
             return _mapper.Map<List<UserDetailsTbl>, List<UserListModel>>(userDetailTbl);
         }
 
-        public async Task<UserCreateModel> GetForCreate()
+        public async Task<UserCreateGetModel> GetForCreate()
         {
-            UserCreateModel userCreateModel = new UserCreateModel
+            UserCreateGetModel userCreateGetModel = new UserCreateGetModel
             {
                 User = new UserModel(),
-                UserDetail = new UserDetailsModel(),
+                UserDetailsBase = new UserDetailsBaseModel(),
                 Roles = _roleService.GetAll(),
                 UserTypes = await _userTypeService.GetAll()
             };
 
-            return userCreateModel;
+            return userCreateGetModel;
         }
 
-        public async Task<UserEditModel> GetForEdit(int id)
+        public async Task<UserEditGetModel> GetForEdit(int id)
         {
-            UserEditModel userEditModel = new UserEditModel
+            UserEditGetModel userEditGetModel = new UserEditGetModel
             {
                 Roles = _roleService.GetAll(),
                 UserTypes = await _userTypeService.GetAll()
             };
 
-            var userTbl = await _context.UsersTbl
-                .Include(u => u.UserDetailsTbl)
-                .Where(u => 
-                    u.UserId == id && 
-                    !u.UserDetailsTbl.IsDeleted)
-                .AsNoTracking()
-                .SingleOrDefaultAsync();
+            //var userTbl = await _context.UsersTbl
+            //    .Include(u => u.UserDetailsTbl)
+            //    .Where(u => 
+            //        u.UserId == id && 
+            //        !u.UserDetailsTbl.IsDeleted)
+            //    .AsNoTracking()
+            //    .SingleOrDefaultAsync();
 
-            //if no user is found then show error
-            if (userTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
+            ////if no user is found then show error
+            //if (userTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
 
-            userEditModel.User = _mapper.Map<UserModel>(userTbl);
-            userEditModel.UserDetail = _mapper.Map<UserDetailsModel>(userTbl.UserDetailsTbl);
+            //userEditGetModel.User = _mapper.Map<UserModel>(userTbl);
+            //userEditGetModel.UserDetailsBase = _mapper.Map<UserDetailsBaseModel>(userTbl.UserDetailsTbl);
 
-            return userEditModel;
+            return userEditGetModel;
         }
 
         public async Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId)
@@ -196,7 +196,7 @@ namespace WebApi.Services
 
             //populate table objects
             _mapper.Map(userCreateModel.User, usersTbl);
-            _mapper.Map(userCreateModel.UserDetail, usersTbl.UserDetailsTbl);
+            _mapper.Map(userCreateModel.UserDetailsBase, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
             //if (isCreateUser)
