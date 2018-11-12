@@ -4,7 +4,7 @@ using WebApi.Models;
 
 namespace WebApi.Validators
 {
-    public class UserDetailsBaseValidator : AbstractValidator<UserDetailsBaseModel>
+    public class UserDetailsBaseValidator : AbstractValidator<UserDetailsBaseAdminModel>
     {
         /// <summary>  
         /// Validator rules for User Save Model

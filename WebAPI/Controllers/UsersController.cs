@@ -53,8 +53,7 @@ namespace WebApi.Controllers
         /// <response code="400">If user is not valid</response> 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(400)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Authenticate([FromBody]UserAuthenticateModel userModel)
         {
             var userDetails = await _userService.Authenticate(userModel);
@@ -74,11 +73,12 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns>Returns details of logged in user</returns>
         [Authorize(Policy = Policies.AgentsAndAbove)]
-        [Route("GetLoggedIn")]
+        [Route("getLoggedIn")]
         [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<UserDetailsModel>> GetLoggedIn()
         {
-            return await _userService.GetById(_operatingUser.GetOperatingUserId(HttpContext));
+            return await _userService.GetById(_operatingUser.GetUserId(HttpContext));
         }
 
         /// <summary>
@@ -88,6 +88,7 @@ namespace WebApi.Controllers
         /// <returns>Returns User</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<ActionResult<UserDetailsModel>> GetById(int id)
         {
             return await _userService.GetById(id);
@@ -98,7 +99,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns>Returns list of users</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
-        [Route("List")]
+        [Route("list")]
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserListModel>>> GetList()
         {
@@ -110,7 +111,7 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns>Returns data for 'Create' user screen</returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
-        [Route("GetForCreate")]
+        [Route("getForCreate")]
         [HttpGet]
         public async Task<ActionResult<UserCreateGetModel>> GetForCreate()
         {
@@ -118,15 +119,29 @@ namespace WebApi.Controllers
         }
 
         /// <summary>
-        /// Gets data for 'Edit' user screen
+        /// Gets user's detail for editing
         /// </summary>
-        /// <returns>Returns data for 'Edit' user screen</returns>
+        /// <returns></returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
-        [Route("GetForEdit/{id}")]
+        [Route("getForEdit/{id}")]
         [HttpGet]
-        public async Task<ActionResult<UserEditModel>> GetForEdit(int id)
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<UserEditGetModel>> GetForEdit(int id)
         {
             return await _userService.GetForEdit(id);
+        }
+
+        /// <summary>
+        /// Get logged in user's details for editing
+        /// </summary>
+        /// <returns></returns>
+        [Authorize(Policy = Policies.AgentsAndAbove)]
+        [Route("getForEditLoggedIn")]
+        [HttpGet]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<UserEditGetModel>> GetForEditLoggedIn()
+        {
+            return await _userService.GetForEdit(_operatingUser.GetUserId(HttpContext));
         }
 
         /// <summary>
@@ -136,9 +151,10 @@ namespace WebApi.Controllers
         /// <returns></returns>
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [HttpDelete("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
         public async Task<IActionResult> Delete(int id)
         {
-            await _userService.Delete(id, _operatingUser.GetOperatingUserId(HttpContext));
+            await _userService.Delete(id, _operatingUser.GetUserId(HttpContext));
             return Ok();
         }
 
@@ -154,7 +170,67 @@ namespace WebApi.Controllers
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         public async Task<ActionResult<bool>> Create([FromBody]UserCreateSaveModel userCreateSaveModel)
         {
-            return await _userService.Create(userCreateSaveModel, _operatingUser.GetOperatingUserId(HttpContext));
+            return await _userService.Create(userCreateSaveModel, _operatingUser.GetUserId(HttpContext));
+        }
+
+        //----Update Methods----
+
+        /// <summary>
+        /// Updates any user's login details
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        [HttpPost("update")]
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<bool>> Update([FromBody]UserModel userModel)
+        {
+            return await _userService.Update(userModel, _operatingUser.GetUserId(HttpContext));
+        }
+
+        /// <summary>
+        /// Updates any user's general details
+        /// </summary>
+        /// <param name="userDetailsBaseAdminModel"></param>
+        /// <returns></returns>
+        [HttpPost("updateDetail")]
+        [Authorize(Policy = Policies.AdminsAndAbove)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<bool>> UpdateDetail([FromBody]UserDetailsBaseAdminModel userDetailsBaseAdminModel)
+        {
+            return await _userService.UpdateDetail(userDetailsBaseAdminModel, _operatingUser.GetUserId(HttpContext));
+        }
+
+        /// <summary>
+        /// Updates logged in user login details
+        /// </summary>
+        /// <param name="userModel"></param>
+        /// <returns></returns>
+        [HttpPost("updateLoggedIn")]
+        [Authorize(Policy = Policies.AgentsAndAbove)]
+        [ProducesResponseType((int)HttpStatusCode.BadRequest)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<bool>> UpdateLoggedIn([FromBody]UserModel userModel)
+        {
+            int operatingUserId = _operatingUser.GetUserId(HttpContext);
+            userModel.UserId = operatingUserId;
+            return await _userService.Update(userModel, operatingUserId);
+        }
+
+        /// <summary>
+        /// Updates logged in user's general details
+        /// </summary>
+        /// <param name="userDetailsBaseModel"></param>
+        /// <returns></returns>
+        [HttpPost("updateDetailLoggedIn")]
+        [Authorize(Policy = Policies.AgentsAndAbove)]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<bool>> UpdateDetailLoggedIn([FromBody]UserDetailsBaseModel userDetailsBaseModel)
+        {
+            int operatingUserId = _operatingUser.GetUserId(HttpContext);
+            userDetailsBaseModel.UserId = operatingUserId;
+            return await _userService.UpdateDetailForLoggedIn(userDetailsBaseModel, operatingUserId);
         }
     }
 }

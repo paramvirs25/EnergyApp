@@ -18,7 +18,7 @@ namespace WebApi.Helpers
             CreateMap<UserModel, UsersTbl>()
                 .ForMember(dest => dest.UserDetailsTbl, opt => opt.Ignore());
 
-            CreateMap<UserDetailsBaseModel, UserDetailsTbl>()
+            CreateMap<UserDetailsBaseAdminModel, UserDetailsTbl>()
                 .ForMember(dest => dest.ContentTblCreatedByNavigation, opt => opt.Ignore())
                 .ForMember(dest => dest.ContentTblModifiedByNavigation, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedBy, opt => opt.Ignore())
@@ -34,7 +34,7 @@ namespace WebApi.Helpers
                 .ForMember(dest => dest.User, opt => opt.Ignore())
                 .ForMember(dest => dest.UserContentTbl, opt => opt.Ignore())
                 .ForMember(dest => dest.UserType, opt => opt.Ignore());
-            CreateMap<UserDetailsTbl, UserDetailsBaseModel>()
+            CreateMap<UserDetailsTbl, UserDetailsBaseAdminModel>()
                 .ForSourceMember(src => src.ContentTblCreatedByNavigation, opt => opt.Ignore())
                 .ForSourceMember(src => src.ContentTblModifiedByNavigation, opt => opt.Ignore())
                 .ForSourceMember(src => src.CreatedBy, opt => opt.Ignore())
