@@ -4,24 +4,30 @@
 </div>
 <div class="padAll10">
     <h3><label>{{lblAddEditUser}}</label> User</h3>
-    <form class="userDetailsMatForm">
+    <form [formGroup]="userDetailsMatForm" >
         <div class="padT10">
             <h5> Login Details </h5>
             <hr />
         </div>
         <div class="padT10">
             <mat-form-field class="matCtrl">
-                <input matInput placeholder="Username" required>
+                <input matInput [formControl]="username" placeholder="Username" [errorStateMatcher]="matcher" required>
+                <mat-error *ngIf="username.hasError('required')"> Username is required </mat-error>
             </mat-form-field>
         </div>
         <div class="padT10">
             <mat-form-field class="matCtrl">
-                <input matInput placeholder="Password" [type]="passhide ? 'password' : 'text'" required>
+                <input matInput [formControl]="password" placeholder="Password" [type]="passhide ? 'password' : 'text'" required>
                 <mat-icon matSuffix (click)="passhide = !passhide">{{passhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-error *ngIf="password.hasError('required')"> Password is required </mat-error>
+                <mat-error *ngIf="password.hasError('minlength')"> Password must be at least 4 characters </mat-error>
             </mat-form-field>
             <mat-form-field class="matCtrl">
-                <input matInput placeholder="Confirm Password" [type]="confirmhide ? 'password' : 'text'" required>
+                <input matInput [formControl]="confirmpass" placeholder="Confirm Password" [type]="confirmhide ? 'password' : 'text'" required>
                 <mat-icon matSuffix (click)="confirmhide = !confirmhide">{{confirmhide ? 'visibility_off' : 'visibility'}}</mat-icon>
+                <mat-error *ngIf="confirmpass.hasError('required')">Confirm Password is required </mat-error>
+                <mat-error *ngIf="confirmpass.hasError('minlength')">Confirm Password must be at least 4 characters </mat-error>
+                <mat-error *ngIf="confirmpass.hasError('MatchPassword')">Passwords do not match</mat-error>
             </mat-form-field>
         </div>
         <div class="padT50">

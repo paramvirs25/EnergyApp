@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService, UserService } from '../../_services';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
+import { FormControl, FormBuilder, FormGroup, NgForm, Validators, FormGroupDirective, AbstractControl } from '@angular/forms';
 
 import { Roles, UserTypes, UserLogin, UserDetailBase } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { UserCreateSave } from '../../_models/userModelExtensions';
+import { ErrorStateMatcher } from '@angular/material/core';
+
 
 @Component({
     selector: 'app-user-detail-mat',
@@ -18,10 +21,12 @@ export class UserDetailMatComponent implements OnInit {
         private userService: UserService,
         private router: Router,
         private alertService: AlertService,
-        private activeRoute: ActivatedRoute, ) { }
+        private activeRoute: ActivatedRoute,
+        private formBuilder: FormBuilder) { }
 
     passhide = true;
     confirmhide = true;
+    userDetailsMatForm: FormGroup;
 
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
@@ -34,10 +39,25 @@ export class UserDetailMatComponent implements OnInit {
     lblAddEditUser: string;
     hasUserId = false;
 
+    username = new FormControl('', [Validators.required]);
+    password = new FormControl('', [Validators.required, Validators.minLength(4)]);
+    confirmpass = new FormControl('', [Validators.required, Validators.minLength(4)]);
+
+    matcher = new MyErrorStateMatcher();
+
     ngOnInit() {
 
         this.userId = +this.activeRoute.snapshot.paramMap.get('id');
 
+        // Define validations and control names
+        this.userDetailsMatForm = this.formBuilder.group({
+            username: this.username,
+            password: this.password,
+            confirmpass: this.confirmpass
+        }, {
+                validator: PasswordValidation.MatchPassword
+            });
+                
         //Add Mode
         if (this.userId == 0) {
             this.lblAddEditUser = "Add";
@@ -60,41 +80,41 @@ export class UserDetailMatComponent implements OnInit {
     }
 
     save() {
-        this.isSaving = true;
+        this.submitted = true;
 
         // stop here if form is invalid
-        //if (this.userDetailsForm.invalid) {
-        //    return;
-        //}
+        if (this.userDetailsMatForm.invalid) {
+            return;
+        }
 
         //Save user details
-        this.userCreateSave = new UserCreateSave();
+        //this.userCreateSave = new UserCreateSave();
 
-        this.userCreateSave.user = new UserLogin();
-        this.userCreateSave.user.userId = this.userId;
-        this.userCreateSave.user.username = "testU"; //this.f.username.value;
-        this.userCreateSave.user.password = "testP"; //this.f.password.value;
+        //this.userCreateSave.user = new UserLogin();
+        //this.userCreateSave.user.userId = this.userId;
+        //this.userCreateSave.user.username = "testU"; //this.f.username.value;
+        //this.userCreateSave.user.password = "testP"; //this.f.password.value;
 
-        this.userCreateSave.userDetailsBase = new UserDetailBase();
-        this.userCreateSave.userDetailsBase.userFirstName = "FName"; //this.f.firstname.value;
-        this.userCreateSave.userDetailsBase.userLastName = "LName"; //this.f.lastname.value;
-        this.userCreateSave.userDetailsBase.userEmail = "FName@LNAME.com"; //this.f.email.value;
-        this.userCreateSave.userDetailsBase.roleId = 100; //this.f.ddrole.value;
-        this.userCreateSave.userDetailsBase.userTypeId = 1; //this.f.ddusertype.value;
+        //this.userCreateSave.userDetailsBase = new UserDetailBase();
+        //this.userCreateSave.userDetailsBase.userFirstName = "FName"; //this.f.firstname.value;
+        //this.userCreateSave.userDetailsBase.userLastName = "LName"; //this.f.lastname.value;
+        //this.userCreateSave.userDetailsBase.userEmail = "FName@LNAME.com"; //this.f.email.value;
+        //this.userCreateSave.userDetailsBase.roleId = 100; //this.f.ddrole.value;
+        //this.userCreateSave.userDetailsBase.userTypeId = 1; //this.f.ddusertype.value;
 
-        //console.log(this.userSave);
+        ////console.log(this.userSave);
 
-        this.isSaving = true;
-        this.userService.create(this.userCreateSave).subscribe(
-            data => {
-                this.isSaving = false;
-                this.alertService.success('User Created Successfully', true);
-                this.goUserListPage();
-            },
-            error => {
-                //this.alertService.error(error);
-                this.isSaving = false;
-            });
+        //this.isSaving = true;
+        //this.userService.create(this.userCreateSave).subscribe(
+        //    data => {
+        //        this.isSaving = false;
+        //        this.alertService.success('User Created Successfully', true);
+        //        this.goUserListPage();
+        //    },
+        //    error => {
+        //        //this.alertService.error(error);
+        //        this.isSaving = false;
+        //    });
 
         //this.goUserListPage();
     }
@@ -114,4 +134,23 @@ export class UserDetailMatComponent implements OnInit {
         this.router.navigate(['/', AppConstants.userListComponentPath]);
     }
 
+}
+
+/** Error when invalid control is dirty, touched, or submitted. */
+export class MyErrorStateMatcher implements ErrorStateMatcher {
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
+        const isSubmitted = form && form.submitted;
+        return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    }
+}
+
+export class PasswordValidation {
+
+    static MatchPassword(ac: AbstractControl) {
+        if (ac.get('password').value != ac.get('confirmpass').value) {
+            ac.get('confirmpass').setErrors({ MatchPassword: true })
+        } else {
+            return null
+        }
+    }
 }
