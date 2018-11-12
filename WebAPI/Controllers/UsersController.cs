@@ -145,16 +145,16 @@ namespace WebApi.Controllers
         /// <summary>
         /// Creates a user if it already doesnot exits
         /// </summary>
-        /// <param name="userCreateModel"></param>
+        /// <param name="userCreateSaveModel"></param>
         /// <returns></returns>
         /// <response code="200">If Registratin succeeds</response>
         /// <response code="400">If registration failed</response> 
         [HttpPost("create")]
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        public async Task<ActionResult<bool>> Create([FromBody]UserCreateModel userCreateModel)
+        public async Task<ActionResult<bool>> Create([FromBody]UserCreateSaveModel userCreateSaveModel)
         {
-            return await _userService.Create(userCreateModel, _operatingUser.GetOperatingUserId(HttpContext));
+            return await _userService.Create(userCreateSaveModel, _operatingUser.GetOperatingUserId(HttpContext));
         }
     }
 }

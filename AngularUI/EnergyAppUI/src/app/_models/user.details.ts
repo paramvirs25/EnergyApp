@@ -1,10 +1,6 @@
-export class UserDetail {
-    userId: number;
-    roleId: number;
-    userTypeId: number;
-    userFirstName: string;
-    userLastName: string;
-    userEmail: string;
+import { UserDetailBase } from './user.details.base';
+
+export class UserDetail extends UserDetailBase {
     isDeleted: boolean;
     createdDate: string;
     createdBy: number;

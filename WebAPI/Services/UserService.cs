@@ -26,7 +26,7 @@ namespace WebApi.Services
         Task<UserCreateGetModel> GetForCreate();
         Task<UserEditGetModel> GetForEdit(int id);
 
-        Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId);
+        Task<bool> Create(UserCreateSaveModel userCreateSaveModel, int operatingUserId);
         Task Delete(int id, int operatingUserId);
     }
 
@@ -117,8 +117,6 @@ namespace WebApi.Services
         {
             UserCreateGetModel userCreateGetModel = new UserCreateGetModel
             {
-                User = new UserModel(),
-                UserDetailsBase = new UserDetailsBaseModel(),
                 Roles = _roleService.GetAll(),
                 UserTypes = await _userTypeService.GetAll()
             };
@@ -151,7 +149,7 @@ namespace WebApi.Services
             return userEditGetModel;
         }
 
-        public async Task<bool> Create(UserCreateModel userCreateModel, int operatingUserId)
+        public async Task<bool> Create(UserCreateSaveModel userCreateSaveModel, int operatingUserId)
         {
             //bool isCreateUser = userCreateModel.UserId == 0;
 
@@ -160,11 +158,11 @@ namespace WebApi.Services
                 .Include(udt => udt.UserDetailsTbl)
                 .AsNoTracking()
                 .AnyAsync(u =>
-                    u.Username == userCreateModel.User.Username
-                    && u.UserId != userCreateModel.User.UserId
+                    u.Username == userCreateSaveModel.User.Username
+                    && u.UserId != userCreateSaveModel.User.UserId
                     && !u.UserDetailsTbl.IsDeleted
                     )
-                ) { throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userCreateModel.User.Username)); }
+                ) { throw new BadRequestException(string.Format(UserValidationMessage.USERNAME_ALREADY_TAKEN, userCreateSaveModel.User.Username)); }
 
 
             //byte[] passwordHash, passwordSalt;
@@ -195,8 +193,8 @@ namespace WebApi.Services
             //}
 
             //populate table objects
-            _mapper.Map(userCreateModel.User, usersTbl);
-            _mapper.Map(userCreateModel.UserDetailsBase, usersTbl.UserDetailsTbl);
+            _mapper.Map(userCreateSaveModel.User, usersTbl);
+            _mapper.Map(userCreateSaveModel.UserDetailsBase, usersTbl.UserDetailsTbl);
 
             //Save to User table and user detaisl table
             //if (isCreateUser)
