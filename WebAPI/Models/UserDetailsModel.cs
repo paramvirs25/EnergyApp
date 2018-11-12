@@ -2,7 +2,7 @@ using System;
 
 namespace WebApi.Models
 {
-    public class UserDetailsModel : UserDetailsBaseModel
+    public class UserDetailsModel : UserDetailsBaseAdminModel
     {
         public bool IsDeleted { get; set; }
         public DateTime CreatedDate { get; set; }
