@@ -33,7 +33,6 @@ export class UserDetailMatComponent implements OnInit {
     userCreateSave: UserCreateSave;
     isLoadingResults = false;
     isSaving = false;
-    submitted = false;
 
     userId = 0; //Add Mode
     lblAddEditUser: string;
@@ -90,13 +89,18 @@ export class UserDetailMatComponent implements OnInit {
     }
 
     save() {
-        this.submitted = true;
+
+        // make all controls touched for validation to work
+        for (let i in this.userDetailsMatForm.controls) {
+            this.userDetailsMatForm.controls[i].markAsTouched();
+        }
 
         // stop here if form is invalid
-        if (this.userDetailsMatForm.invalid) {
+        if (this.userDetailsMatForm.invalid) { 
             return;
         }
 
+        console.log("pass");
         //Save user details
         //this.userCreateSave = new UserCreateSave();
 
@@ -153,12 +157,12 @@ export class UserDetailMatComponent implements OnInit {
 
 /** Error when invalid control is dirty, touched, or submitted. */
 export class MyErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {
-        const isSubmitted = form && form.submitted;
-        return !!(control && control.invalid && (control.dirty || control.touched || isSubmitted));
+    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {        
+        return !!(control && control.invalid && (control.dirty || control.touched));
     }
 }
 
+// Compare password validation
 export class PasswordValidation {
 
     static MatchPassword(ac: AbstractControl) {
