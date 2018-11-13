@@ -53,8 +53,11 @@ export class UserListComponent implements OnInit {
 
     // Go To Add Users
     goAddUserDetails() {
-        //this.router.navigate(['/', AppConstants.userDetailComponentPath]);
         this.router.navigate(['/userdetail/0']);
+    }
+
+    goAddMatUserDetails() {
+        this.router.navigate(['/userdetailmat/0']);
     }
 
     //Delete User Modal

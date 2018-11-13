@@ -3,8 +3,8 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 </div>
 <div class="padAll10">
-    <h3><label>{{lblAddEditUser}}</label> User</h3>
-    <form [formGroup]="userDetailsMatForm" >
+    <h3><label>{{lblAddEditUser}}</label></h3>
+    <form [formGroup]="loginDetailsForm">
         <div class="padT10">
             <h5> Login Details </h5>
             <hr />
@@ -30,6 +30,15 @@
                 <mat-error *ngIf="confirmpass.hasError('MatchPassword')">Passwords do not match </mat-error>
             </mat-form-field>
         </div>
+        <div class="row padT40" *ngIf="isEditMode">
+            <div class="col-sm-2">
+                <button id="btnSaveLoginDetails" class="btn btn-dark btn-block" type="button" [disabled]="isSavingLoginDetails" (click)="saveLoginDetails()">
+                    Save Login
+                </button>
+            </div>
+        </div>
+    </form>
+    <form [formGroup]="userDetailsForm">
         <div class="padT50">
             <h5> User Details </h5>
             <hr />
@@ -53,7 +62,7 @@
         </div>
         <div class="padT10">
             <mat-form-field class="matCtrl">
-                <mat-select formControlName="ddrole" placeholder="Roles" >
+                <mat-select formControlName="ddrole" placeholder="Roles">
                     <mat-option *ngFor="let op of roleOptions" [value]="op.roleId">
                         {{op.roleDisplayName}}
                     </mat-option>
@@ -67,17 +76,29 @@
                 </mat-select>
             </mat-form-field>
         </div>
-        <div class="row padT50">
+        <div class="row padT40" *ngIf="isEditMode">
             <div class="col-sm-2">
-                <button id="btnSave" class="btn btn-dark btn-block" type="button" [disabled]="isSaving" (click)="save()">
-                    Save
+                <button id="btnSaveUserDetails" class="btn btn-dark btn-block" type="button" [disabled]="isSavingUserDetails" (click)="saveUserDetails()">
+                    Save User
                 </button>
             </div>
             <div class="col-sm-2">
-                <button id="btnCancel" class="btn btn-dark btn-block" type="button" >
-                    Cancel
+                <button id="btnCancelUser" class="btn btn-dark btn-block" type="button" (click)="goUserListPage()">
+                    Back
                 </button>
             </div>
         </div>
     </form>
+    <div class="row padT50" *ngIf="!isEditMode">
+        <div class="col-sm-2">
+            <button id="btnSave" class="btn btn-dark btn-block" type="button" [disabled]="isSaving" (click)="saveforCreate()">
+                Save
+            </button>
+        </div>
+        <div class="col-sm-2">
+            <button id="btnCancel" class="btn btn-dark btn-block" type="button" (click)="goUserListPage()">
+                Cancel
+            </button>
+        </div>
+    </div>
 </div>
