@@ -42,6 +42,11 @@ export class UserDetailMatComponent implements OnInit {
     username = new FormControl('', [Validators.required]);
     password = new FormControl('', [Validators.required, Validators.minLength(4)]);
     confirmpass = new FormControl('', [Validators.required, Validators.minLength(4)]);
+    firstname = new FormControl('', [Validators.required]);
+    lastname = new FormControl('', [Validators.required]);
+    email = new FormControl('', [Validators.required, Validators.email]);
+    ddrole = new FormControl(null);
+    ddusertype = new FormControl(null);
 
     matcher = new MyErrorStateMatcher();
 
@@ -53,7 +58,12 @@ export class UserDetailMatComponent implements OnInit {
         this.userDetailsMatForm = this.formBuilder.group({
             username: this.username,
             password: this.password,
-            confirmpass: this.confirmpass
+            confirmpass: this.confirmpass,
+            firstname: this.firstname,
+            lastname: this.lastname,
+            email: this.email,
+            ddrole: this.ddrole,
+            ddusertype: this.ddusertype
         }, {
                 validator: PasswordValidation.MatchPassword
             });
@@ -119,14 +129,19 @@ export class UserDetailMatComponent implements OnInit {
         //this.goUserListPage();
     }
 
+    // convenience getter for easy access to form fields
+    get f() { return this.userDetailsMatForm.controls; }
+
     // Initialise Dropdown Roles
     initRoles(roles: Roles[]) {
         this.roleOptions = roles;
+        this.f.ddrole.setValue(this.roleOptions[0].roleId);
     }
 
     // Initialise Dropdown UserTypes
     initUserTypes(userTypes: UserTypes[]) {
         this.userTypeOptions = userTypes;
+        this.f.ddusertype.setValue(this.userTypeOptions[0].userTypeId);
     }
 
     // Go To Users List
@@ -147,10 +162,21 @@ export class MyErrorStateMatcher implements ErrorStateMatcher {
 export class PasswordValidation {
 
     static MatchPassword(ac: AbstractControl) {
-        if (ac.get('password').value != ac.get('confirmpass').value) {
-            ac.get('confirmpass').setErrors({ MatchPassword: true })
+        if (ac.get(ControlNames.password).value != ac.get(ControlNames.confirmpass).value) {
+            ac.get(ControlNames.confirmpass).setErrors({ MatchPassword: true })
         } else {
             return null
         }
     }
+}
+
+export class ControlNames {
+    static username = 'username';
+    static password = 'password';
+    static confirmpass = 'confirmpass';
+    static firstname = 'firstname';
+    static lastname = 'lastname';
+    static email = 'email';
+    static ddrole = 'ddrole';
+    static ddusertype = 'ddusertype';
 }

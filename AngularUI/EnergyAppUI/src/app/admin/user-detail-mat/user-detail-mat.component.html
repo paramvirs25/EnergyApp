@@ -27,7 +27,7 @@
                 <mat-icon matSuffix (click)="confirmhide = !confirmhide">{{confirmhide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 <mat-error *ngIf="confirmpass.hasError('required')">Confirm Password is required </mat-error>
                 <mat-error *ngIf="confirmpass.hasError('minlength')">Confirm Password must be at least 4 characters </mat-error>
-                <mat-error *ngIf="confirmpass.hasError('MatchPassword')">Passwords do not match</mat-error>
+                <mat-error *ngIf="confirmpass.hasError('MatchPassword')">Passwords do not match </mat-error>
             </mat-form-field>
         </div>
         <div class="padT50">
@@ -36,27 +36,31 @@
         </div>
         <div class="padT10">
             <mat-form-field class="matCtrl">
-                <input matInput placeholder="First Name" required>
+                <input matInput [formControl]="firstname" placeholder="First Name" required>
+                <mat-error *ngIf="firstname.hasError('required')"> First Name is required </mat-error>
             </mat-form-field>
             <mat-form-field class="matCtrl">
-                <input matInput placeholder="Last Name" required>
-            </mat-form-field>
-        </div>
-        <div class="padT10">
-            <mat-form-field class="matCtrl">
-                <input matInput placeholder="Email" required>
+                <input matInput [formControl]="lastname" placeholder="Last Name" required>
+                <mat-error *ngIf="lastname.hasError('required')"> Last Name is required </mat-error>
             </mat-form-field>
         </div>
         <div class="padT10">
             <mat-form-field class="matCtrl">
-                <mat-select placeholder="Roles" required>
+                <input matInput [formControl]="email" placeholder="Email" required>
+                <mat-error *ngIf="email.hasError('required')"> Email is required </mat-error>
+                <mat-error *ngIf="email.hasError('email')"> Email must be a valid email address </mat-error>
+            </mat-form-field>
+        </div>
+        <div class="padT10">
+            <mat-form-field class="matCtrl">
+                <mat-select [formControl]="ddrole" placeholder="Roles" >
                     <mat-option *ngFor="let op of roleOptions" [value]="op.roleId">
                         {{op.roleDisplayName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
             <mat-form-field class="matCtrl">
-                <mat-select placeholder="User Type" required>
+                <mat-select [formControl]="ddusertype" placeholder="User Type">
                     <mat-option *ngFor="let op of userTypeOptions" [value]="op.userTypeId">
                         {{op.userTypeDisplayName}}
                     </mat-option>
