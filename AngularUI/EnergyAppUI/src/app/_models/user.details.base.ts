@@ -1,5 +1,5 @@
 export class UserDetailBase {
-    userTypeId: number;
+    userId: number;
     userFirstName: string;
     userLastName: string;
     userEmail: string;

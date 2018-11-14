@@ -1,6 +1,6 @@
-import { UserLogin, UserDetailBase } from "../../_models";
+import { UserLogin, UserDetailsBaseAdmin } from "../../_models";
 
 export class UserCreateSave {
     user: UserLogin;
-    userDetailsBase: UserDetailBase;
+    userDetailsBaseAdmin: UserDetailsBaseAdmin;
 }

@@ -86,17 +86,17 @@ export class UserDetailComponent implements OnInit {
                     this.f.password.setValue(userEdit.user.password);
                     this.f.confirmpassword.setValue(userEdit.user.password);
 
-                    this.f.firstname.setValue(userEdit.userDetail.userFirstName);
-                    this.f.lastname.setValue(userEdit.userDetail.userLastName);
-                    this.f.email.setValue(userEdit.userDetail.userEmail);
+                    this.f.firstname.setValue(userEdit.userDetailsBaseAdmin.userFirstName);
+                    this.f.lastname.setValue(userEdit.userDetailsBaseAdmin.userLastName);
+                    this.f.email.setValue(userEdit.userDetailsBaseAdmin.userEmail);
 
                     //Initialise dropdowns
                     this.initRoles(userEdit.roles);
                     this.initUserTypes(userEdit.userTypes);
 
                     //Bind Dropdowns
-                    this.f.ddrole.setValue(userEdit.userDetail.roleId);
-                    this.f.ddusertype.setValue(userEdit.userDetail.userTypeId);
+                    this.f.ddrole.setValue(userEdit.userDetailsBaseAdmin.roleId);
+                    this.f.ddusertype.setValue(userEdit.userDetailsBaseAdmin.userTypeId);
 
                     this.isLoadingResults = false;
                 },

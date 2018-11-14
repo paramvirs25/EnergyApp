@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, NgForm, Validators, FormGroupDirective, AbstractControl } from '@angular/forms';
 
-import { Roles, UserTypes, UserLogin, UserDetailBase } from '../../_models';
+import { Roles, UserTypes, UserLogin, UserDetailsBaseAdmin } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { UserCreateSave } from '../../_models/userModelExtensions';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -145,12 +145,12 @@ export class UserDetailMatComponent implements OnInit {
         this.ucSave.user.username = this.loginCtrls.username.value;
         this.ucSave.user.password = this.loginCtrls.password.value;
 
-        this.ucSave.userDetailsBase = new UserDetailBase();
-        this.ucSave.userDetailsBase.userFirstName = this.userDetailCtrls.firstname.value;
-        this.ucSave.userDetailsBase.userLastName = this.userDetailCtrls.lastname.value;
-        this.ucSave.userDetailsBase.userEmail = this.userDetailCtrls.email.value;
-        this.ucSave.userDetailsBase.roleId = this.userDetailCtrls.ddrole.value;
-        this.ucSave.userDetailsBase.userTypeId = this.userDetailCtrls.ddusertype.value;
+        this.ucSave.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
+        this.ucSave.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
+        this.ucSave.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
+        this.ucSave.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
+        this.ucSave.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
+        this.ucSave.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
 
         console.log(this.ucSave);
 
