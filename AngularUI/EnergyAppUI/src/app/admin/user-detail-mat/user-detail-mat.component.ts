@@ -32,6 +32,9 @@ export class UserDetailMatComponent implements OnInit {
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
     ucSave: UserCreateSave;
+    userLogin: UserLogin;
+    userDetailsBaseAdmin: UserDetailsBaseAdmin;
+
     isLoadingResults = false;
 
     isSaving = false;
@@ -91,30 +94,30 @@ export class UserDetailMatComponent implements OnInit {
                 error => {
                     this.isLoadingResults = false;
                 });
-        }
+        } //Edit Mode
         else if (this.userId > 0) {
             this.lblAddEditUser = "Edit User -> UserId - " + this.userId;
             this.isEditMode = true;
             this.isLoadingResults = true;
 
             this.userService.getForEdit(this.userId).subscribe(
-                userEdit => {
+                ue => {
                     
-                    this.loginCtrls.username.setValue(userEdit.user.username);
-                    this.loginCtrls.password.setValue(userEdit.user.password);
-                    this.loginCtrls.confirmpass.setValue(userEdit.user.password);
+                    this.loginCtrls.username.setValue(ue.user.username);
+                    this.loginCtrls.password.setValue(ue.user.password);
+                    this.loginCtrls.confirmpass.setValue(ue.user.password);
 
-                    this.userDetailCtrls.firstname.setValue(userEdit.userDetailsBaseAdmin.userFirstName);
-                    this.userDetailCtrls.lastname.setValue(userEdit.userDetailsBaseAdmin.userLastName);
-                    this.userDetailCtrls.email.setValue(userEdit.userDetailsBaseAdmin.userEmail);
+                    this.userDetailCtrls.firstname.setValue(ue.userDetailsBaseAdmin.userFirstName);
+                    this.userDetailCtrls.lastname.setValue(ue.userDetailsBaseAdmin.userLastName);
+                    this.userDetailCtrls.email.setValue(ue.userDetailsBaseAdmin.userEmail);
 
                     //Initialise dropdowns
-                    this.initRoles(userEdit.roles);
-                    this.initUserTypes(userEdit.userTypes);
+                    this.initRoles(ue.roles);
+                    this.initUserTypes(ue.userTypes);
 
                     //Bind Dropdowns
-                    this.userDetailCtrls.ddrole.setValue(userEdit.userDetailsBaseAdmin.roleId);
-                    this.userDetailCtrls.ddusertype.setValue(userEdit.userDetailsBaseAdmin.userTypeId);
+                    this.userDetailCtrls.ddrole.setValue(ue.userDetailsBaseAdmin.roleId);
+                    this.userDetailCtrls.ddusertype.setValue(ue.userDetailsBaseAdmin.userTypeId);
 
                     this.isLoadingResults = false;
                 },
@@ -178,7 +181,22 @@ export class UserDetailMatComponent implements OnInit {
             return;
         }
 
-        console.log("pass save login details");       
+        this.userLogin = new UserLogin();
+        this.userLogin.userId = this.userId;
+        this.userLogin.username = this.loginCtrls.username.value;
+        this.userLogin.password = this.loginCtrls.password.value;
+
+        this.isSavingLoginDetails = true;
+        this.userService.update(this.userLogin).subscribe(
+            data => {
+                this.isSavingLoginDetails = false;
+                this.alertService.success('Login Details Saved Successfully', true);
+            },
+            error => {
+                //this.alertService.error(error);
+                this.isSavingLoginDetails = false;
+            });
+      
     }
 
     //Save Method for User Details Component
@@ -192,7 +210,24 @@ export class UserDetailMatComponent implements OnInit {
             return;
         }
 
-        console.log("pass save user details");
+        this.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
+        this.userDetailsBaseAdmin.userId = this.userId;
+        this.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
+        this.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
+        this.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
+        this.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
+        this.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
+
+        this.isSavingUserDetails = true;
+        this.userService.updateDetail(this.userDetailsBaseAdmin).subscribe(
+            data => {
+                this.isSavingUserDetails = false;
+                this.alertService.success('User Details Saved Successfully', true);
+            },
+            error => {
+                //this.alertService.error(error);
+                this.isSavingUserDetails = false;
+            });
     }
 
     // convenience getter for easy access to form fields
