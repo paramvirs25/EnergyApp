@@ -93,8 +93,35 @@ export class UserDetailMatComponent implements OnInit {
                 });
         }
         else if (this.userId > 0) {
-            this.lblAddEditUser = "Edit User -> User Id " + this.userId;
+            this.lblAddEditUser = "Edit User -> UserId - " + this.userId;
             this.isEditMode = true;
+            this.isLoadingResults = true;
+
+            this.userService.getForEdit(this.userId).subscribe(
+                userEdit => {
+                    
+                    this.loginCtrls.username.setValue(userEdit.user.username);
+                    this.loginCtrls.password.setValue(userEdit.user.password);
+                    this.loginCtrls.confirmpass.setValue(userEdit.user.password);
+
+                    this.userDetailCtrls.firstname.setValue(userEdit.userDetailsBaseAdmin.userFirstName);
+                    this.userDetailCtrls.lastname.setValue(userEdit.userDetailsBaseAdmin.userLastName);
+                    this.userDetailCtrls.email.setValue(userEdit.userDetailsBaseAdmin.userEmail);
+
+                    //Initialise dropdowns
+                    this.initRoles(userEdit.roles);
+                    this.initUserTypes(userEdit.userTypes);
+
+                    //Bind Dropdowns
+                    this.userDetailCtrls.ddrole.setValue(userEdit.userDetailsBaseAdmin.roleId);
+                    this.userDetailCtrls.ddusertype.setValue(userEdit.userDetailsBaseAdmin.userTypeId);
+
+                    this.isLoadingResults = false;
+                },
+                error => {
+                    this.isLoadingResults = false;
+                    this.router.navigate(['/', AppConstants.userListComponentPath]);
+                });
         }     
     }
 
