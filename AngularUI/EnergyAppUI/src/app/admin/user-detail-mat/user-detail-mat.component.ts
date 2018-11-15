@@ -62,7 +62,14 @@ export class UserDetailMatComponent implements OnInit {
     ngOnInit() {
 
         this.userId = +this.activeRoute.snapshot.paramMap.get('id');
-        this.isloggedInUser = this.activeRoute.snapshot.paramMap.get('loggedinUser') == "true";
+        this.isloggedInUser = this.activeRoute.snapshot.paramMap.get('isloggedinUser') == "true";
+
+        //Reloads page when Current Route params are changed
+        this.activeRoute.params.subscribe(() => {
+            this.router.routeReuseStrategy.shouldReuseRoute = function () {
+                return false;
+            };
+        })
                         
         // Define validations and control names for Login Details
         this.loginDetailsForm = this.formBuilder.group({
