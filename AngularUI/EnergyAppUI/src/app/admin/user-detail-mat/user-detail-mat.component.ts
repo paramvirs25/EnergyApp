@@ -36,6 +36,7 @@ export class UserDetailMatComponent implements OnInit {
     userDetailsBaseAdmin: UserDetailsBaseAdmin;
 
     isLoadingResults = false;
+    isShowLoginDetails = false;
 
     isSaving = false;
     isSavingLoginDetails = false;
@@ -80,6 +81,7 @@ export class UserDetailMatComponent implements OnInit {
         //Add Mode
         if (this.userId == 0) {
             this.lblAddEditUser = "Add User";
+            this.isShowLoginDetails = true;
             this.isLoadingResults = true;
 
             //Get Data for Create Mode
