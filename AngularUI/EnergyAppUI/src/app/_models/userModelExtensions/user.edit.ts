@@ -1,12 +1,12 @@
 import { Roles } from "../roles";
 import { UserTypes } from "../userTypes";
 import { UserLogin } from "../user.login";
-import { UserDetail } from "../user.details";
+import { UserDetailsBaseAdmin } from "../user.details.base.admin";
 
 export class UserEdit
 {
     user: UserLogin;
-    userDetail: UserDetail;
+    userDetailsBaseAdmin: UserDetailsBaseAdmin;
     roles: Roles[];
     userTypes: UserTypes[];
 }
