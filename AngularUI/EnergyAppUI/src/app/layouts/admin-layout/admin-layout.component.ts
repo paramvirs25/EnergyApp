@@ -23,7 +23,7 @@ export class AdminLayoutComponent implements OnInit {
   }
 
   private loadUser() {
-    this.userService.getById(this.userShared.getLoggedInUser().userid)
+      this.userService.getLoggedIn()
       .pipe(first())
       .subscribe(
         user => {
