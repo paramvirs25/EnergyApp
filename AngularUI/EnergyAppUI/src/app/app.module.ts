@@ -96,7 +96,7 @@ export class AngularMaterialModule { }
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],
-    entryComponents: [UserListComponent],
+    entryComponents: [UserListComponent, AlertComponent],
     exports: [BsDropdownModule, TooltipModule, ModalModule],
     bootstrap: [AppComponent]
 })
