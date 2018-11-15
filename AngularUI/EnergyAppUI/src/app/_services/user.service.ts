@@ -23,17 +23,22 @@ export class UserService {
 
     //Get logged in user
     getLoggedIn(): Observable<UserDetail> {
-        return this.http.get<UserDetail>(`${environment.apiUrl}/users/GetLoggedIn/`);
+        return this.http.get<UserDetail>(`${environment.apiUrl}/users/getLoggedIn/`);
     }
 
     //Gets data for 'Create' user screen
     getForCreate(): Observable<UserCreateGet> {
-        return this.http.get<UserCreateGet>(`${environment.apiUrl}/users/GetForCreate/`);
+        return this.http.get<UserCreateGet>(`${environment.apiUrl}/users/getForCreate/`);
     }
 
     //Gets user's detail for editing
     getForEdit(id: number): Observable<UserEdit> {
-        return this.http.get<UserEdit>(`${environment.apiUrl}/users/GetForEdit/` + id);
+        return this.http.get<UserEdit>(`${environment.apiUrl}/users/getForEdit/` + id);
+    }
+
+    //Get logged in user's details for editing
+    getForEditLoggedIn(): Observable<UserEdit> {
+        return this.http.get<UserEdit>(`${environment.apiUrl}/users/getForEditLoggedIn/`);
     }
 
     //Creates a user if it already doesnot exits

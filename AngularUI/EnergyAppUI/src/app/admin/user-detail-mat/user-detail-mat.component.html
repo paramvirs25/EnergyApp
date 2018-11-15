@@ -9,9 +9,9 @@
             <div class="col-sm-2">
                 <h5> Login Details </h5>
             </div>
-            <mat-slide-toggle *ngIf="isEditMode" (change)="isShowLoginDetails = !isShowLoginDetails"></mat-slide-toggle>
+            <mat-slide-toggle *ngIf="isEditMode" (change)="isShowLoginCtrls = !isShowLoginCtrls"></mat-slide-toggle>
         </div>
-        <div *ngIf="isShowLoginDetails">
+        <div *ngIf="isShowLoginCtrls">
             <hr />
             <div class="padT10">
                 <mat-form-field class="matCtrl">
@@ -65,7 +65,7 @@
                 <mat-error *ngIf="email.hasError('email')"> Email must be a valid email address </mat-error>
             </mat-form-field>
         </div>
-        <div class="padT10">
+        <div class="padT10" *ngIf="!isloggedInUser">
             <mat-form-field class="matCtrl">
                 <mat-select formControlName="ddrole" placeholder="Roles">
                     <mat-option *ngFor="let op of roleOptions" [value]="op.roleId">

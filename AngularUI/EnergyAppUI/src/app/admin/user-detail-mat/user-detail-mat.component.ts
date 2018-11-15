@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
 import { FormControl, FormBuilder, FormGroup, NgForm, Validators, FormGroupDirective, AbstractControl } from '@angular/forms';
 
-import { Roles, UserTypes, UserLogin, UserDetailsBaseAdmin } from '../../_models';
+import { Roles, UserTypes, UserLogin, UserDetailsBaseAdmin, UserDetailBase } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { UserCreateSave } from '../../_models/userModelExtensions';
 import { ErrorStateMatcher } from '@angular/material/core';
@@ -33,10 +33,11 @@ export class UserDetailMatComponent implements OnInit {
     userTypeOptions: UserTypes[];
     ucSave: UserCreateSave;
     userLogin: UserLogin;
+    userDetailBase: UserDetailBase;
     userDetailsBaseAdmin: UserDetailsBaseAdmin;
 
     isLoadingResults = false;
-    isShowLoginDetails = false;
+    isShowLoginCtrls = false;
 
     isSaving = false;
     isSavingLoginDetails = false;
@@ -45,6 +46,7 @@ export class UserDetailMatComponent implements OnInit {
     userId = 0; //Add Mode
     lblAddEditUser: string;
     isEditMode = false;
+    isloggedInUser = false;
 
     username = new FormControl('', [Validators.required]);
     password = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -60,8 +62,9 @@ export class UserDetailMatComponent implements OnInit {
     ngOnInit() {
 
         this.userId = +this.activeRoute.snapshot.paramMap.get('id');
-
-        // Define validations and control names
+        this.isloggedInUser = this.activeRoute.snapshot.paramMap.get('loggedinUser') == "true";
+                        
+        // Define validations and control names for Login Details
         this.loginDetailsForm = this.formBuilder.group({
             username: this.username,
             password: this.password,
@@ -69,7 +72,7 @@ export class UserDetailMatComponent implements OnInit {
         },
         {   validator: PasswordValidation.MatchPassword });
 
-        // Define validations and control names
+        // Define validations and control names for User Details
         this.userDetailsForm = this.formBuilder.group({
             firstname: this.firstname,
             lastname: this.lastname,
@@ -81,7 +84,7 @@ export class UserDetailMatComponent implements OnInit {
         //Add Mode
         if (this.userId == 0) {
             this.lblAddEditUser = "Add User";
-            this.isShowLoginDetails = true;
+            this.isShowLoginCtrls = true;
             this.isLoadingResults = true;
 
             //Get Data for Create Mode
@@ -101,7 +104,7 @@ export class UserDetailMatComponent implements OnInit {
             this.lblAddEditUser = "Edit User -> UserId - " + this.userId;
             this.isEditMode = true;
             this.isLoadingResults = true;
-
+            
             this.userService.getForEdit(this.userId).subscribe(
                 ue => {
                     
@@ -151,14 +154,13 @@ export class UserDetailMatComponent implements OnInit {
         this.ucSave.user.password = this.loginCtrls.password.value;
 
         this.ucSave.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
+        this.ucSave.userDetailsBaseAdmin.userId = this.userId;
         this.ucSave.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
         this.ucSave.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
         this.ucSave.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
         this.ucSave.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
         this.ucSave.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
-
-        console.log(this.ucSave);
-
+        
         this.isSaving = true;
         this.userService.create(this.ucSave).subscribe(
             data => {
@@ -212,24 +214,47 @@ export class UserDetailMatComponent implements OnInit {
             return;
         }
 
-        this.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
-        this.userDetailsBaseAdmin.userId = this.userId;
-        this.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
-        this.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
-        this.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
-        this.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
-        this.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
+        //Save any user's general details
+        if (!this.isloggedInUser) {
+            this.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
+            this.userDetailsBaseAdmin.userId = this.userId;
+            this.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
+            this.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
+            this.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
+            this.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
+            this.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
 
-        this.isSavingUserDetails = true;
-        this.userService.updateDetail(this.userDetailsBaseAdmin).subscribe(
-            data => {
-                this.isSavingUserDetails = false;
-                this.alertService.success('User Details Saved Successfully', true);
-            },
-            error => {
-                //this.alertService.error(error);
-                this.isSavingUserDetails = false;
-            });
+            this.isSavingUserDetails = true;
+            this.userService.updateDetail(this.userDetailsBaseAdmin).subscribe(
+                data => {
+                    this.isSavingUserDetails = false;
+                    this.alertService.success('User Details Saved Successfully', true);
+                },
+                error => {
+                    //this.alertService.error(error);
+                    this.isSavingUserDetails = false;
+                });
+        }
+        //Save logged in user's general details
+        else {
+            this.userDetailBase = new UserDetailBase();
+            this.userDetailBase.userId = this.userId;
+            this.userDetailBase.userFirstName = this.userDetailCtrls.firstname.value;
+            this.userDetailBase.userLastName = this.userDetailCtrls.lastname.value;
+            this.userDetailBase.userEmail = this.userDetailCtrls.email.value;
+
+            this.isSavingUserDetails = true;
+            this.userService.updateDetailLoggedIn(this.userDetailBase).subscribe(
+                data => {
+                    this.isSavingUserDetails = false;
+                    this.alertService.success('User Details Saved Successfully', true);
+                },
+                error => {
+                    //this.alertService.error(error);
+                    this.isSavingUserDetails = false;
+                });
+        }
+        
     }
 
     // convenience getter for easy access to form fields
