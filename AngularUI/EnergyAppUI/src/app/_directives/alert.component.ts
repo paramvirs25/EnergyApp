@@ -23,20 +23,20 @@ export class AlertComponent implements OnInit, OnDestroy {
         //  setTimeout(() => this.message = null, 3000);
         //});
 
-        this.subscription = this.alertService.getMessage().subscribe(message => {
-            if (message) {
-                this.snackBar.open(
-                    message.text,
-                    message.type,
-                    {
-                        duration: 5000,
-                        panelClass: ['snackBar-customClass']
-                    });
-            }
-        });
+        //this.subscription = this.alertService.getMessage().subscribe(message => {
+        //    if (message) {
+        //        this.snackBar.open(
+        //            message.text,
+        //            message.type,
+        //            {
+        //                duration: 5000,
+        //                panelClass: ['snackBar-customClass']
+        //            });
+        //    }
+        //});
     }
 
     ngOnDestroy() {
-        this.subscription.unsubscribe();
+        //this.subscription.unsubscribe();
     }
 }

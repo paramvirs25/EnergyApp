@@ -1,5 +1,8 @@
 import { Component } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
+import { AlertService } from './_services';
 
 @Component({
     selector: 'app',
@@ -7,11 +10,32 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 
 export class AppComponent {
+    private subscription: Subscription;
+    message: any;
+
     constructor(
-        private route: ActivatedRoute) { }
+        private route: ActivatedRoute,
+        private alertService: AlertService,
+        public snackBar: MatSnackBar) { }
 
     ngOnInit() {
         // get return url from route parameters or default to '/'
         //console.log("AppComponent-returnUrl- " + this.route.snapshot.queryParams['returnUrl']);
+
+        this.subscription = this.alertService.getMessage().subscribe(message => {
+            if (message) {
+                this.snackBar.open(
+                    message.text,
+                    message.type,
+                    {
+                        duration: 5000,
+                        panelClass: ['snackBar-customClass']
+                    });
+            }
+        });
+    }
+
+    ngOnDestroy() {
+        this.subscription.unsubscribe();
     }
 }
