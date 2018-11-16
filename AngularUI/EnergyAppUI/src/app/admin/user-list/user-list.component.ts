@@ -19,6 +19,7 @@ export class UserListComponent implements OnInit {
     userIdToDelete =  0;
     showModal = false;
     lblmodalContent = "";
+    passLoggedinUser = false;
 
     isLoadingResults = true;
 
@@ -53,11 +54,11 @@ export class UserListComponent implements OnInit {
 
     // Go To Add Users
     goAddUserDetails() {
-        this.router.navigate(['/userdetail/0']);
+        this.router.navigate(['/userdetail', "0"]);
     }
 
     goAddMatUserDetails() {
-        this.router.navigate(['/userdetailmat/0']);
+        this.router.navigate(['/userdetailmat', "0", this.passLoggedinUser]); //false for Not Logged user
     }
 
     //Delete User Modal

@@ -8,27 +8,28 @@ import { UserShared } from '../../_shared';
 import { AppConstants } from '../../app.constant';
 
 @Component({
-  selector: 'app-admin-layout',
-  templateUrl: './admin-layout.component.html',
-  styleUrls: ['./admin-layout.component.css']
+    selector: 'app-admin-layout',
+    templateUrl: './admin-layout.component.html',
+    styleUrls: ['./admin-layout.component.css']
 })
 export class AdminLayoutComponent implements OnInit {
 
-  currentUser: UserDetail;
+    currentUser: UserDetail;
+    passloggedinUser = true;
 
-  constructor(private userService: UserService, private router: Router, private userShared: UserShared) { }
+    constructor(private userService: UserService, private router: Router, private userShared: UserShared) { }
+    
+    ngOnInit() {
+        this.loadUser();
+    }
 
-  ngOnInit() {
-    this.loadUser();
-  }
-
-  private loadUser() {
-      this.userService.getLoggedIn()
-      .pipe(first())
-      .subscribe(
-        user => {
-          this.currentUser = user;
-        });
+    private loadUser() {
+        this.userService.getLoggedIn()
+            .pipe(first())
+            .subscribe(
+                user => {
+                    this.currentUser = user;
+                });
     }
 
     // Go To User List Page
