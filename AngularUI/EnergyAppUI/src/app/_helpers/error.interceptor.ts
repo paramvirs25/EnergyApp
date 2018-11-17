@@ -37,12 +37,12 @@ export class ErrorInterceptor implements HttpInterceptor {
                 || err.status == "404" //"Not Found" - Record not found on server
             ) 
             {
-                let msg : string = this.formatErrorMsg(err.error);
-                if (msg == "") {
-                    msg = err.statusText;
+                let msg: string[] = this.formatErrorMsg(err.error);
+                if (msg == null) {
+                    msg.push(err.statusText);
                 }
 
-                this.alertService.error(msg);
+                this.alertService.errorArr(msg);
             }
             //else if (err.error && err.error.message != undefined) {
             //    error = err.error.message;
@@ -60,7 +60,7 @@ export class ErrorInterceptor implements HttpInterceptor {
      * Expected object format is:
      * {Key1: ArrayValue(1), Key2: ArrayValue(1)}
      */
-    formatErrorMsg(error: object) : string {
+    formatErrorMsg(error: object) : string[] {
         let errMsgs: string[] = new Array();
 
         if (error != null) {
@@ -74,9 +74,9 @@ export class ErrorInterceptor implements HttpInterceptor {
                 }
             }
 
-            return errMsgs.join("\n");
+            return errMsgs;  //.join("<br/>");
         }
 
-        return "";
+        return null;
     }
 }
