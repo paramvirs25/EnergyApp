@@ -39,9 +39,7 @@ export class UserListComponent implements OnInit {
             this.gridDataSource = new MatTableDataSource(userlist);
             this.users = userlist;
             this.isLoadingResults = false;
-
-            console.log(userlist);
-
+            
             this.gridDataSource.sort = this.sort;
             this.gridDataSource.paginator = this.paginator;
         });
