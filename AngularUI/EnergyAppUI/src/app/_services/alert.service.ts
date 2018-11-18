@@ -23,13 +23,23 @@ export class AlertService {
     }
 
     success(message: string, keepAfterNavigationChange = false) {
+        let list: Array<string> = [message];
+        this.successArr(list, keepAfterNavigationChange);
+    }
+
+    successArr(msgArr: string[], keepAfterNavigationChange = false) {
         this.keepAfterNavigationChange = keepAfterNavigationChange;
-        this.subject.next({ type: 'Success', text: message });
+        this.subject.next({ type: 'Success', list: msgArr });
     }
 
     error(message: string, keepAfterNavigationChange = false) {
+        let list: Array<string> = [message];
+        this.errorArr(list, keepAfterNavigationChange);
+    }
+
+    errorArr(msgArr: string[], keepAfterNavigationChange = false) {
         this.keepAfterNavigationChange = keepAfterNavigationChange;
-        this.subject.next({ type: 'Error', text: message });
+        this.subject.next({ type: 'Error', list: msgArr });
     }
 
     getMessage(): Observable<any> {

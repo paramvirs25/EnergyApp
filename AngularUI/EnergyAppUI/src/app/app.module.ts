@@ -5,15 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CdkTableModule } from '@angular/cdk/table';
-import { CdkTreeModule } from '@angular/cdk/tree';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatDatepickerModule, MatDialogModule,
-         MatDividerModule, MatExpansionModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule, MatPaginatorModule, MatProgressBarModule,
-         MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule, MatSnackBarModule, MatSortModule, MatStepperModule,
-         MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule, MatTreeModule
-       } from '@angular/material';
+
+import { AngularMaterialModule } from './material-module';
 
 import { AppComponent } from './app.component';
 import { routing } from './app.routing';
@@ -24,6 +18,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { CompareValidatorModule } from 'angular-compare-validator';
 
 import { AlertComponent } from './_directives';
+import { SnackBarCustomComponent, SnackBarComponent } from './_directives';
+
 import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
 import { AlertService, AuthenticationService, UserService, RolesService, UserTypesService } from './_services';
@@ -40,19 +36,6 @@ import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
-
-
-@NgModule({
-  exports: [
-    CdkTableModule, CdkTreeModule, MatAutocompleteModule, MatBadgeModule, MatBottomSheetModule, MatButtonModule, MatButtonToggleModule, MatCardModule, MatCheckboxModule, MatChipsModule, MatStepperModule,
-    MatDatepickerModule, MatDialogModule, MatDividerModule, MatExpansionModule, MatGridListModule, MatIconModule, MatInputModule, MatListModule, MatMenuModule, MatNativeDateModule,
-    MatPaginatorModule, MatProgressBarModule, MatProgressSpinnerModule, MatRadioModule, MatRippleModule, MatSelectModule, MatSidenavModule, MatSliderModule, MatSlideToggleModule,
-    MatSnackBarModule, MatSortModule, MatTableModule, MatTabsModule, MatToolbarModule, MatTooltipModule,
-    MatTreeModule
-  ],
-  declarations: []
-})
-export class AngularMaterialModule { }
 
 @NgModule({
     imports: [
@@ -82,6 +65,7 @@ export class AngularMaterialModule { }
         DashboardComponent,
         UserListComponent,
         UserDetailComponent,
+        SnackBarCustomComponent, SnackBarComponent,
         UserDetailMatComponent
     ],
     providers: [
@@ -96,7 +80,7 @@ export class AngularMaterialModule { }
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],
-    entryComponents: [UserListComponent, AlertComponent],
+    entryComponents: [UserListComponent, AlertComponent, SnackBarCustomComponent, SnackBarComponent],
     exports: [BsDropdownModule, TooltipModule, ModalModule],
     bootstrap: [AppComponent]
 })

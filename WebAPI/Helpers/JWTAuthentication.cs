@@ -11,6 +11,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System;
 using System.Linq;
+using WebApi.Helpers.Exceptions;
 
 namespace WebApi.Helpers
 {
@@ -44,14 +45,12 @@ namespace WebApi.Helpers
                 {
                     OnTokenValidated = context =>
                     {
-                        var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
-                        var userId = int.Parse(context.Principal.Identity.Name);
-                        var user = userService.GetById(userId);
-                        if (user == null)
+                        if(!IsUserValid(context))
                         {
                             // return unauthorized if user no longer exists
                             context.Fail("Unauthorized");
                         }
+
                         return Task.CompletedTask;
                     }
                 };
@@ -67,6 +66,23 @@ namespace WebApi.Helpers
             });
         }
 
+        public static bool IsUserValid(TokenValidatedContext context)
+        {
+            var userService = context.HttpContext.RequestServices.GetRequiredService<IUserService>();
+            var userId = int.Parse(context.Principal.Identity.Name);
+
+            try
+            {
+                var user = userService.GetById(userId);
+                return true;
+            }
+            catch (NotFoundException)
+            {
+                //user no longer exists
+                return false;
+            }
+        }
+
         public static string GetToken(UserDetailsModel user, string secretKey)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
@@ -78,7 +94,7 @@ namespace WebApi.Helpers
                     new Claim(ClaimTypes.Name, user.UserId.ToString()),
                     new Claim(ClaimTypes.Role, user.RoleId.ToString())
                 }),
-                Expires = DateTime.UtcNow.AddDays(7),
+                Expires = DateTime.UtcNow.AddMinutes(20),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
             var token = tokenHandler.CreateToken(tokenDescriptor);
