@@ -48,6 +48,7 @@ export class UserDetailMatComponent implements OnInit {
     isEditMode = false;
     isloggedInUser = false;
 
+    // Define validations and form control names
     username = new FormControl('', [Validators.required]);
     password = new FormControl('', [Validators.required, Validators.minLength(4)]);
     confirmpass = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -61,32 +62,17 @@ export class UserDetailMatComponent implements OnInit {
 
     ngOnInit() {
 
-        this.userId = +this.activeRoute.snapshot.paramMap.get('id');
+        this.userId = +this.activeRoute.snapshot.paramMap.get('id'); // get id as number
         this.isloggedInUser = this.activeRoute.snapshot.paramMap.get('isloggedinUser') == "true";
 
-        //Reloads page when Current Route params are changed
-        this.activeRoute.params.subscribe(() => {
-            this.router.routeReuseStrategy.shouldReuseRoute = function () {
-                return false;
-            };
-        })
+        //Reloads page when Active Route params are changed
+        this.reloadonRouteChange();
                         
-        // Define validations and control names for Login Details
-        this.loginDetailsForm = this.formBuilder.group({
-            username: this.username,
-            password: this.password,
-            confirmpass: this.confirmpass
-        },
-        {   validator: PasswordValidation.MatchPassword });
+        // Initialise Login Details Validators
+        this.initLoginValidators();
 
-        // Define validations and control names for User Details
-        this.userDetailsForm = this.formBuilder.group({
-            firstname: this.firstname,
-            lastname: this.lastname,
-            email: this.email,
-            ddrole: this.ddrole,
-            ddusertype: this.ddusertype
-        });
+        // Initialise User Details Validators
+        this.initUserDetailValidators();
                 
         //Add Mode
         if (this.userId == 0) {
@@ -95,49 +81,59 @@ export class UserDetailMatComponent implements OnInit {
             this.isLoadingResults = true;
 
             //Get Data for Create Mode
-            this.userService.getForCreate().subscribe(
-                userCreate => {
-                    //Initialise dropdowns
-                    this.initRoles(userCreate.roles);
-                    this.initUserTypes(userCreate.userTypes);
-
-                    this.isLoadingResults = false;
-                },
-                error => {
-                    this.isLoadingResults = false;
-                });
-        } //Edit Mode
+            this.getForCreate();
+        }
+        //Edit Mode
         else if (this.userId > 0) {
             this.lblAddEditUser = "Edit User -> UserId - " + this.userId;
             this.isEditMode = true;
             this.isLoadingResults = true;
-            
-            this.userService.getForEdit(this.userId).subscribe(
-                ue => {
-                    
-                    this.loginCtrls.username.setValue(ue.user.username);
-                    this.loginCtrls.password.setValue(ue.user.password);
-                    this.loginCtrls.confirmpass.setValue(ue.user.password);
 
-                    this.userDetailCtrls.firstname.setValue(ue.userDetailsBaseAdmin.userFirstName);
-                    this.userDetailCtrls.lastname.setValue(ue.userDetailsBaseAdmin.userLastName);
-                    this.userDetailCtrls.email.setValue(ue.userDetailsBaseAdmin.userEmail);
-
-                    //Initialise dropdowns
-                    this.initRoles(ue.roles);
-                    this.initUserTypes(ue.userTypes);
-
-                    //Bind Dropdowns
-                    this.userDetailCtrls.ddrole.setValue(ue.userDetailsBaseAdmin.roleId);
-                    this.userDetailCtrls.ddusertype.setValue(ue.userDetailsBaseAdmin.userTypeId);
-
-                    this.isLoadingResults = false;
-                },
-                error => {
-                    this.isLoadingResults = false;
-                    this.router.navigate(['/', AppConstants.userListComponentPath]);
-                });
+            //Bind Controls for Edit Mode
+            this.getForEdit(this.userId);
         }     
+    }
+
+    //Bind Controls for Create Mode
+    getForCreate() {
+        this.userService.getForCreate().subscribe(userCreate => {
+
+            //Initialise dropdowns
+            this.initRoles(userCreate.roles);
+            this.initUserTypes(userCreate.userTypes);
+            this.isLoadingResults = false;
+        },
+        error => {
+            this.isLoadingResults = false;
+        });
+    }
+
+    //Bind Controls for Edit Mode
+    getForEdit(userId) {
+
+        this.userService.getForEdit(userId).subscribe(ue => {
+
+            this.loginCtrls.username.setValue(ue.user.username);
+            this.loginCtrls.password.setValue(ue.user.password);
+            this.loginCtrls.confirmpass.setValue(ue.user.password);
+            this.userDetailCtrls.firstname.setValue(ue.userDetailsBaseAdmin.userFirstName);
+            this.userDetailCtrls.lastname.setValue(ue.userDetailsBaseAdmin.userLastName);
+            this.userDetailCtrls.email.setValue(ue.userDetailsBaseAdmin.userEmail);
+
+            //Initialise dropdowns
+            this.initRoles(ue.roles);
+            this.initUserTypes(ue.userTypes);
+
+            //Bind Dropdowns
+            this.userDetailCtrls.ddrole.setValue(ue.userDetailsBaseAdmin.roleId);
+            this.userDetailCtrls.ddusertype.setValue(ue.userDetailsBaseAdmin.userTypeId);
+
+            this.isLoadingResults = false;
+        },
+        error => {
+            this.isLoadingResults = false;
+            this.router.navigate(['/', AppConstants.userListComponentPath]);
+        });
     }
 
     //Save Method to Create User
@@ -267,6 +263,35 @@ export class UserDetailMatComponent implements OnInit {
     // convenience getter for easy access to form fields
     get loginCtrls() { return this.loginDetailsForm.controls; }
     get userDetailCtrls() { return this.userDetailsForm.controls; }
+
+    // Reloads page when Active Route params are changed
+    reloadonRouteChange() {
+        this.activeRoute.params.subscribe(() => {
+            this.router.routeReuseStrategy.shouldReuseRoute = function () {
+                return false;
+            };
+        });
+    }
+
+    //Initialise login details form validators
+    initLoginValidators() {
+        this.loginDetailsForm = this.formBuilder.group({
+            username: this.username,
+            password: this.password,
+            confirmpass: this.confirmpass
+        }, { validator: PasswordValidation.MatchPassword });
+    }
+
+    //Initialise user details form validators
+    initUserDetailValidators() {
+        this.userDetailsForm = this.formBuilder.group({
+            firstname: this.firstname,
+            lastname: this.lastname,
+            email: this.email,
+            ddrole: this.ddrole,
+            ddusertype: this.ddusertype
+        });
+    }
 
     // Initialise Dropdown Roles
     initRoles(roles: Roles[]) {
