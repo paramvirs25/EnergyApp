@@ -31,11 +31,7 @@ export class UserDetailMatComponent implements OnInit {
 
     roleOptions: Roles[];
     userTypeOptions: UserTypes[];
-    ucSave: UserCreateSave;
-    userLogin: UserLogin;
-    userDetailBase: UserDetailBase;
-    userDetailsBaseAdmin: UserDetailsBaseAdmin;
-
+    
     isLoadingResults = false;
     isShowLoginCtrls = false;
 
@@ -140,32 +136,36 @@ export class UserDetailMatComponent implements OnInit {
     saveforCreate() {
 
         // make all controls touched for validation to work
-        this.makeLoginCtrlsTouched();
-        this.makeUserCtrlsTouched();       
+        this.makeCtrlsTouched(this.loginCtrls);
+        this.makeCtrlsTouched(this.userDetailCtrls);
+
+        //this.makeLoginCtrlsTouched();
+        //this.makeUserCtrlsTouched();       
 
         // stop here if form is invalid
         if (this.loginDetailsForm.invalid || this.userDetailsForm.invalid) { 
             return;
         }
 
-        //Save user details
-        this.ucSave = new UserCreateSave();
+        let ucSave: UserCreateSave = new UserCreateSave();
 
-        this.ucSave.user = new UserLogin();
-        this.ucSave.user.userId = this.userId;
-        this.ucSave.user.username = this.loginCtrls.username.value;
-        this.ucSave.user.password = this.loginCtrls.password.value;
+        //user login
+        ucSave.user = new UserLogin();
+        ucSave.user.userId = this.userId;
+        ucSave.user.username = this.loginCtrls.username.value;
+        ucSave.user.password = this.loginCtrls.password.value;
 
-        this.ucSave.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
-        this.ucSave.userDetailsBaseAdmin.userId = this.userId;
-        this.ucSave.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
-        this.ucSave.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
-        this.ucSave.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
-        this.ucSave.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
-        this.ucSave.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
+        //user details
+        ucSave.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
+        ucSave.userDetailsBaseAdmin.userId = this.userId;
+        ucSave.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
+        ucSave.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
+        ucSave.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
+        ucSave.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
+        ucSave.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
         
         this.isSaving = true;
-        this.userService.create(this.ucSave).subscribe(
+        this.userService.create(ucSave).subscribe(
             data => {
                 this.isSaving = false;
                 this.alertService.success('User Created Successfully', true);
@@ -181,20 +181,21 @@ export class UserDetailMatComponent implements OnInit {
     saveLoginDetails() {
 
         // make Login controls touched for validation to work
-        this.makeLoginCtrlsTouched();
+        //this.makeLoginCtrlsTouched();
+        this.makeCtrlsTouched(this.loginCtrls);
 
         // stop here if form is invalid
         if (this.loginDetailsForm.invalid) {
             return;
         }
 
-        this.userLogin = new UserLogin();
-        this.userLogin.userId = this.userId;
-        this.userLogin.username = this.loginCtrls.username.value;
-        this.userLogin.password = this.loginCtrls.password.value;
+        let userLogin: UserLogin = new UserLogin();
+        userLogin.userId = this.userId;
+        userLogin.username = this.loginCtrls.username.value;
+        userLogin.password = this.loginCtrls.password.value;
 
         this.isSavingLoginDetails = true;
-        this.userService.update(this.userLogin).subscribe(
+        this.userService.update(userLogin).subscribe(
             data => {
                 this.isSavingLoginDetails = false;
                 this.alertService.success('Login Details Saved Successfully', true);
@@ -210,7 +211,8 @@ export class UserDetailMatComponent implements OnInit {
     saveUserDetails() {
 
         // make user controls touched for validation to work
-        this.makeUserCtrlsTouched();
+        //this.makeUserCtrlsTouched();
+        this.makeCtrlsTouched(this.userDetailCtrls);
 
         // stop here if form is invalid
         if (this.userDetailsForm.invalid) {
@@ -219,16 +221,16 @@ export class UserDetailMatComponent implements OnInit {
 
         //Save any user's general details
         if (!this.isloggedInUser) {
-            this.userDetailsBaseAdmin = new UserDetailsBaseAdmin();
-            this.userDetailsBaseAdmin.userId = this.userId;
-            this.userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
-            this.userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
-            this.userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
-            this.userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
-            this.userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
+            let userDetailsBaseAdmin: UserDetailsBaseAdmin = new UserDetailsBaseAdmin();
+            userDetailsBaseAdmin.userId = this.userId;
+            userDetailsBaseAdmin.userFirstName = this.userDetailCtrls.firstname.value;
+            userDetailsBaseAdmin.userLastName = this.userDetailCtrls.lastname.value;
+            userDetailsBaseAdmin.userEmail = this.userDetailCtrls.email.value;
+            userDetailsBaseAdmin.roleId = this.userDetailCtrls.ddrole.value;
+            userDetailsBaseAdmin.userTypeId = this.userDetailCtrls.ddusertype.value;
 
             this.isSavingUserDetails = true;
-            this.userService.updateDetail(this.userDetailsBaseAdmin).subscribe(
+            this.userService.updateDetail(userDetailsBaseAdmin).subscribe(
                 data => {
                     this.isSavingUserDetails = false;
                     this.alertService.success('User Details Saved Successfully', true);
@@ -240,14 +242,14 @@ export class UserDetailMatComponent implements OnInit {
         }
         //Save logged in user's general details
         else {
-            this.userDetailBase = new UserDetailBase();
-            this.userDetailBase.userId = this.userId;
-            this.userDetailBase.userFirstName = this.userDetailCtrls.firstname.value;
-            this.userDetailBase.userLastName = this.userDetailCtrls.lastname.value;
-            this.userDetailBase.userEmail = this.userDetailCtrls.email.value;
+            let userDetailBase: UserDetailBase = new UserDetailBase();
+            userDetailBase.userId = this.userId;
+            userDetailBase.userFirstName = this.userDetailCtrls.firstname.value;
+            userDetailBase.userLastName = this.userDetailCtrls.lastname.value;
+            userDetailBase.userEmail = this.userDetailCtrls.email.value;
 
             this.isSavingUserDetails = true;
-            this.userService.updateDetailLoggedIn(this.userDetailBase).subscribe(
+            this.userService.updateDetailLoggedIn(userDetailBase).subscribe(
                 data => {
                     this.isSavingUserDetails = false;
                     this.alertService.success('User Details Saved Successfully', true);
@@ -311,16 +313,22 @@ export class UserDetailMatComponent implements OnInit {
     }
 
     // make Login Details Controls touched for validations
-    makeLoginCtrlsTouched() {
-        for (let i in this.loginCtrls) {
-            this.loginCtrls[i].markAsTouched();
-        }
-    }
+    //makeLoginCtrlsTouched() {
+    //    for (let i in this.loginCtrls) {
+    //        this.loginCtrls[i].markAsTouched();
+    //    }
+    //}
 
-    // make User Details Controls touched for validations
-    makeUserCtrlsTouched() {
-        for (let i in this.userDetailCtrls) {
-            this.userDetailCtrls[i].markAsTouched();
+    //// make User Details Controls touched for validations
+    //makeUserCtrlsTouched() {
+    //    for (let i in this.userDetailCtrls) {
+    //        this.userDetailCtrls[i].markAsTouched();
+    //    }
+    //}
+
+    makeCtrlsTouched(ctrlColl) {
+        for (let i in ctrlColl) {
+            ctrlColl[i].markAsTouched();
         }
     }
 }
