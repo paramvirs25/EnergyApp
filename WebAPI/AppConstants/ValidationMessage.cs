@@ -1,5 +1,12 @@
 ﻿namespace WebApi.AppConstants.ValidationMessages
 {
+    public class ContentValidationMessage
+    {
+        public const string CONTENT_URL_REQUIRED = "Content URL is required.";
+        public const string CONTENT_NAME_REQUIRED = "Content name is required.";
+        public const string CONTENT_TYPE_REQUIRED = "Content type is required.";
+    }
+
     public class UserValidationMessage
     {
         public const string USERNAME_PASSWORD_INCORRECT = "Username or password is incorrect.";
