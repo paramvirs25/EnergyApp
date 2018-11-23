@@ -4,7 +4,7 @@ using Microsoft.Extensions.Options;
 
 using WebApi.Helpers;
 using WebApi.Models;
-using WebApi.Models.UserModelExtensions;
+using WebApi.Models.ContentModelExtensions;
 using WebApi.Services;
 using WebApi.Helpers.Authorization;
 using System.Threading.Tasks;
@@ -14,58 +14,24 @@ using System.Net;
 
 namespace WebApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("[controller]")]
     public class ContentController : ControllerBase
     {
-        //private IUserService _userService;
+        private IContentService _contentService;
         private readonly AppSettings _appSettings;
         private OperatingUser _operatingUser;
 
         public ContentController(
-            //IUserService userService,
+            IContentService contentService,
             IOptions<AppSettings> appSettings,
             OperatingUser operatingUser)
         {
-            //_userService = userService;
+            _contentService = contentService;
             _appSettings = appSettings.Value;
             _operatingUser = operatingUser;
         }
-
-        ///// <summary>
-        ///// Checks if username and password belongs to a valid user
-        ///// </summary>
-        ///// <remarks>
-        ///// Sample request:
-        /////
-        /////     POST /authenticate
-        /////     {
-        /////        "username": "anyusername",
-        /////        "password": "anypassword"
-        /////     }
-        /////
-        ///// </remarks>
-        ///// <param name="userModel"></param>
-        ///// <returns>Authenticated user details</returns>
-        ///// <response code="200">Returns authenticated user</response>
-        ///// <response code="400">If user is not valid</response> 
-        //[AllowAnonymous]
-        //[HttpPost("authenticate")]
-        //[ProducesResponseType((int)HttpStatusCode.BadRequest)]
-        //public async Task<IActionResult> Authenticate([FromBody]UserAuthenticateModel userModel)
-        //{
-        //    var userDetails = await _userService.Authenticate(userModel);
-
-        //    string tokenString = JWTAuthentication.GetToken(userDetails, _appSettings.Secret);
-
-        //    // return basic user info (without password) and token to store client side
-        //    return Ok(new
-        //    {
-        //        userid = userDetails.UserId,
-        //        token = tokenString
-        //    });
-        //}
 
         ///// <summary>
         ///// Get logged in user
@@ -80,30 +46,30 @@ namespace WebApi.Controllers
         //    return await _userService.GetById(_operatingUser.GetUserId(HttpContext));
         //}
 
-        ///// <summary>
-        ///// Gets user by Id
-        ///// </summary>
-        ///// <param name="id">Id of user to find</param>
-        ///// <returns>Returns User</returns>
+        /// <summary>
+        /// Gets Content by Id
+        /// </summary>
+        /// <param name="id">Id of Content to find</param>
+        /// <returns>Returns content</returns>
         //[Authorize(Policy = Policies.AdminsAndAbove)]
-        //[HttpGet("{id}")]
-        //[ProducesResponseType((int)HttpStatusCode.NotFound)]
-        //public async Task<ActionResult<UserDetailsModel>> GetById(int id)
-        //{
-        //    return await _userService.GetById(id);
-        //}
+        [HttpGet("{id}")]
+        [ProducesResponseType((int)HttpStatusCode.NotFound)]
+        public async Task<ActionResult<ContentModel>> GetById(int id)
+        {
+            return await _contentService.GetById(id);
+        }
 
-        ///// <summary>
-        ///// Gets a list of users
-        ///// </summary>
-        ///// <returns>Returns list of users</returns>
+        /// <summary>
+        /// Gets a list of content
+        /// </summary>
+        /// <returns>Returns list of content</returns>
         //[Authorize(Policy = Policies.AdminsAndAbove)]
-        //[Route("list")]
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<UserListModel>>> GetList()
-        //{
-        //    return await _userService.GetList();
-        //}
+        [Route("list")]
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<ContentListModel>>> GetList()
+        {
+            return await _contentService.GetList();
+        }
 
         ///// <summary>
         ///// Gets data for 'Create' user screen

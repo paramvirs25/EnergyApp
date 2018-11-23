@@ -1,6 +1,7 @@
 using AutoMapper;
 using WebApi.Models;
 using WebApi.Models.UserModelExtensions;
+using WebApi.Models.ContentModelExtensions;
 using DAL.Entities;
 
 namespace WebApi.Helpers
@@ -12,6 +13,8 @@ namespace WebApi.Helpers
         /// </summary>
         public AutoMapperProfile()
         {
+            CreateContentMappings();
+
             CreateMap<UsersTbl, UserModel>()
                 .ForMember(src => src.Password, opt => opt.Ignore()) //Password is not passed from business layer to model layer
                 .ForSourceMember(src => src.UserDetailsTbl, opt => opt.Ignore());
@@ -127,6 +130,22 @@ namespace WebApi.Helpers
                 .ForSourceMember(src => src.UserDetailsTbl, opt => opt.Ignore());
             CreateMap<UserTypesModel, UserTypesTbl>()
                 .ForMember(dest => dest.UserDetailsTbl, opt => opt.Ignore());
+        }
+
+        private void CreateContentMappings()
+        {
+            CreateMap<ContentTbl, ContentModel>()
+                .ForSourceMember(src => src.CreatedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.ModifiedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.UserContentTbl, opt => opt.Ignore());
+
+            //Content list
+            CreateMap<ContentTbl, ContentListModel>()
+                .ForSourceMember(src => src.CreatedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.ModifiedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.UserContentTbl, opt => opt.Ignore())
+                .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.CreatedByNavigation.UserFirstName))
+                .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.UserFirstName));
         }
     }
 }

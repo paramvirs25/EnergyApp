@@ -1,5 +1,7 @@
 
 --Delete
+Delete from [ContentTbl]
+Go
 Delete from [UserDetailsTbl]
 Go
 Delete from [UsersTbl]
@@ -42,4 +44,17 @@ VALUES (2, 200, 1, N'Admin', N'Hayabusa', N'shaminder@shaminder.com', 1, 1)
 GO
 INSERT [dbo].[UserDetailsTbl] ([UserId], [RoleId], [UserTypeId], [UserFirstName], [UserLastName], [UserEmail], [CreatedBy], [ModifiedBy]) 
 VALUES (3, 100, 1, N'Agent', N'User', N'agent@user.com', 2, 2)
+GO
+
+--ContentTbl
+INSERT INTO [ContentTbl]([ContentId],[ContentURL],[ContentName],[ContentType],[IsDeleted],[CreatedDate],[CreatedBy],[ModifiedDate],[ModifiedBy])
+     VALUES(1,'https://www.youtube.com/watch?v=TUwCmcR83EE','Stage 4 - Love','Video',0,getdate(),1,getdate(),1)
+GO
+
+INSERT INTO [ContentTbl]([ContentId],[ContentURL],[ContentName],[ContentType],[IsDeleted],[CreatedDate],[CreatedBy],[ModifiedDate],[ModifiedBy])
+     VALUES(2,'https://www.youtube.com/watch?v=dp48nCGgTuE','Stage 3 - Upset','Video',0,getdate(),1,getdate(),1)
+GO
+
+INSERT INTO [ContentTbl]([ContentId],[ContentURL],[ContentName],[ContentType],[IsDeleted],[CreatedDate],[CreatedBy],[ModifiedDate],[ModifiedBy])
+     VALUES(3,'https://www.youtube.com/watch?v=F1IkFo9TrJo','Stage 2 - Meeting','Video',0,getdate(),1,getdate(),1)
 GO

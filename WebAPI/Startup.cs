@@ -60,6 +60,7 @@ namespace WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
             services.AddScoped<IUserTypeService, UserTypeService>();
+            services.AddScoped<IContentService, ContentService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -110,20 +111,21 @@ namespace WebApi
                 c.SwaggerDoc("v1", new Info
                 {
                     Version = "v1",
-                    Title = "Project Energy API",
-                    Description = "A simple example ASP.NET Core Web API",
-                    TermsOfService = "None",
-                    Contact = new Contact
-                    {
-                        Name = "Param",
-                        Email = string.Empty,
-                        Url = "https://twinflamescoach.com"
-                    },
-                    License = new License
-                    {
-                        Name = "Use under LICX",
-                        Url = "https://example.com/license"
-                    }
+                    Title = "Project Energy API"
+                    //,
+                    //Description = "Provides methods for data access",
+                    //TermsOfService = "None",
+                    //Contact = new Contact
+                    //{
+                    //    Name = "Param",
+                    //    Email = string.Empty,
+                    //    Url = "https://twinflamescoach.com"
+                    //},
+                    //License = new License
+                    //{
+                    //    Name = "Use under LICX",
+                    //    Url = "https://example.com/license"
+                    //}
                 });
 
                 // Set the comments path for the Swagger JSON and UI.

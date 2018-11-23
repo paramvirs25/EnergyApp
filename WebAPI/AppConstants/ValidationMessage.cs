@@ -5,6 +5,8 @@
         public const string CONTENT_URL_REQUIRED = "Content URL is required.";
         public const string CONTENT_NAME_REQUIRED = "Content name is required.";
         public const string CONTENT_TYPE_REQUIRED = "Content type is required.";
+
+        public const string CONTENT_NOT_FOUND = "Content not found.";
     }
 
     public class UserValidationMessage
