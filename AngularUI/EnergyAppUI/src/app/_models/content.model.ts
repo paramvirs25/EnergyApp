@@ -1,6 +1,6 @@
-import { UserDetailsBaseAdmin } from './user.details.base.admin';
+import { ContentBase } from './content.base';
 
-export class UserDetail extends UserDetailsBaseAdmin {
+export class ContentModel extends ContentBase {
     isDeleted: boolean;
     createdDate: string;
     createdBy: number;

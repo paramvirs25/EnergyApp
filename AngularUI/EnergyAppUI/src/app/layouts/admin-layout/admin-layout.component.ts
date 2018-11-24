@@ -40,4 +40,9 @@ export class AdminLayoutComponent implements OnInit {
     goAdminLoginPage() {
         this.router.navigate(['/', AppConstants.adminLoginComponentPath]);
     }
+    
+    // Go To Content List
+    goContentListPage() {
+        this.router.navigate(['/', AppConstants.contentListComponentPath]);
+    }
 }
