@@ -28,7 +28,9 @@
                 </ng-container>
                 <ng-container matColumnDef="contentUrl">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>URL</th>
-                    <td mat-cell *matCellDef="let row">{{row.contentUrl}}</td>
+                    <td mat-cell *matCellDef="let row">
+                        <a href="{{row.contentUrl}}" target="_blank">{{row.contentUrl}}</a>
+                    </td>
                 </ng-container>
                 <ng-container matColumnDef="contentType">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Type</th>
