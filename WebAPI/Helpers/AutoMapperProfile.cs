@@ -139,6 +139,25 @@ namespace WebApi.Helpers
                 .ForSourceMember(src => src.ModifiedByNavigation, opt => opt.Ignore())
                 .ForSourceMember(src => src.UserContentTbl, opt => opt.Ignore());
 
+            CreateMap<ContentTbl, ContentBaseModel>()
+                .ForSourceMember(src => src.IsDeleted, opt => opt.Ignore())
+                .ForSourceMember(src => src.CreatedDate, opt => opt.Ignore())
+                .ForSourceMember(src => src.CreatedBy, opt => opt.Ignore())
+                .ForSourceMember(src => src.ModifiedDate, opt => opt.Ignore())
+                .ForSourceMember(src => src.ModifiedBy, opt => opt.Ignore())
+                .ForSourceMember(src => src.CreatedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.ModifiedByNavigation, opt => opt.Ignore())
+                .ForSourceMember(src => src.UserContentTbl, opt => opt.Ignore());
+            CreateMap<ContentBaseModel, ContentTbl>()
+                .ForMember(src => src.IsDeleted, opt => opt.Ignore())
+                .ForMember(src => src.CreatedDate, opt => opt.Ignore())
+                .ForMember(src => src.CreatedBy, opt => opt.Ignore())
+                .ForMember(src => src.ModifiedDate, opt => opt.Ignore())
+                .ForMember(src => src.ModifiedBy, opt => opt.Ignore())
+                .ForMember(src => src.CreatedByNavigation, opt => opt.Ignore())
+                .ForMember(src => src.ModifiedByNavigation, opt => opt.Ignore())
+                .ForMember(src => src.UserContentTbl, opt => opt.Ignore());
+
             //Content list
             CreateMap<ContentTbl, ContentListModel>()
                 .ForSourceMember(src => src.CreatedByNavigation, opt => opt.Ignore())
