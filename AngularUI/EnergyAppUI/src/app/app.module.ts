@@ -22,7 +22,7 @@ import { SnackBarCustomComponent, SnackBarComponent } from './_directives';
 
 import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor } from './_helpers';
-import { AlertService, AuthenticationService, UserService, RolesService, UserTypesService } from './_services';
+import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService } from './_services';
 import { UserShared } from './_shared';
 
 import { HomeComponent } from './home';
@@ -36,6 +36,7 @@ import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.component';
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
+import { ContentListComponent } from './admin/content-list/content-list.component';
 
 @NgModule({
     imports: [
@@ -66,12 +67,14 @@ import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client
         UserListComponent,
         UserDetailComponent,
         SnackBarCustomComponent, SnackBarComponent,
-        UserDetailMatComponent
+        UserDetailMatComponent,
+        ContentListComponent
     ],
     providers: [
         AuthGuard,
         AdminGuard,
         AlertService,
+        ContentService,
         AuthenticationService,
         UserService,
         RolesService,

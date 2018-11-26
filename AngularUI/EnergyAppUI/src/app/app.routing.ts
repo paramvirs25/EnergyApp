@@ -16,6 +16,7 @@ import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-lo
 import { UserListComponent } from './admin/user-list/user-list.component';
 import { UserDetailComponent } from './admin/user-detail/user-detail.component';
 import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.component';
+import { ContentListComponent } from './admin/content-list/content-list.component';
 
 const appRoutes: Routes = [
     { path: '', redirectTo: ('/' + AppConstants.clientLoginComponentPath), pathMatch: 'full' },
@@ -26,7 +27,8 @@ const appRoutes: Routes = [
         children: [
             { path: AppConstants.userListComponentPath, component: UserListComponent },
             { path: AppConstants.userDetailComponentPath, component: UserDetailComponent },
-            { path: AppConstants.userDetailMatComponentPath, component: UserDetailMatComponent }
+            { path: AppConstants.userDetailMatComponentPath, component: UserDetailMatComponent },
+            { path: AppConstants.contentListComponentPath, component: ContentListComponent }
         ]
     },
     {

@@ -52,11 +52,11 @@ export class UserListComponent implements OnInit {
 
     // Go To Add Users
     goAddUserDetails() {
-        this.router.navigate(['/userdetail', "0"]);
+        this.router.navigate(['/' + AppConstants.userDetail, 0]);
     }
 
     goAddMatUserDetails() {
-        this.router.navigate(['/userdetailmat', "0", this.passLoggedinUser]); //false for Not Logged user
+        this.router.navigate(['/' + AppConstants.userDetailMat, 0, this.passLoggedinUser]); //false for Not Logged user
     }
 
     //Delete User Modal

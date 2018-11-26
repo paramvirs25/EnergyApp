@@ -9,7 +9,6 @@ import { AppConstants } from '../../app.constant';
 import { UserCreateSave } from '../../_models/userModelExtensions';
 import { ErrorStateMatcher } from '@angular/material/core';
 
-
 @Component({
     selector: 'app-user-detail-mat',
     templateUrl: './user-detail-mat.component.html',
@@ -311,21 +310,8 @@ export class UserDetailMatComponent implements OnInit {
     goUserListPage() {
         this.router.navigate(['/', AppConstants.userListComponentPath]);
     }
-
-    // make Login Details Controls touched for validations
-    //makeLoginCtrlsTouched() {
-    //    for (let i in this.loginCtrls) {
-    //        this.loginCtrls[i].markAsTouched();
-    //    }
-    //}
-
-    //// make User Details Controls touched for validations
-    //makeUserCtrlsTouched() {
-    //    for (let i in this.userDetailCtrls) {
-    //        this.userDetailCtrls[i].markAsTouched();
-    //    }
-    //}
-
+    
+    // make Controls touched for validations
     makeCtrlsTouched(ctrlColl) {
         for (let i in ctrlColl) {
             ctrlColl[i].markAsTouched();

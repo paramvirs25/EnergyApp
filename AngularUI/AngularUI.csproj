@@ -17,8 +17,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="EnergyAppUI\src\app\admin\content-list\content-list.component.css" />
+    <None Remove="EnergyAppUI\src\app\admin\content-list\content-list.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\admin\user-detail-mat\user-detail-mat.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\admin\user-detail\user-detail.component.spec.ts" />
+    <None Remove="EnergyAppUI\src\app\admin\user-list\user-list.component.css" />
     <None Remove="EnergyAppUI\src\app\admin\user-list\user-list.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.css" />
     <None Remove="EnergyAppUI\src\app\dashboard\dashboard.component.spec.ts" />

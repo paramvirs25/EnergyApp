@@ -32,12 +32,8 @@ export class AdminLayoutComponent implements OnInit {
                 });
     }
 
-    // Go To User List Page
-    goUserListPage() {
-        this.router.navigate(['/', AppConstants.userListComponentPath]);
-    }
     // Go To Admin Login Page
     goAdminLoginPage() {
         this.router.navigate(['/', AppConstants.adminLoginComponentPath]);
-    }
+    }    
 }

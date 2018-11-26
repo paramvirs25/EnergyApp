@@ -6,7 +6,7 @@
     <h3><label>{{lblAddEditUser}}</label></h3>
     <form [formGroup]="loginDetailsForm">
         <div class="row padT20">
-            <div class="col-sm-2">
+            <div class="col-sm-2" style="min-width:150px;">
                 <h5> Login Details </h5>
             </div>
             <mat-slide-toggle *ngIf="isEditMode" (change)="isShowLoginCtrls = !isShowLoginCtrls"></mat-slide-toggle>
