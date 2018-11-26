@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { ContentList } from '../../_models/contentModelExtensions';
 import { ContentService } from '../../_services';
+import { AppConstants } from '../../app.constant';
 
 @Component({
     selector: 'app-content-list',
@@ -14,7 +15,6 @@ export class ContentListComponent implements OnInit {
 
     displayedColumns: string[] = ['contentId', 'contentName', 'contentUrl', 'contentType', 'actions'];
     gridDataSource: MatTableDataSource<ContentList>;
-    content: ContentList[] = [];
     contentIdToDelete = 0;
     showModal = false;
     lblmodalContent = "";
@@ -35,7 +35,6 @@ export class ContentListComponent implements OnInit {
     bindContentList() {
         this.contentService.getList().subscribe(contentlist => {
             this.gridDataSource = new MatTableDataSource(contentlist);
-            this.content = contentlist;
             this.isLoadingResults = false;
 
             this.gridDataSource.sort = this.sort;
@@ -46,5 +45,26 @@ export class ContentListComponent implements OnInit {
     // Search Content
     applyFilter(filterValue: string) {
         this.gridDataSource.filter = filterValue.trim().toLowerCase();
+    }
+
+    // Go To Add Content
+    goAddContentDetails() {
+        this.router.navigate(['/' + AppConstants.contentDetail, 0]);
+    }
+
+    //Delete Content Modal
+    onDeleteModal(content: ContentList): void {
+        this.showModal = true;
+        this.lblmodalContent = "Are you sure you want to delete <b>" + content.contentName + "</b> with <b> ContentId - " + content.contentId + "</b> ?";
+        this.contentIdToDelete = content.contentId;
+    }
+
+    //Delete content
+    deleteContent() {
+        
+    }
+
+    closeModal() {
+        this.showModal = false;
     }
 }

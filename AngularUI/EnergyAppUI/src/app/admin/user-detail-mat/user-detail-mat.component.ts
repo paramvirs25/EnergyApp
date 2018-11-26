@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { AlertService, UserService } from '../../_services';
 import { ActivatedRoute } from '@angular/router';
 import { Router } from '@angular/router';
-import { FormControl, FormBuilder, FormGroup, NgForm, Validators, FormGroupDirective, AbstractControl } from '@angular/forms';
+import { FormControl, FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 
 import { Roles, UserTypes, UserLogin, UserDetailsBaseAdmin, UserDetailBase } from '../../_models';
 import { AppConstants } from '../../app.constant';
 import { UserCreateSave } from '../../_models/userModelExtensions';
-import { ErrorStateMatcher } from '@angular/material/core';
+import { ValidationCheck } from '../../_helpers';
 
 @Component({
     selector: 'app-user-detail-mat',
@@ -21,6 +21,7 @@ export class UserDetailMatComponent implements OnInit {
         private router: Router,
         private alertService: AlertService,
         private activeRoute: ActivatedRoute,
+        private validationCheck: ValidationCheck,
         private formBuilder: FormBuilder) { }
 
     passhide = true;
@@ -53,7 +54,7 @@ export class UserDetailMatComponent implements OnInit {
     ddrole = new FormControl(null);
     ddusertype = new FormControl(null);
 
-    matcher = new MyErrorStateMatcher();
+    matcher = this.validationCheck.errorStateMatcher();
 
     ngOnInit() {
 
@@ -135,12 +136,9 @@ export class UserDetailMatComponent implements OnInit {
     saveforCreate() {
 
         // make all controls touched for validation to work
-        this.makeCtrlsTouched(this.loginCtrls);
-        this.makeCtrlsTouched(this.userDetailCtrls);
-
-        //this.makeLoginCtrlsTouched();
-        //this.makeUserCtrlsTouched();       
-
+        this.validationCheck.makeCtrlsTouched(this.loginCtrls);
+        this.validationCheck.makeCtrlsTouched(this.userDetailCtrls);
+   
         // stop here if form is invalid
         if (this.loginDetailsForm.invalid || this.userDetailsForm.invalid) { 
             return;
@@ -180,8 +178,7 @@ export class UserDetailMatComponent implements OnInit {
     saveLoginDetails() {
 
         // make Login controls touched for validation to work
-        //this.makeLoginCtrlsTouched();
-        this.makeCtrlsTouched(this.loginCtrls);
+        this.validationCheck.makeCtrlsTouched(this.loginCtrls);
 
         // stop here if form is invalid
         if (this.loginDetailsForm.invalid) {
@@ -210,8 +207,7 @@ export class UserDetailMatComponent implements OnInit {
     saveUserDetails() {
 
         // make user controls touched for validation to work
-        //this.makeUserCtrlsTouched();
-        this.makeCtrlsTouched(this.userDetailCtrls);
+        this.validationCheck.makeCtrlsTouched(this.userDetailCtrls);
 
         // stop here if form is invalid
         if (this.userDetailsForm.invalid) {
@@ -309,20 +305,6 @@ export class UserDetailMatComponent implements OnInit {
     // Go To Users List
     goUserListPage() {
         this.router.navigate(['/', AppConstants.userListComponentPath]);
-    }
-    
-    // make Controls touched for validations
-    makeCtrlsTouched(ctrlColl) {
-        for (let i in ctrlColl) {
-            ctrlColl[i].markAsTouched();
-        }
-    }
-}
-
-/** Error when invalid control is dirty, touched, or submitted. */
-export class MyErrorStateMatcher implements ErrorStateMatcher {
-    isErrorState(control: FormControl | null, form: FormGroupDirective | NgForm | null): boolean {        
-        return !!(control && control.invalid && (control.dirty || control.touched));
     }
 }
 

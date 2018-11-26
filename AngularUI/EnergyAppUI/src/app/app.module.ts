@@ -21,7 +21,7 @@ import { AlertComponent } from './_directives';
 import { SnackBarCustomComponent, SnackBarComponent } from './_directives';
 
 import { AuthGuard, AdminGuard } from './_guards';
-import { JwtInterceptor, ErrorInterceptor } from './_helpers';
+import { JwtInterceptor, ErrorInterceptor, ValidationCheck } from './_helpers';
 import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService } from './_services';
 import { UserShared } from './_shared';
 
@@ -37,6 +37,7 @@ import { UserDetailMatComponent } from './admin/user-detail-mat/user-detail-mat.
 import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-login-layout.component';
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
 import { ContentListComponent } from './admin/content-list/content-list.component';
+import { ContentDetailComponent } from './admin/content-detail/content-detail.component';
 
 @NgModule({
     imports: [
@@ -68,7 +69,8 @@ import { ContentListComponent } from './admin/content-list/content-list.componen
         UserDetailComponent,
         SnackBarCustomComponent, SnackBarComponent,
         UserDetailMatComponent,
-        ContentListComponent
+        ContentListComponent,
+        ContentDetailComponent
     ],
     providers: [
         AuthGuard,
@@ -80,6 +82,7 @@ import { ContentListComponent } from './admin/content-list/content-list.componen
         RolesService,
         UserTypesService,
         UserShared,
+        ValidationCheck,
         { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
     ],

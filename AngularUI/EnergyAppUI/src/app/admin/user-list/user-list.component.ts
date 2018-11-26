@@ -15,7 +15,6 @@ export class UserListComponent implements OnInit {
 
     displayedColumns: string[] = ['userId', 'userFirstName', 'userLastName', 'userEmail', 'roleName', 'userTypeName', 'actions'];
     gridDataSource: MatTableDataSource<UserList>;
-    users: UserList[] = [];
     userIdToDelete =  0;
     showModal = false;
     lblmodalContent = "";
@@ -37,7 +36,6 @@ export class UserListComponent implements OnInit {
     bindUserList() {
         this.userService.getList().subscribe(userlist => {
             this.gridDataSource = new MatTableDataSource(userlist);
-            this.users = userlist;
             this.isLoadingResults = false;
             
             this.gridDataSource.sort = this.sort;
@@ -62,7 +60,7 @@ export class UserListComponent implements OnInit {
     //Delete User Modal
     onDeleteModal(user: UserList): void {
         this.showModal = true;
-        this.lblmodalContent = "Are you sure you want to delete user " + user.userFirstName + " " + user.userLastName + " with UserId - " + user.userId + "?";
+        this.lblmodalContent = "Are you sure you want to delete user <b>" + user.userFirstName + " " + user.userLastName + "</b> with <b> UserId - " + user.userId + "</b> ?";
         this.userIdToDelete = user.userId;        
     }
 

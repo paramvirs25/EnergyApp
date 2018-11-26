@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="EnergyAppUI\src\app\admin\content-detail\content-detail.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\admin\content-list\content-list.component.css" />
     <None Remove="EnergyAppUI\src\app\admin\content-list\content-list.component.spec.ts" />
     <None Remove="EnergyAppUI\src\app\admin\user-detail-mat\user-detail-mat.component.spec.ts" />
