@@ -6,6 +6,7 @@ import { FormControl, FormBuilder, FormGroup, Validators } from '@angular/forms'
 import { AppConstants } from '../../app.constant';
 
 import { ValidationCheck } from '../../_helpers';
+import { ContentType, ContentBase } from '../../_models';
 
 @Component({
     selector: 'app-content-detail',
@@ -23,7 +24,7 @@ export class ContentDetailComponent implements OnInit {
         private formBuilder: FormBuilder) { }
 
     contentDetailsForm: FormGroup;
-    //contentTypeOptions
+    contentTypeOptions: ContentType[];
 
     isLoadingResults = false;
     isSaving = false;
@@ -47,7 +48,10 @@ export class ContentDetailComponent implements OnInit {
         //Add Mode
         if (this.contentId == 0) {
             this.lblAddEditContent = "Add Content";
-            //this.isLoadingResults = true;
+            this.isLoadingResults = true;
+
+            //Get Data for Create Mode
+            this.getForCreate();
         }
         //Edit Mode
         else if (this.contentId > 0) {
@@ -60,15 +64,32 @@ export class ContentDetailComponent implements OnInit {
         }
     }
 
+    //Bind Controls for Create Mode
+    getForCreate() {
+        this.contentService.getForCreate().subscribe(cc => {
+
+            //Initialise dropdown
+            this.initContentTypes(cc.contentType);
+            this.isLoadingResults = false;
+        },
+        error => {
+            this.isLoadingResults = false;
+        });
+    }
+
     //Bind Controls for Edit Mode
     getForEdit(contentId) {
 
-        this.contentService.getById(contentId).subscribe(ce => {
+        this.contentService.getForEdit(contentId).subscribe(ce => {
 
-            this.contentCtrls.contentname.setValue(ce.contentName);
-            this.contentCtrls.contenturl.setValue(ce.contentUrl);
+            this.contentCtrls.contentname.setValue(ce.content.contentName);
+            this.contentCtrls.contenturl.setValue(ce.content.contentUrl);
 
-            //initContentTypes()
+            //Initialise dropdown
+            this.initContentTypes(ce.contentType);
+
+            //Bind dropdown
+            this.contentCtrls.ddcontenttype.setValue(ce.content.contentType);
 
             this.isLoadingResults = false;
         },
@@ -91,8 +112,9 @@ export class ContentDetailComponent implements OnInit {
     }
 
     // Initialise Dropdown ContentTypes
-    initContentTypes() {
-        //this.contentCtrls.ddcontenttype.setValue(this.contentTypeOptions[0].contentTypeId);
+    initContentTypes(contentTypes: ContentType[]) {
+        this.contentTypeOptions = contentTypes;
+        this.contentCtrls.ddcontenttype.setValue(this.contentTypeOptions[0].contentTypeName);
     }
 
     // Go To Content List
@@ -100,6 +122,7 @@ export class ContentDetailComponent implements OnInit {
         this.router.navigate(['/', AppConstants.contentListComponentPath]);
     }
 
+    //Save Content Details
     save() {
 
         // make controls touched for validation to work
@@ -109,5 +132,23 @@ export class ContentDetailComponent implements OnInit {
         if (this.contentDetailsForm.invalid) {
             return;
         }
+
+        let contentBase: ContentBase = new ContentBase();
+        contentBase.contentId = this.contentId;
+        contentBase.contentName = this.contentCtrls.contentname.value;
+        contentBase.contentType = this.contentCtrls.ddcontenttype.value;
+        contentBase.contentUrl = this.contentCtrls.contenturl.value;
+
+        this.isSaving = true;
+        this.contentService.create(contentBase).subscribe(            
+            data => {
+                console.log(contentBase);
+                this.isSaving = false;
+                this.alertService.success('Content Created Successfully', true);
+            },
+            error => {
+                //this.alertService.error(error);
+                this.isSaving = false;
+            });
     }
 }

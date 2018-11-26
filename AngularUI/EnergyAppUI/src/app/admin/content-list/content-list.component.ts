@@ -61,7 +61,10 @@ export class ContentListComponent implements OnInit {
 
     //Delete content
     deleteContent() {
-        
+        this.contentService.delete(this.contentIdToDelete).subscribe(() => {
+            this.closeModal();
+            this.bindContentList();
+        }); 
     }
 
     closeModal() {

@@ -1,5 +1,6 @@
 export * from './content.model';
 export * from './content.base';
+export * from './contentType';
 export * from './user.login';
 export * from './user.details';
 export * from './user.details.base';

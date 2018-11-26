@@ -18,7 +18,8 @@
         <div class="padT10">
             <mat-form-field class="matCtrl">
                 <mat-select formControlName="ddcontenttype" placeholder="Content Type">
-                    <mat-option>
+                    <mat-option *ngFor="let op of contentTypeOptions" [value]="op.contentTypeName">
+                        {{op.contentTypeName}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
