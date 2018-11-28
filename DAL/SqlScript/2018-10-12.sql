@@ -25,27 +25,27 @@ GO
 IF  EXISTS (SELECT * FROM sys.foreign_keys WHERE object_id = OBJECT_ID(N'[dbo].[FK_UserDetailsTbl_ContentTbl_CreatedBy]') AND parent_object_id = OBJECT_ID(N'[dbo].[ContentTbl]'))
 ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [FK_UserDetailsTbl_ContentTbl_CreatedBy]
 GO
-IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__UserConte__DateC__28B808A7]') AND type = 'D')
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_UserContentTbl_DateCompleted]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [DF__UserConte__DateC__28B808A7]
+ALTER TABLE [dbo].[UserContentTbl] DROP CONSTRAINT [DF_UserContentTbl_DateCompleted]
 END
 
 GO
-IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__Modif__2B947552]') AND type = 'D')
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_ModifiedDate]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF__ContentTb__Modif__2B947552]
+ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF_ContentTbl_ModifiedDate]
 END
 
 GO
-IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__Creat__2AA05119]') AND type = 'D')
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_CreatedDate]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF__ContentTb__Creat__2AA05119]
+ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF_ContentTbl_CreatedDate]
 END
 
 GO
-IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__IsDel__29AC2CE0]') AND type = 'D')
+IF  EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_IsDeleted]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF__ContentTb__IsDel__29AC2CE0]
+ALTER TABLE [dbo].[ContentTbl] DROP CONSTRAINT [DF_ContentTbl_IsDeleted]
 END
 
 GO
@@ -84,7 +84,7 @@ GO
 IF NOT EXISTS (SELECT * FROM sys.objects WHERE object_id = OBJECT_ID(N'[dbo].[ContentTbl]') AND type in (N'U'))
 BEGIN
 CREATE TABLE [dbo].[ContentTbl](
-	[ContentId] [int] NOT NULL,
+	[ContentId] [int] IDENTITY(1,1) NOT NULL,
 	[ContentURL] [nvarchar](1000) NULL,
 	[ContentName] [nvarchar](50) NULL,
 	[ContentType] [nvarchar](50) NULL,
@@ -210,27 +210,27 @@ END
 GO
 
 
-IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__IsDel__29AC2CE0]') AND type = 'D')
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_IsDeleted]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF__ContentTb__IsDel__29AC2CE0]  DEFAULT ((0)) FOR [IsDeleted]
+ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF_ContentTbl_IsDeleted]  DEFAULT ((0)) FOR [IsDeleted]
 END
 
 GO
-IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__Creat__2AA05119]') AND type = 'D')
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_CreatedDate]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF__ContentTb__Creat__2AA05119]  DEFAULT (getdate()) FOR [CreatedDate]
+ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF_ContentTbl_CreatedDate]  DEFAULT (getdate()) FOR [CreatedDate]
 END
 
 GO
-IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__ContentTb__Modif__2B947552]') AND type = 'D')
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_ContentTbl_ModifiedDate]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF__ContentTb__Modif__2B947552]  DEFAULT (getdate()) FOR [ModifiedDate]
+ALTER TABLE [dbo].[ContentTbl] ADD  CONSTRAINT [DF_ContentTbl_ModifiedDate]  DEFAULT (getdate()) FOR [ModifiedDate]
 END
 
 GO
-IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF__UserConte__DateC__28B808A7]') AND type = 'D')
+IF NOT EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[DF_UserContentTbl_DateCompleted]') AND type = 'D')
 BEGIN
-ALTER TABLE [dbo].[UserContentTbl] ADD  CONSTRAINT [DF__UserConte__DateC__28B808A7]  DEFAULT (getdate()) FOR [DateCompleted]
+ALTER TABLE [dbo].[UserContentTbl] ADD  CONSTRAINT [DF_UserContentTbl_DateCompleted]  DEFAULT (getdate()) FOR [DateCompleted]
 END
 
 GO

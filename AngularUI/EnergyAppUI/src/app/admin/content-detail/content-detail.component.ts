@@ -140,15 +140,27 @@ export class ContentDetailComponent implements OnInit {
         contentBase.contentUrl = this.contentCtrls.contenturl.value;
 
         this.isSaving = true;
-        this.contentService.create(contentBase).subscribe(            
-            data => {
-                console.log(contentBase);
-                this.isSaving = false;
-                this.alertService.success('Content Created Successfully', true);
-            },
-            error => {
-                //this.alertService.error(error);
-                this.isSaving = false;
-            });
+
+        if (!this.isEditMode) {
+            this.contentService.create(contentBase).subscribe(
+                data => {
+                    this.isSaving = false;
+                    this.alertService.success('Content Created Successfully', true);
+                },
+                error => {
+                    this.isSaving = false;
+                });
+        }
+        else {
+            this.contentService.update(contentBase).subscribe(
+                data => {
+                    this.isSaving = false;
+                    this.alertService.success('Content Updated Successfully', true);
+                },
+                error => {
+                    this.isSaving = false;
+                });
+        }
+        
     }
 }

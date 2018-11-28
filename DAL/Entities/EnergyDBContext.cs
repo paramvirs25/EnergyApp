@@ -37,8 +37,6 @@ namespace DAL.Entities
             {
                 entity.HasKey(e => e.ContentId);
 
-                entity.Property(e => e.ContentId).ValueGeneratedNever();
-
                 entity.Property(e => e.ContentName).HasMaxLength(50);
 
                 entity.Property(e => e.ContentType).HasMaxLength(50);

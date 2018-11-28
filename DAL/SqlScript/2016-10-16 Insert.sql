@@ -47,6 +47,8 @@ VALUES (3, 100, 1, N'Agent', N'User', N'agent@user.com', 2, 2)
 GO
 
 --ContentTbl
+SET IDENTITY_INSERT [dbo].[ContentTbl] ON 
+GO
 INSERT INTO [ContentTbl]([ContentId],[ContentURL],[ContentName],[ContentType],[IsDeleted],[CreatedDate],[CreatedBy],[ModifiedDate],[ModifiedBy])
      VALUES(1,'https://www.youtube.com/watch?v=TUwCmcR83EE','Stage 4 - Love','Video',0,getdate(),1,getdate(),1)
 GO
@@ -57,4 +59,6 @@ GO
 
 INSERT INTO [ContentTbl]([ContentId],[ContentURL],[ContentName],[ContentType],[IsDeleted],[CreatedDate],[CreatedBy],[ModifiedDate],[ModifiedBy])
      VALUES(3,'https://www.youtube.com/watch?v=F1IkFo9TrJo','Stage 2 - Meeting','Video',0,getdate(),1,getdate(),1)
+GO
+SET IDENTITY_INSERT [dbo].[ContentTbl] OFF
 GO

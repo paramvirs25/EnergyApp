@@ -100,15 +100,15 @@ namespace WebApi.Controllers
         /// <summary>
         /// Updates any user's login details
         /// </summary>
-        /// <param name="createModel"></param>
+        /// <param name="updateModel"></param>
         /// <returns></returns>
         [HttpPost("update")]
         [Authorize(Policy = Policies.AdminsAndAbove)]
         [ProducesResponseType((int)HttpStatusCode.BadRequest)]
         [ProducesResponseType((int)HttpStatusCode.NotFound)]
-        public async Task<ActionResult<bool>> Update([FromBody]ContentBaseModel createModel)
+        public async Task<ActionResult<bool>> Update([FromBody]ContentBaseModel updateModel)
         {
-            return await _contentService.Update(createModel, _operatingUser.GetUserId(HttpContext));
+            return await _contentService.Update(updateModel, _operatingUser.GetUserId(HttpContext));
         }
 
         /// <summary>
