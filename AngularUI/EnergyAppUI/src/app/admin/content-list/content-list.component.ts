@@ -3,7 +3,7 @@ import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 
 import { ContentList } from '../../_models/contentModelExtensions';
-import { ContentService } from '../../_services';
+import { ContentService, AlertService } from '../../_services';
 import { AppConstants } from '../../app.constant';
 
 @Component({
@@ -25,6 +25,7 @@ export class ContentListComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private contentService: ContentService,
+        private alertService: AlertService,
         private router: Router) { }
 
     ngOnInit() {
@@ -63,6 +64,7 @@ export class ContentListComponent implements OnInit {
     deleteContent() {
         this.contentService.delete(this.contentIdToDelete).subscribe(() => {
             this.closeModal();
+            this.alertService.success('Content Id - ' + this.contentIdToDelete + ' Deleted Successfully', true);
             this.bindContentList();
         }); 
     }

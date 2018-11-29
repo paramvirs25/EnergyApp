@@ -41,12 +41,13 @@ export class ContentDetailComponent implements OnInit {
 
     ngOnInit() {
         this.contentId = +this.activeRoute.snapshot.paramMap.get('id'); // get id as number
+        this.isEditMode = this.contentId > 0;
 
         //Initialise validations
         this.initValidators();
 
         //Add Mode
-        if (this.contentId == 0) {
+        if (!this.isEditMode) {
             this.lblAddEditContent = "Add Content";
             this.isLoadingResults = true;
 
@@ -54,7 +55,7 @@ export class ContentDetailComponent implements OnInit {
             this.getForCreate();
         }
         //Edit Mode
-        else if (this.contentId > 0) {
+        else {
             this.lblAddEditContent = "Edit Content -> ContentId - " + this.contentId;
             this.isEditMode = true;
             this.isLoadingResults = true;
@@ -146,6 +147,7 @@ export class ContentDetailComponent implements OnInit {
                 data => {
                     this.isSaving = false;
                     this.alertService.success('Content Created Successfully', true);
+                    this.goContentListPage();
                 },
                 error => {
                     this.isSaving = false;

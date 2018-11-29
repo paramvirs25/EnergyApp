@@ -60,6 +60,7 @@ export class UserDetailMatComponent implements OnInit {
 
         this.userId = +this.activeRoute.snapshot.paramMap.get('id'); // get id as number
         this.isloggedInUser = this.activeRoute.snapshot.paramMap.get('isloggedinUser') == "true";
+        this.isEditMode = this.userId > 0;
 
         //Reloads page when Active Route params are changed
         this.reloadonRouteChange();
@@ -71,7 +72,7 @@ export class UserDetailMatComponent implements OnInit {
         this.initUserDetailValidators();
                 
         //Add Mode
-        if (this.userId == 0) {
+        if (!this.isEditMode) {
             this.lblAddEditUser = "Add User";
             this.isShowLoginCtrls = true;
             this.isLoadingResults = true;
@@ -80,7 +81,7 @@ export class UserDetailMatComponent implements OnInit {
             this.getForCreate();
         }
         //Edit Mode
-        else if (this.userId > 0) {
+        else{
             this.lblAddEditUser = "Edit User -> UserId - " + this.userId;
             this.isEditMode = true;
             this.isLoadingResults = true;

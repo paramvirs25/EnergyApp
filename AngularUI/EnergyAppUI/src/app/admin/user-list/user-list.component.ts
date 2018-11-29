@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 import { Router } from '@angular/router';
 
-import { UserService } from '../../_services';
+import { UserService, AlertService } from '../../_services';
 import { UserList } from '../../_models/userModelExtensions';
 import { AppConstants } from '../../app.constant';
 
@@ -26,6 +26,7 @@ export class UserListComponent implements OnInit {
     @ViewChild(MatSort) sort: MatSort;
 
     constructor(private userService: UserService,
+        private alertService: AlertService,
         private router: Router) { }
 
     ngOnInit() {
@@ -68,6 +69,7 @@ export class UserListComponent implements OnInit {
     deleteUser() {
         this.userService.delete(this.userIdToDelete).subscribe(() => {
             this.closeModal();
+            this.alertService.success('User Id - ' + this.userIdToDelete + ' Deleted Successfully', true);
             this.bindUserList();
         }); 
     }
