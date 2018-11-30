@@ -38,17 +38,20 @@ namespace WebApi.Services
         private IMapper _mapper;
         private IRoleService _roleService;
         private IUserTypeService _userTypeService;
+        private IUserContentService _userContentService;
 
         public UserService(
             DataContext context,
             IMapper mapper,
             IRoleService roleService,
-            IUserTypeService userTypeService)
+            IUserTypeService userTypeService,
+            IUserContentService userContentService)
         {
             _context = context;
             _mapper = mapper;
             _roleService = roleService;
             _userTypeService = userTypeService;
+            _userContentService = userContentService;
         }
 
         public async Task<UserDetailsModel> Authenticate(UserAuthenticateModel userAuthModel)
@@ -153,8 +156,6 @@ namespace WebApi.Services
 
         public async Task<bool> Create(UserCreateSaveModel userCreateSaveModel, int operatingUserId)
         {
-            //bool isCreateUser = userCreateModel.UserId == 0;
-
             //check for duplicate username
             if (await _context.UsersTbl
                 .Include(udt => udt.UserDetailsTbl)
@@ -173,45 +174,22 @@ namespace WebApi.Services
             //user.PasswordHash = passwordHash;
             //user.PasswordSalt = passwordSalt;
 
-            UsersTbl usersTbl = null;
-            //if (isCreateUser)
-            //{
-                usersTbl = new UsersTbl
+            UsersTbl usersTbl = new UsersTbl
+            {
+                UserDetailsTbl = new UserDetailsTbl()
                 {
-                    UserDetailsTbl = new UserDetailsTbl()
-                };
-            //}
-            //else
-            //{
-            //    usersTbl = await _context.UsersTbl
-            //        .Include(udt => udt.UserDetailsTbl)
-            //        .Where(u => 
-            //            u.UserId == userCreateModel.UserId
-            //            && !u.UserDetailsTbl.IsDeleted)
-            //        .SingleOrDefaultAsync();
-
-            //    //if no user is found then show error
-            //    if (usersTbl == null) { throw new NotFoundException(UserValidationMessage.USER_NOT_FOUND); }
-            //}
-
+                    UserContentTbl = await _userContentService.GetForCreate(userCreateSaveModel.User.UserId)
+                }
+            };
+            
             //populate table objects
             _mapper.Map(userCreateSaveModel.User, usersTbl);
             _mapper.Map(userCreateSaveModel.UserDetailsBaseAdmin, usersTbl.UserDetailsTbl);
-
-            //Save to User table and user detaisl table
-            //if (isCreateUser)
-            //{
-                usersTbl.UserDetailsTbl.CreatedBy = operatingUserId;
-                usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
+            
+            usersTbl.UserDetailsTbl.CreatedBy = operatingUserId;
+            usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
                 
-                await _context.AddAsync(usersTbl);
-            //}
-            //else
-            //{
-            //    usersTbl.UserDetailsTbl.ModifiedBy = operatingUserId;
-            //    usersTbl.UserDetailsTbl.ModifiedDate = DateTime.Now;
-            //}
-
+            await _context.AddAsync(usersTbl);
             await _context.SaveChangesAsync();
 
             //after save update models with data

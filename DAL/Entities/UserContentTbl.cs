@@ -7,7 +7,7 @@ namespace DAL.Entities
     {
         public int UserId { get; set; }
         public int ContentId { get; set; }
-        public byte IsComplete { get; set; }
+        public bool IsComplete { get; set; }
         public DateTime DateCompleted { get; set; }
 
         public ContentTbl Content { get; set; }

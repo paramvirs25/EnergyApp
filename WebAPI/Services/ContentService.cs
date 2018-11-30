@@ -19,6 +19,7 @@ namespace WebApi.Services
     {
         Task<ContentModel> GetById(int id);
         Task<List<ContentListModel>> GetList();
+        Task<List<ContentTbl>> GetAll();
         ContentCreateGetModel GetForCreate();
         Task<ContentEditGetModel> GetForEdit(int id);
 
@@ -75,6 +76,19 @@ namespace WebApi.Services
                 .ToListAsync();
 
             return _mapper.Map<List<ContentTbl>, List<ContentListModel>>(tblRows);
+        }
+
+        /// <summary>
+        /// Gets list of all contents excluding non-active ones.
+        /// This method is intended to be used across services, where as GetList() method is to be used by Web API controllers
+        /// </summary>
+        /// <returns>Returns list of content</returns>
+        public async Task<List<ContentTbl>> GetAll()
+        {
+            return await _context.ContentTbl
+                .Where(c =>
+                    !c.IsDeleted)
+                .ToListAsync();
         }
 
         public ContentCreateGetModel GetForCreate()

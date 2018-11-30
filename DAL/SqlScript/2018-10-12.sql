@@ -132,7 +132,7 @@ BEGIN
 CREATE TABLE [dbo].[UserContentTbl](
 	[UserId] [int] NOT NULL,
 	[ContentId] [int] NOT NULL,
-	[IsComplete] [tinyint] NOT NULL,
+	[IsComplete] [bit] NOT NULL,
 	[DateCompleted] [datetime] NOT NULL,
  CONSTRAINT [PK__UserCont__E518B6CDEBECD15A] PRIMARY KEY CLUSTERED 
 (
