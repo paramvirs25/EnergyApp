@@ -15,6 +15,8 @@ namespace WebApi.Helpers
         {
             CreateContentMappings();
 
+            CreateUserContentMappings();
+
             CreateMap<UsersTbl, UserModel>()
                 .ForMember(src => src.Password, opt => opt.Ignore()) //Password is not passed from business layer to model layer
                 .ForSourceMember(src => src.UserDetailsTbl, opt => opt.Ignore());
@@ -165,6 +167,16 @@ namespace WebApi.Helpers
                 .ForSourceMember(src => src.UserContentTbl, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedByName, opt => opt.MapFrom(src => src.CreatedByNavigation.UserFirstName))
                 .ForMember(dest => dest.ModifiedByName, opt => opt.MapFrom(src => src.ModifiedByNavigation.UserFirstName));
+        }
+
+        private void CreateUserContentMappings()
+        {
+            CreateMap<UserContentTbl, UserContentListModel>()
+                .ForSourceMember(src => src.Content, opt => opt.Ignore())
+                .ForSourceMember(src => src.User, opt => opt.Ignore())
+                .ForMember(dest => dest.ContentUrl, opt => opt.MapFrom(src => src.Content.ContentUrl))
+                .ForMember(dest => dest.ContentName, opt => opt.MapFrom(src => src.Content.ContentName))
+                .ForMember(dest => dest.ContentType, opt => opt.MapFrom(src => src.Content.ContentType));
         }
     }
 }

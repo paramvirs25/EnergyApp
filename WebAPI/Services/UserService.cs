@@ -178,7 +178,7 @@ namespace WebApi.Services
             {
                 UserDetailsTbl = new UserDetailsTbl()
                 {
-                    UserContentTbl = await _userContentService.GetForCreate(userCreateSaveModel.User.UserId)
+                    UserContentTbl = await _userContentService.GetNewUserContent(userCreateSaveModel.User.UserId)
                 }
             };
             
