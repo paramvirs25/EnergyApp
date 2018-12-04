@@ -22,7 +22,7 @@ import { SnackBarCustomComponent, SnackBarComponent } from './_directives';
 
 import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor, ValidationCheck } from './_helpers';
-import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService } from './_services';
+import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService, UserContentService } from './_services';
 import { UserShared } from './_shared';
 
 import { HomeComponent } from './home';
@@ -79,6 +79,7 @@ import { ContentDetailComponent } from './admin/content-detail/content-detail.co
         ContentService,
         AuthenticationService,
         UserService,
+        UserContentService,
         RolesService,
         UserTypesService,
         UserShared,

@@ -4,7 +4,3 @@
   min-width: 350px;
 }
 
-/*Sets visibility of expand collapse icons */
-[aria-expanded="false"] > .minusIcon, [aria-expanded="true"] > .plusIcon {
-  display: none;
-}

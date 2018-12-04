@@ -57,66 +57,25 @@
           Let’s discuss: How to better understand the investor?
         </div> 
         <div class="tab-pane mTop20 fade divScrollable" id="contents" role="tabpanel">
-          <div class="accordion" id="accordionContent">
-            <div class="card">
-              <div id="headingOne">
-                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                  <!--//These icons visibility is changed by Home.Component.css-->
-                  <i class="fas fa-plus-circle plusIcon"></i>
-                  <i class="fas fa-minus-circle minusIcon"></i>
-                  01 | Becoming an investor
-                </button>
-              </div>
-              <div id="collapseOne" class="collapse show" data-parent="#accordionContent">
-                <div class="card-body">
-                  <div class="mBottom10">
-                    <a href="#">01 | Sub Menu 1.23 </a>
-                  </div>
-                  <div class="mBottom10">
-                    <a href="#">02 | Sub Menu 3.23 </a>
-                  </div>
+            <div class="accordion" id="accordionContent">
+                <div class="card" *ngFor="let uc of usercontentlist; let i = index">
+                    <div>
+                        <button class="btn btn-link" type="button" (click)="current = i">
+                            <i class='fas' [ngClass]="(i != current) ? 'fa-plus-circle' : 'fa-minus-circle'">
+                            </i>
+                            <!--<span> {{(i != current) ? 'Edit' : 'Show'}} </span>-->
+                            {{i+1}} | {{ uc.contentName }}
+                        </button>
+                    </div>
+                    <div id="collapseOne" data-parent="#accordionContent" [class.collapse]='current != i'>
+                        <div class="card-body">
+                            <div class="mBottom10">
+                                URL - {{ uc.contentUrl}}
+                            </div>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-            <div class="card">
-              <div id="headingTwo">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  <i class="fas fa-plus-circle plusIcon"></i>
-                  <i class="fas fa-minus-circle minusIcon"></i>
-                  02 | Know your investor
-                </button>
-              </div>
-              <div id="collapseTwo" class="collapse" data-parent="#accordionContent">
-                <div class="card-body">
-                  <div class="mBottom10">
-                    <a href="#">01 | Sub Menu 7.27 </a>
-                  </div>
-                  <div class="mBottom10">
-                    <a href="#">02 | Sub Menu 2.23 </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card">
-              <div id="headingThree">
-                <button class="btn btn-link collapsed" type="button" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
-                  <i class="fas fa-plus-circle plusIcon"></i>
-                  <i class="fas fa-minus-circle minusIcon"></i>
-                  03 | Module Funding System
-                </button>
-              </div>
-              <div id="collapseThree" class="collapse" data-parent="#accordionContent">
-                <div class="card-body">
-                  <div class="mBottom10">
-                    <a href="#">01 | Sub Menu 7.27 </a>
-                  </div>
-                  <div class="mBottom10">
-                    <a href="#">02 | Sub Menu 2.23 </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
