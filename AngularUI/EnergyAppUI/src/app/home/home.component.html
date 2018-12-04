@@ -2,15 +2,16 @@
 <div class="floatL columnSize">
   <div class="padAll20">
     <div class="mBottom30">
-      <h4 id="lblVideoName">lblVideoName</h4>
+      <h4 >{{lblVideoName}}</h4>
     </div>
     <div class="padT10">
-      <video id="azuremediaplayer" class="azuremediaplayer amp-default-skin" autoplay controls style="width:100%;" height="300">
-        <source src="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" type="application/vnd.ms-sstr+xml" />
-        <p class="amp-no-js">
-          To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
-        </p>
-      </video>
+        <!--<video id="azuremediaplayer" class="azuremediaplayer amp-default-skin" autoplay controls style="width:100%;" height="300">
+            <source src="//amssamples.streaming.mediaservices.windows.net/91492735-c523-432b-ba01-faba6c2206a2/AzureMediaServicesPromo.ism/manifest" type="application/vnd.ms-sstr+xml" />
+            <p class="amp-no-js">
+                To view this video please enable JavaScript, and consider upgrading to a web browser that supports HTML5 video
+            </p>
+        </video>-->
+        <iframe style="width:100%;" height="300" [src]="video | safe" frameborder="0" allowfullscreen></iframe>
     </div>
   </div>
 </div>
@@ -59,18 +60,17 @@
         <div class="tab-pane mTop20 fade divScrollable" id="contents" role="tabpanel">
             <div class="accordion" id="accordionContent">
                 <div class="card" *ngFor="let uc of usercontentlist; let i = index">
-                    <div>
-                        <button class="btn btn-link" type="button" (click)="current = i">
+                    <div (click)="current = i" >
+                        <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)">
                             <i class='fas' [ngClass]="(i != current) ? 'fa-plus-circle' : 'fa-minus-circle'">
                             </i>
-                            <!--<span> {{(i != current) ? 'Edit' : 'Show'}} </span>-->
                             {{i+1}} | {{ uc.contentName }}
                         </button>
                     </div>
                     <div id="collapseOne" data-parent="#accordionContent" [class.collapse]='current != i'>
                         <div class="card-body">
                             <div class="mBottom10">
-                                URL - {{ uc.contentUrl}}
+                                Show Details here
                             </div>
                         </div>
                     </div>

@@ -25,7 +25,7 @@ import { JwtInterceptor, ErrorInterceptor, ValidationCheck } from './_helpers';
 import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService, UserContentService } from './_services';
 import { UserShared } from './_shared';
 
-import { HomeComponent } from './home';
+import { HomeComponent, SafePipe } from './home';
 import { LoginComponent } from './login';
 import { RegisterComponent } from './register';
 import { DashboardComponent } from './dashboard';
@@ -62,6 +62,7 @@ import { ContentDetailComponent } from './admin/content-detail/content-detail.co
         AdminLayoutComponent,
         ClientLayoutComponent,
         HomeComponent,
+        SafePipe,
         LoginComponent,
         RegisterComponent,
         DashboardComponent,
