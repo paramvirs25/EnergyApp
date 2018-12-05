@@ -39,6 +39,7 @@ import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client
 import { ContentListComponent } from './admin/content-list/content-list.component';
 import { ContentDetailComponent } from './admin/content-detail/content-detail.component';
 import { EmbedVideo } from 'ngx-embed-video';
+import { YoutubePlayerModule } from 'ngx-youtube-player';
 
 @NgModule({
     imports: [
@@ -51,6 +52,7 @@ import { EmbedVideo } from 'ngx-embed-video';
         routing,
         FontAwesomeModule,
         CompareValidatorModule,
+        YoutubePlayerModule,
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
         ModalModule.forRoot(),

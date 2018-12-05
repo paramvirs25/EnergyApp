@@ -4,9 +4,9 @@
         <div class="mBottom30">
             <h4>{{lblVideoName}}</h4>
         </div>
-        <div class="padT10">
-            <!--generate iframe video link from codebehind-->
-            <div [innerHtml]="videoHtml" ></div>
+        <div class="padT10">                        
+            <youtube-player height="300" width="100%" (ready)="readyPlayer($event)" (change)="onStateChange($event)">
+            </youtube-player>
         </div>
     </div>
 </div>
@@ -43,31 +43,13 @@
                     <hr />
                     Step by step learning of Twin Flame Union
                 </div>
-                <div class="tab-pane mTop20 fade divScrollable" id="contents" role="tabpanel">
-                    <!--Accordian by bootstrap-->
-                    <!--<div class="accordion" id="accordionContent">
-                        <div class="card" *ngFor="let uc of usercontentlist; let i = index">
-                            <div (click)="current = i">
-                                <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)">
-                                    <i class='fas' [ngClass]="(i != current) ? 'fa-plus-circle' : 'fa-minus-circle'"></i>
-                                    {{i+1}} | {{ uc.contentName }}
-                                </button>
-                            </div>
-                            <div id="collapseOne" data-parent="#accordionContent" [class.collapse]='current != i'>
-                                <div class="card-body">
-                                    <div class="mBottom10">
-                                        Show Details here
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>-->
+                <div class="tab-pane mTop20 fade divScrollable" id="contents" role="tabpanel">                    
                     <!--Accordian by angular material-->
                     <mat-accordion displayMode="flat">
                         <mat-expansion-panel class="panelborder" *ngFor="let uc of usercontentlist; let i = index" [expanded]="i == 0">
                             <mat-expansion-panel-header >
                                 <mat-panel-title>
-                                    <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)">
+                                    <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)" >
                                         {{i+1}} | {{ uc.contentName }}
                                     </button>
                                 </mat-panel-title>
