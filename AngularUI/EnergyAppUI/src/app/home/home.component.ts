@@ -46,7 +46,10 @@ export class HomeComponent implements OnInit {
     
     //when specific usercontent is clicked
     onUserContentClick(uc: UserContentList) {
-        this.lblVideoName = uc.contentName;
-        this.videoHtml = this.embedService.embed(uc.contentUrl, { attr: { width: '100%', height: 300 }});
+        if (this.lblVideoName != uc.contentName)
+        {
+            this.lblVideoName = uc.contentName;
+            this.videoHtml = this.embedService.embed(uc.contentUrl, { attr: { width: '100%', height: 300 } });
+        }
     }
 }
