@@ -4,3 +4,7 @@
   min-width: 350px;
 }
 
+.panelborder {
+    border: solid 1px lightgrey;
+}
+
