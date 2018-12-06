@@ -22,7 +22,7 @@ import { SnackBarCustomComponent, SnackBarComponent } from './_directives';
 
 import { AuthGuard, AdminGuard } from './_guards';
 import { JwtInterceptor, ErrorInterceptor, ValidationCheck } from './_helpers';
-import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService } from './_services';
+import { AlertService, AuthenticationService, UserService, ContentService, RolesService, UserTypesService, UserContentService } from './_services';
 import { UserShared } from './_shared';
 
 import { HomeComponent } from './home';
@@ -38,6 +38,8 @@ import { AdminLoginLayoutComponent } from './layouts/admin-login-layout/admin-lo
 import { ClientLoginLayoutComponent } from './layouts/client-login-layout/client-login-layout.component';
 import { ContentListComponent } from './admin/content-list/content-list.component';
 import { ContentDetailComponent } from './admin/content-detail/content-detail.component';
+import { EmbedVideo } from 'ngx-embed-video';
+import { YoutubePlayerModule } from 'ngx-youtube-player';
 
 @NgModule({
     imports: [
@@ -50,9 +52,11 @@ import { ContentDetailComponent } from './admin/content-detail/content-detail.co
         routing,
         FontAwesomeModule,
         CompareValidatorModule,
+        YoutubePlayerModule,
         BsDropdownModule.forRoot(),
         TooltipModule.forRoot(),
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        EmbedVideo.forRoot()
     ],
     declarations: [
         AppComponent,
@@ -79,6 +83,7 @@ import { ContentDetailComponent } from './admin/content-detail/content-detail.co
         ContentService,
         AuthenticationService,
         UserService,
+        UserContentService,
         RolesService,
         UserTypesService,
         UserShared,
