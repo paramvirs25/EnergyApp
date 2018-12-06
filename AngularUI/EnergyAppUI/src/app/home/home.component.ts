@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
-import { UserContentService, UserService } from '../_services';
+import { UserContentService } from '../_services';
 import { UserContentList } from '../_models/userContentModelExtensions';
+import { forEach } from '@angular/router/src/utils/collection';
 
 @Component({
     selector: 'app-home',
@@ -16,15 +17,15 @@ export class HomeComponent implements OnInit {
 
     usercontentlist: UserContentList[];
     defaultusercontent: UserContentList;
-
-    videoHtml: string;
-
+    selectedContentId = 0;
+    
     constructor(private userContentService: UserContentService) { }
 
     ngOnInit(): void {        
         this.getLoggedinUserContent();
     }
 
+    // Runs when Youtube player is ready
     readyPlayer(player) {
         this.player = player;
 
@@ -32,31 +33,30 @@ export class HomeComponent implements OnInit {
         if (this.defaultusercontent) {
             this.onUserContentClick(this.defaultusercontent);
         }
-
-        console.log('player instance', player);
     }
 
+    // Check state of youtube player
     onStateChange(event) {
-        console.log('player state', event.data);
+        //Check if player state has ended.. mark video complete
+        if (event.data == YT.PlayerState.ENDED) {            
 
-        //switch (this.ytEvent.getPlayerState()) {
-        //    case PLAYING:
-        //        if (this.cleanTime() == 0) {
-        //            console.log('started ' + this.cleanTime());
-        //        } else {
-        //            console.log('playing ' + this.cleanTime());
-        //        };
-        //        break;
-        //    case window['YT'].PlayerState.PAUSED:
-        //        if (this.player.getDuration() - this.player.getCurrentTime() != 0) {
-        //            console.log('paused' + ' @ ' + this.cleanTime());
-        //        };
-        //        break;
-        //    case window['YT'].PlayerState.ENDED:
-        //        console.log('ended ');
-        //        break;
-        //};
-    }    
+            for (let i in this.usercontentlist) {
+                let uc = this.usercontentlist[i];
+
+                //Check if selected video ended is not marked completed earlier
+                if (this.selectedContentId == uc.contentId && !uc.isComplete) {
+
+                    //make video marked completed
+                    this.userContentService.updateLoggedIn(this.selectedContentId).subscribe(isMarkComplete => {
+                        if (isMarkComplete) {
+                            uc.isComplete = true;
+                        }
+                    });
+                }
+            }
+        }
+    }
+    
     //get Youtube Video Id from url
     getYoutubeVideoId(url) {
         var regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
@@ -91,7 +91,9 @@ export class HomeComponent implements OnInit {
             if (this.player) {
 
                 this.videoId = this.getYoutubeVideoId(uc.contentUrl);
-                this.player.cueVideoById(this.videoId); //add by video id
+                this.player.cueVideoById(this.videoId); //cue by video id doesnt play by default
+
+                this.selectedContentId = uc.contentId;
             }
         }
     }

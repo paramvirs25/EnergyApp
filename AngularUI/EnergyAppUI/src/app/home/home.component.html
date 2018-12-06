@@ -47,10 +47,11 @@
                     <!--Accordian by angular material-->
                     <mat-accordion displayMode="flat">
                         <mat-expansion-panel class="panelborder" *ngFor="let uc of usercontentlist; let i = index" [expanded]="i == 0">
-                            <mat-expansion-panel-header >
+                            <mat-expansion-panel-header>
                                 <mat-panel-title>
-                                    <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)" >
-                                        {{i+1}} | {{ uc.contentName }}
+                                    <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)">
+                                        {{i+1}} | {{ uc.contentName }} &nbsp;
+                                        <i class="fas fa-check-circle" *ngIf="uc.isComplete"></i>
                                     </button>
                                 </mat-panel-title>
                             </mat-expansion-panel-header>

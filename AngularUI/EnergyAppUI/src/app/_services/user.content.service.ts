@@ -17,4 +17,9 @@ export class UserContentService {
     getListLoggedIn(): Observable<UserContentList[]> {
         return this.http.get<UserContentList[]>(`${this.apiUrl}/listLoggedIn/`);
     }
+
+    //update LoggedIn user and mark its Content Completed
+    updateLoggedIn(contentId: number) {
+        return this.http.post(`${this.apiUrl}/updateLoggedIn/` + contentId, null);
+    }
 }
