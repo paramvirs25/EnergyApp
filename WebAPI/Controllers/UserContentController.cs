@@ -23,11 +23,11 @@ namespace WebApi.Controllers
         private OperatingUser _operatingUser;
 
         public UserContentController(
-            IUserContentService contentService,
+            IUserContentService userContentService,
             IOptions<AppSettings> appSettings,
             OperatingUser operatingUser)
         {
-            _userContentService = contentService;
+            _userContentService = userContentService;
             _appSettings = appSettings.Value;
             _operatingUser = operatingUser;
         }
@@ -37,11 +37,18 @@ namespace WebApi.Controllers
         /// </summary>
         /// <returns>Returns list of user content</returns>
         [Authorize(Policy = Policies.AgentsAndAbove)]
-        [Route("listByUserId/{userId}")]
+        [Route("listLoggedIn")]
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserContentListModel>>> GetListByUserId(int userId)
+        public async Task<ActionResult<IEnumerable<UserContentListModel>>> GetListLoggedIn()
         {
-            return await _userContentService.GetListByUserId(userId);
+            return await _userContentService.GetListByUserId(_operatingUser.GetUserId(HttpContext));
+        }
+
+        [HttpPost("updateLoggedIn/{contentId}")]
+        [Authorize(Policy = Policies.AgentsAndAbove)]
+        public async Task<ActionResult<bool>> UpdateLoggedIn(int contentId)
+        {
+            return await _userContentService.MarkContentCompleted(_operatingUser.GetUserId(HttpContext), contentId);
         }
     }
 }

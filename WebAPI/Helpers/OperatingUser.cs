@@ -6,7 +6,7 @@ namespace WebApi.Helpers
     {
         public int GetUserId(HttpContext httpContext)
         {
-            //return 1;
+            //return 6;
             return int.Parse(httpContext.User.Identity.Name);
         }
     }

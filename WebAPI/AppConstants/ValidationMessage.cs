@@ -9,6 +9,11 @@
         public const string CONTENT_NOT_FOUND = "Content not found.";
     }
 
+    public class UserContentValidationMessage
+    {
+        public const string USER_CONTENT_NOT_FOUND = "User Content not found.";
+    }
+
     public class UserValidationMessage
     {
         public const string USERNAME_PASSWORD_INCORRECT = "Username or password is incorrect.";
