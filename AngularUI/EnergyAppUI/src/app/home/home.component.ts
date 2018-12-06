@@ -19,8 +19,7 @@ export class HomeComponent implements OnInit {
 
     videoHtml: string;
 
-    constructor(private userService: UserService,
-        private userContentService: UserContentService) { }
+    constructor(private userContentService: UserContentService) { }
 
     ngOnInit(): void {        
         this.getLoggedinUserContent();
@@ -73,15 +72,11 @@ export class HomeComponent implements OnInit {
     //Get Logged in User's UserContent
     getLoggedinUserContent() {
 
-        //get logged in user details
-        this.userService.getLoggedIn().subscribe(ud => {
+        // get usercontentlist by logged userid
+        this.userContentService.getListLoggedIn().subscribe(list => {
 
-            // get usercontentlist by logged userid
-            this.userContentService.getListByUserId(ud.userId).subscribe(list => {
-
-                this.usercontentlist = list;
-                this.defaultusercontent = list[0];
-            });
+            this.usercontentlist = list;
+            this.defaultusercontent = list[0];
         });
     }
     
@@ -92,7 +87,7 @@ export class HomeComponent implements OnInit {
         {
             this.lblVideoName = uc.contentName;
 
-            // check if youtube player is ready
+            // check if youtube player API is ready
             if (this.player) {
 
                 this.videoId = this.getYoutubeVideoId(uc.contentUrl);

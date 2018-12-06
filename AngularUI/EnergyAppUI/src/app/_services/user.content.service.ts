@@ -13,8 +13,8 @@ export class UserContentService {
         this.apiUrl = `${environment.apiUrl}/usercontent`;
     }
 
-    //Gets usercontent list by userId
-    getListByUserId(userId: number): Observable<UserContentList[]> {
-        return this.http.get<UserContentList[]>(`${this.apiUrl}/listByUserId/` + userId);
+    //Gets usercontent list by loggedin user
+    getListLoggedIn(): Observable<UserContentList[]> {
+        return this.http.get<UserContentList[]>(`${this.apiUrl}/listLoggedIn/`);
     }
 }

@@ -45,6 +45,7 @@ namespace WebApi.Services
             var tblRows = await _context.UserContentTbl
                 .Include(uct => uct.Content)
                 .Where(uct =>
+                    uct.UserId == userId &&
                     !uct.Content.IsDeleted)
                 .AsNoTracking()
                 .ToListAsync();
