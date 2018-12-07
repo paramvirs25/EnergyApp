@@ -14,10 +14,12 @@
     <div class="padAll20">
         <div class="mBottom30 clearfix">
             <div class="floatL">
-                <button class="btn btn-outline-primary" type="submit">+ Playlist</button>
+                <!--<button class="btn btn-outline-primary" type="submit">+ Playlist</button>-->
             </div>
-            <div class="floatR">
-                Progress bar
+            <div style="width:250px;" class="floatR">
+                Course Completed {{contentCompletedPercent}}%  ({{contentCompletedCount}}/{{totalContents}})
+                <mat-progress-bar [value]="contentCompletedPercent">
+                </mat-progress-bar>
             </div>
         </div>
         <div>
@@ -50,7 +52,7 @@
                             <mat-expansion-panel-header>
                                 <mat-panel-title>
                                     <button class="btn btn-link" type="button" (click)="onUserContentClick(uc)">
-                                        {{i+1}} | {{ uc.contentName }} &nbsp;
+                                        {{i+1}} | {{ uc.contentName }}&nbsp;
                                         <i class="fas fa-check-circle" *ngIf="uc.isComplete"></i>
                                     </button>
                                 </mat-panel-title>

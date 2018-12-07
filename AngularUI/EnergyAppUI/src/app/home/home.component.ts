@@ -18,6 +18,11 @@ export class HomeComponent implements OnInit {
     usercontentlist: UserContentList[];
     defaultusercontent: UserContentList;
     selectedContentId = 0;
+
+    contentCompletedCount = 0;
+    contentCompletedPercent = 0;
+    totalContents = 0;
+
     
     constructor(private userContentService: UserContentService) { }
 
@@ -43,13 +48,16 @@ export class HomeComponent implements OnInit {
             for (let i in this.usercontentlist) {
                 let uc = this.usercontentlist[i];
 
-                //Check if selected video ended is not marked completed earlier
-                if (this.selectedContentId == uc.contentId && !uc.isComplete) {
+                //Check if selected video being ended is not marked completed earlier
+                if (uc.contentId == this.selectedContentId  && !uc.isComplete) {
 
                     //make video marked completed
                     this.userContentService.updateLoggedIn(this.selectedContentId).subscribe(isMarkComplete => {
                         if (isMarkComplete) {
                             uc.isComplete = true;
+
+                            //update progress bar
+                            this.getProgress(this.usercontentlist);
                         }
                     });
                 }
@@ -77,24 +85,38 @@ export class HomeComponent implements OnInit {
 
             this.usercontentlist = list;
             this.defaultusercontent = list[0];
+
+            this.getProgress(list);
         });
     }
-    
+
+    //get progress of contents completed
+    getProgress(list: UserContentList[]) {
+
+        this.totalContents = list.length;
+        this.contentCompletedCount = 0;
+        this.contentCompletedPercent = 0;
+
+        for (let i in list) {
+            if (list[i].isComplete) {
+                this.contentCompletedCount++;
+            }
+        }
+        this.contentCompletedPercent = (this.contentCompletedCount / this.totalContents) * 100;
+    }
+
     //when specific usercontent is clicked
     onUserContentClick(uc: UserContentList) {
 
-        if (this.lblVideoName != uc.contentName) // Check if same link is not clicked
+        // check if youtube player API is ready and Check if same link is not clicked
+        if (this.player && this.lblVideoName != uc.contentName)
         {
             this.lblVideoName = uc.contentName;
 
-            // check if youtube player API is ready
-            if (this.player) {
+            this.videoId = this.getYoutubeVideoId(uc.contentUrl);
+            this.player.cueVideoById(this.videoId); //cueVideoById doesnt play by default
 
-                this.videoId = this.getYoutubeVideoId(uc.contentUrl);
-                this.player.cueVideoById(this.videoId); //cue by video id doesnt play by default
-
-                this.selectedContentId = uc.contentId;
-            }
+            this.selectedContentId = uc.contentId;
         }
     }
 }
