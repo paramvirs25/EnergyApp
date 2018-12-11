@@ -8,9 +8,13 @@ import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class RolesService {
-    constructor(private http: HttpClient) { }
+    apiUrl: string;
+
+    constructor(private http: HttpClient) {
+        this.apiUrl = `${environment.apiUrl}/roles`;
+    }
 
     getRoles(): Observable<Roles[]> {
-        return this.http.get<Roles[]>(`${environment.apiUrl}/roles`);
+        return this.http.get<Roles[]>(`${this.apiUrl}`);
     }
 }

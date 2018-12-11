@@ -8,9 +8,13 @@ import { Observable, of } from 'rxjs';
 
 @Injectable()
 export class UserTypesService {
-    constructor(private http: HttpClient) { }
+    apiUrl: string;
+
+    constructor(private http: HttpClient) {
+        this.apiUrl = `${environment.apiUrl}/usertypes`;
+    }
 
     getUserTypes(): Observable<UserTypes[]> {
-        return this.http.get<UserTypes[]>(`${environment.apiUrl}/usertypes`);
+        return this.http.get<UserTypes[]>(`${this.apiUrl}`);
     }
 }
