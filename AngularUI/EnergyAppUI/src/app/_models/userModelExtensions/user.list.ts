@@ -5,4 +5,5 @@ export class UserList extends UserDetail {
     modifiedByName: string;
     roleName: string;
     userTypeName: string;
+    isAllContentWatched: boolean;
 }
