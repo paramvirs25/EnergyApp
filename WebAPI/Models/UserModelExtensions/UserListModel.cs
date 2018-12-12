@@ -6,5 +6,6 @@ namespace WebApi.Models.UserModelExtensions
         public string ModifiedByName { get; set; }
         public string RoleName { get; set; }
         public string UserTypeName { get; set; }
+        public bool IsAllContentWatched { get; set; }
     }
 }

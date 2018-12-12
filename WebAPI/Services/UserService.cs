@@ -21,7 +21,7 @@ namespace WebApi.Services
         Task<UserDetailsModel> Authenticate(UserAuthenticateModel userAuthModel);
 
         Task<UserDetailsModel> GetById(int id);
-        Task<List<UserListModel>> GetList();        
+        Task<List<UserListModel>> GetList();
         Task<UserCreateGetModel> GetForCreate();
         Task<UserEditGetModel> GetForEdit(int id);
 
@@ -104,18 +104,47 @@ namespace WebApi.Services
         /// <returns>Returns list of users</returns>
         public async Task<List<UserListModel>> GetList()
         {
+            //following query uses SELECT method of linq and removes 'Include' method
             var userDetailTbl = await _context.UserDetailsTbl
                 .Where(ud =>
                     ud.RoleId < Role.RoleId.SuperAdmin   //non superadmin user
                     && !ud.IsDeleted)
-                .Include(s => s.CreatedByNavigation)
-                .Include(s => s.ModifiedByNavigation)
-                .Include(s => s.Role)
-                .Include(s => s.UserType)
+                .Select(c => new UserListModel
+                {
+                    UserId = c.UserId,
+                    UserFirstName = c.UserFirstName,
+                    UserLastName = c.UserLastName,
+                    UserEmail = c.UserEmail,
+                    RoleId = c.RoleId,
+                    UserTypeId = c.UserTypeId,
+                    IsDeleted = c.IsDeleted,
+                    CreatedDate = c.CreatedDate,
+                    CreatedBy = c.CreatedBy,
+                    ModifiedDate = c.ModifiedDate,
+                    ModifiedBy = c.ModifiedBy,
+                    CreatedByName = c.CreatedByNavigation.UserFirstName,
+                    ModifiedByName = c.ModifiedByNavigation.UserFirstName,
+                    RoleName = c.Role.RoleDisplayName,
+                    UserTypeName = c.UserType.UserTypeDisplayName,
+                    IsAllContentWatched = c.UserContentTbl.Where(u => !u.IsComplete).Count() == 0
+                })
                 .AsNoTracking()
                 .ToListAsync();
 
-            return _mapper.Map<List<UserDetailsTbl>, List<UserListModel>>(userDetailTbl);
+            return userDetailTbl;
+
+            //****Uses 'Include' method of LINQ
+            //var userDetailTbl = await _context.UserDetailsTbl
+            //    .Where(ud =>
+            //        ud.RoleId < Role.RoleId.SuperAdmin   //non superadmin user
+            //        && !ud.IsDeleted)
+            //    .Include(s => s.CreatedByNavigation)
+            //    .Include(s => s.ModifiedByNavigation)
+            //    .Include(s => s.Role)
+            //    .Include(s => s.UserType)
+            //    .AsNoTracking()
+            //    .ToListAsync();
+            //return _mapper.Map<List<UserDetailsTbl>, List<UserListModel>>(userDetailTbl);
         }
 
         public async Task<UserCreateGetModel> GetForCreate()
